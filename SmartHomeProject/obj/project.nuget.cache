@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "nzX6GQZ+OCx76z58jRLkOmAt6BSh3BSS7ULKIKqIuLIbOHF2L7QeLfGtZK8gYWibWFGKvZxAqK6kjqE8uDymlg==",
+  "success": true,
+  "projectFilePath": "D:\\Programmierprojekte\\GitHub Projekte\\SmartHomeProject\\SmartHomeProject\\SmartHomeProject\\SmartHomeProject.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Tarik\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
+  ],
+  "logs": []
+}
