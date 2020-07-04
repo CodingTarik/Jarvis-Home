@@ -1,5 +1,27 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "Add Device";
 }
+    <legend>Gerät Hinzufügen</legend>
+    <div class="text-center">
+        <form method="POST">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Geräte Name</label>
+                    <input type="text" class="form-control" id="deviceName" name="deviceName" placeholder="Geräte Name eingeben">
+                </div>
+                <div class="form-group">
+                    <label for="exampleSelect1">Geräte Typ</label>
+                    <select class="form-control" id="deviceType" name="deviceType">
+                        <option>Raspberry Pi</option>
+                        <option>Arduino</option>
+                        <option>Philips hue</option>
+                        <option>Sonstige</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exampleTextarea">Beschreibung</label>
+                    <textarea class="form-control" id="deviceDescription" name="deviceDescription" rows="3"></textarea>
+                </div>
+            <input type="submit" value="Submit" class="btn btn-primary"/>
+        </form>
+         
+    </div>
