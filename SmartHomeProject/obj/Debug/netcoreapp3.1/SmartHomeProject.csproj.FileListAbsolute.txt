@@ -146,3 +146,5 @@ C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netc
 C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\SmartHomeProject.csproj.CoreCompileInputs.cache
 C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\SmartHomeProject.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\SmartHomeProject.Properties.Resources.resources
+C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\SmartHomeProject.csproj.GenerateResource.cache

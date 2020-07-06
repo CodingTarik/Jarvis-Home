@@ -1,9 +1,15 @@
-﻿using System;
-namespace SmartHomeProject.Models
+﻿namespace SmartHomeProject.Models
 {
     public class DeviceModel
     {
-        public string name { get; set; }
-        public string Image { get; set; }
+        public string Name { get; set; }
+
+        public byte[] Image
+        {
+            get; set;
+        }
+        public string Type { get; set; }
+        public string Location { get; set; }
+        public int port { get; set; }
     }
 }

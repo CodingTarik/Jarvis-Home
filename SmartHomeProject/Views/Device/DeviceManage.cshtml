@@ -1,12 +1,30 @@
-﻿@model SmartHomeProject.Models.DeviceModel
+﻿@using System.Data.Entity.Core.Metadata.Edm
+@model SmartHomeProject.Models.DeviceModel[]
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <p>Hallo</p>
-    <img src="../devices/@Model.Image">
+    <h1 class="display-4">Geräte</h1>
+    <table>
+        <tr>
+            <th>Device name</th>
+            <th>Symbol</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Port</th>
+        </tr>
+        @foreach (var device in Model)
+        {
+            <tr>
+                <td>@device.Name</td>
+                <td>
+                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.Image))"  width="20%" height="20%"/>
+                </td>
+                <td>@device.Type</td>
+                <td>@device.Location</td>
+                <td>@device.port</td>
+            </tr>
+        }
+    </table>
 </div>
-42:50

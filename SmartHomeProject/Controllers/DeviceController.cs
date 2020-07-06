@@ -1,7 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SmartHomeProject.ConnectionManager;
 using SmartHomeProject.Models;
+using static SmartHomeProject.Program;
 
 namespace SmartHomeProject.Controllers
 {
@@ -16,9 +18,8 @@ namespace SmartHomeProject.Controllers
 
         public IActionResult DeviceManage()
         {
-            DeviceModel device = new DeviceModel() {name = "Raspi", Image = "raspi" };
-            
-            return View(device);
+           
+            return View(DatabaseManager.getDeviceModels());
         }
 
 
@@ -35,9 +36,9 @@ namespace SmartHomeProject.Controllers
         [HttpPost]
         public ActionResult AddDevice(string deviceName, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
-            Console.WriteLine("TEST" + deviceName);
+            DatabaseManager.AddNewDevice(deviceName, deviceType, deviceDescription, deviceIP, devicePort, deviceLocation);
             return View();
-            //return Content($"Hallo {deviceName}");
+           
         }
     }
 }
