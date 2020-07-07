@@ -62,7 +62,7 @@ namespace SmartHomeProject.ConnectionManager
             List<DeviceModel> models = new List<DeviceModel>();
             while (resultReader.Read())
             {
-                DeviceModel model = new DeviceModel() { Image = Properties.Resources.raspi, Name = resultReader.GetString(0), port = resultReader.GetInt32(5)};
+                DeviceModel model = new DeviceModel(resultReader.GetString(4), resultReader.GetInt32(5)) { Image = Properties.Resources.raspi, Name = resultReader.GetString(0)};
                 models.Add(model);
             }
 

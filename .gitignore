@@ -75,3 +75,4 @@ _[Ss]cripts
 *.dot[Cc]over
 SmartHomeProject/bin/Debug/**/*
 SmartHomeProject/obj/Debug/**/*
+SmartHomeProject/bin/Debug/netcoreapp3.1/SmartHomeProject.dll
