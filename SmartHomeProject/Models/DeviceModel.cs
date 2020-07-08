@@ -8,6 +8,10 @@ namespace SmartHomeProject.Models
 {
     public class DeviceModel
     {
+        public DeviceModel()
+        {
+            connection = new DeviceConnectionManager(ip, port);
+        }
         public DeviceModel(string ip, int port)
         {
             connection = new DeviceConnectionManager(ip, port);
@@ -22,8 +26,8 @@ namespace SmartHomeProject.Models
         }
         public string Type { get; set; }
         public string Location { get; set; }
-        public int port { get; private set; }
-        public string ip {get; private set; }
+        public int port { get; set; }
+        public string ip {get; set; }
         public DeviceConnectionManager connection { get; private set; }
         public List<DeviceModelFunction> DeviceFunctions = new List<DeviceModelFunction>();
 

@@ -16,16 +16,29 @@ namespace SmartHomeProject.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public IActionResult DeviceManage()
         {
            
             return View(DatabaseManager.getDeviceModels());
         }
 
+        
 
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        [HttpPost]
+        public IActionResult EditDevice(DeviceModel model)
+        {
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult DeleteDevice(string returnUrl, string model)
+        {
+            Console.WriteLine("D:" + model + "test");
+            return LocalRedirect(returnUrl);
         }
 
         [HttpGet]
@@ -38,7 +51,6 @@ namespace SmartHomeProject.Controllers
         {
             DatabaseManager.AddNewDevice(deviceName, deviceType, deviceDescription, deviceIP, devicePort, deviceLocation);
             return View();
-           
         }
     }
 }

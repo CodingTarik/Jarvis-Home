@@ -14,7 +14,7 @@ namespace SmartHomeProject.ConnectionManager
         /// Has Attributes: DeviceName, DeviceType, DeviceDescription, DeviceLocation, DeviceIP, DevicePort
         /// </summary>
         private const string createDeviceTable = @"CREATE TABLE devices (
-              DeviceName VARCHAR(255),
+              DeviceName VARCHAR(255) PRIMARY KEY,
               DeviceType VARCHAR(255),
               DeviceDescription VARCHAR(255),
               DeviceLocation VARCHAR(255),
@@ -66,10 +66,7 @@ namespace SmartHomeProject.ConnectionManager
                 models.Add(model);
             }
 
-            foreach (var mo in models)
-            {
-                Console.WriteLine(mo.Name);
-            }
+           
     
             webDBConnection.Close();
             return models.ToArray();
