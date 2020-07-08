@@ -1,0 +1,6 @@
+Note! Every Statmant have to follow the same pattern
+      The Parameter Name Than an : and no Space after that in upper Case the value for Example True/False every first Letter in upper Case!!!!
+      Do not add spaces or lines to the File !!!!
+FirstStart:False
+Ip:127.0.0.1 
+Port:334 
