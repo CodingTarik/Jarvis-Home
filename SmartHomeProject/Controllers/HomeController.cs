@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SmartHomeProject.ConnectionManager;
 using SmartHomeProject.Models;
 
 namespace SmartHomeProject.Controllers
@@ -18,9 +19,11 @@ namespace SmartHomeProject.Controllers
             _logger = logger;
         }
 
+       [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            DeviceManageModel pageModel = new DeviceManageModel() {DeviceModels = DatabaseManager.getDeviceModels()};
+            return View(pageModel);
         }
 
         public IActionResult Privacy()

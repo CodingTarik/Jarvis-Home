@@ -1,25 +1,24 @@
-﻿@model SmartHomeProject.Models.DeviceModel[]
-
+﻿@model SmartHomeProject.Models.DeviceManageModel
+@{
 ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <form>
-        <table>
-            <tr>
-                <th>Name</th>
+    <form style="margin-top: 5%">
+       <table class="table table-hover">
+            <tr class="table-primary">
                 <th>Raum</th>
+                <th>Name<th>
             </tr>
-            @foreach (var device in Model)
+    @foreach (var device in Model.DeviceModels)
             {
                 <tr>
-                    <td>@device.DeviceFunctions</td>
-                   
-                    <td><input type="submit" class="btn btn-primary" value="An/Aus" /></td>
+                <td>@device.Location</td>
+                <td>@device.Name</td>
+                <td><button type="button" class="btn btn-info">AN/AUS</button></td>
                 </tr>
-
             }
-        </table>
+
     </form>
 
 </div>

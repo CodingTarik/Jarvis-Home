@@ -1,8 +1,8 @@
-﻿using System;
+﻿using SmartHomeProject.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using SmartHomeProject.Models;
 
 namespace SmartHomeProject.ConnectionManager
 {
@@ -46,7 +46,23 @@ namespace SmartHomeProject.ConnectionManager
             sqlQuery.Parameters.AddWithValue("@DeviceDescription", deviceDescription);
             sqlQuery.Parameters.AddWithValue("@DeviceLocation", deviceLocation);
             sqlQuery.Parameters.AddWithValue("@DeviceIP", deviceIP);
+            if (String.IsNullOrEmpty(devicePort))
+            {
+                devicePort = "333";
+            }
             sqlQuery.Parameters.AddWithValue("@DevicePort", int.Parse(devicePort));
+            sqlQuery.Prepare();
+            bool result = sqlQuery.ExecuteNonQuery() != 0;
+            webDBConnection.Close();
+            return result;
+        }
+
+        internal static bool DeleteDevice(string deviceName)
+        {
+            webDBConnection.Open();
+            SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+            sqlQuery.CommandText = @"DELETE FROM devices WHERE DeviceName = @DeviceName";
+            sqlQuery.Parameters.AddWithValue("@DeviceName", deviceName);
             sqlQuery.Prepare();
             bool result = sqlQuery.ExecuteNonQuery() != 0;
             webDBConnection.Close();
@@ -62,12 +78,24 @@ namespace SmartHomeProject.ConnectionManager
             List<DeviceModel> models = new List<DeviceModel>();
             while (resultReader.Read())
             {
-                DeviceModel model = new DeviceModel(resultReader.GetString(4), resultReader.GetInt32(5)) { Image = Properties.Resources.raspi, Name = resultReader.GetString(0)};
-                models.Add(model);
+                try
+                {
+                    DeviceModel model = new DeviceModel(resultReader.GetString(4), resultReader.GetInt32(5))
+                    {
+                        Image = Properties.Resources.raspi, Name = resultReader.GetString(0),
+                        Location = resultReader.GetString(3), Type = resultReader.GetString(1),
+                        description = resultReader.GetString(3)
+                    };
+                    models.Add(model);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Fehler: " + ex.Message);
+                }
             }
 
-           
-    
+
+
             webDBConnection.Close();
             return models.ToArray();
 

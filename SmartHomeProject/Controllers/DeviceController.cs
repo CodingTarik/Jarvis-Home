@@ -19,11 +19,12 @@ namespace SmartHomeProject.Controllers
         [HttpGet]
         public IActionResult DeviceManage()
         {
-           
-            return View(DatabaseManager.getDeviceModels());
+            DeviceManageModel pageModel = new DeviceManageModel() {DeviceModels = DatabaseManager.getDeviceModels()};
+            return View(pageModel);
         }
 
-        
+       
+
 
         public IActionResult Error()
         {
@@ -37,8 +38,11 @@ namespace SmartHomeProject.Controllers
         [HttpPost]
         public IActionResult DeleteDevice(string returnUrl, string model)
         {
-            Console.WriteLine("D:" + model + "test");
-            return LocalRedirect(returnUrl);
+            bool result = DatabaseManager.DeleteDevice(model);
+            DeviceManageModel pageModel = new DeviceManageModel() { deleteErrored = !result, deletedDeviceName = model, DeviceModels = DatabaseManager.getDeviceModels() };
+            Console.WriteLine("returnUrl: " + returnUrl + " " + pageModel.deleteErrored + " " + pageModel.deletedDeviceName);
+            return View("DeviceManage", pageModel);
+
         }
 
         [HttpGet]
