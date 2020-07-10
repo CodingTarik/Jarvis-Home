@@ -1,22 +1,15 @@
-﻿@model SmartHomeProject.Models.DeviceManageModel
+﻿@model SmartHomeProject.Models.DeviceModel
 @{
-    ViewData["Title"] = "Edit Devie";
+    ViewData["Title"] = "Edit @Model.Name";
 }
 <legend>Edit Device</legend>
 <div class="text-center">
+    <p>@Model.Name</p>
     <form method="POST">
-        <label for="exampleSelect1">Select Device</label>
-        <select class="form-control" id="deviceSelect" name="deviceType">
-            @foreach (var device in Model.DeviceModels)
-            {
-                <option value="@device.Name">@device.Name</option>
-            }
-
-        </select>
         <form>
             <div class="form-group">
                 <label for="deviceName">Geräte Name</label>
-                <input type="text" class="form-control" id="deviceName" value="@Model.DeviceModels[0].Name" name="deviceName" placeholder="Geräte Name eingeben">
+                <input type="text" class="form-control" id="deviceName" name="deviceName" placeholder="Geräte Name eingeben">
             </div>
             <div class="form-group">
                 <label for="deviceType">Geräte Typ</label>
@@ -29,23 +22,23 @@
             </div>
             <div class="form-group">
                 <label for="deviceDescription">Beschreibung</label>
-                <textarea class="form-control" id="deviceDescription" value="@Model.DeviceModels[0].description" name="deviceDescription" rows="3"></textarea>
+                <textarea class="form-control" id="deviceDescription" name="deviceDescription" rows="3"></textarea>
             </div>
             <div class="form-group">
                 <label for="deviceIP">Geräte-IP</label>
-                <input type="text" value="@Model.DeviceModels[0].ip" class="form-control" id="deviceIP" name="deviceIP" placeholder="IP-Addresse eingeben">
+                <input type="text" class="form-control" id="deviceIP" name="deviceIP" placeholder="IP-Addresse eingeben">
             </div>
             <div class="form-group">
                 <label for="devicePort">Geräte-Port</label>
-                <input type="text" class="form-control" id="devicePort" value="@Model.DeviceModels[0].port" name="devicePort" placeholder="Port Eingeben">
+                <input type="text" class="form-control" id="devicePort" name="devicePort" placeholder="Port Eingeben">
             </div>
             <div class="form-group">
                 <label for="deviceLocation">Gerätestandort</label>
-                <input type="text" class="form-control" id="deviceLocation" value="@Model.DeviceModels[0].Location" name="deviceLocation" placeholder="Standort eingeben">
+                <input type="text" class="form-control" id="deviceLocation" name="deviceLocation" placeholder="Standort eingeben">
             </div>
             <input value="Submit" class="btn btn-primary" />
         </form>
     </form>
-    
+
 
 </div>

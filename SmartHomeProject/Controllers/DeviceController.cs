@@ -5,6 +5,7 @@ using SmartHomeProject.ConnectionManager;
 using SmartHomeProject.Models;
 using static SmartHomeProject.Program;
 
+
 namespace SmartHomeProject.Controllers
 {
     public class DeviceController : Controller
@@ -22,18 +23,24 @@ namespace SmartHomeProject.Controllers
             DeviceManageModel pageModel = new DeviceManageModel() {DeviceModels = DatabaseManager.getDeviceModels()};
             return View(pageModel);
         }
-
-       
-
-
+ 
+        [HttpGet]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        [HttpPost]
-        public IActionResult EditDevice(DeviceModel model)
+        [HttpGet]
+        public IActionResult EditDevice()
         {
-            return View(model);
+            DeviceManageModel pageModel = new DeviceManageModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+            return View(pageModel);
+        }
+        [HttpPost]
+
+        public IActionResult EditDevice(string returnUrl, string model)
+        {
+
+               return View();
         }
         [HttpPost]
         public IActionResult DeleteDevice(string returnUrl, string model)

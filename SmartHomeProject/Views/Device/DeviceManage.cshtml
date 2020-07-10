@@ -55,9 +55,9 @@
                     <td>@device.Location</td>
                     <td>@device.port</td>
                     <td>
-                        <form asp-controller="Device" asp-action="EditDevice" method="post">
+                        <form asp-controller="Device" asp-action="EditThis" method="post">
                             <input type="hidden" name="model" value="@device.Name" />
-                            <input type="submit" class="btn btn-info" name="Edit" value="Edit"/>
+                            <input type="submit" class="btn btn-info" name="Edit" value="Edit This"/>
                         </form>
                     </td>
                     <td>
