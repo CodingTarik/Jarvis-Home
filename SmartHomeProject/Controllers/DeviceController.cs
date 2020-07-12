@@ -20,10 +20,9 @@ namespace SmartHomeProject.Controllers
         [HttpGet]
         public IActionResult DeviceManage()
         {
-            DeviceManageModel pageModel = new DeviceManageModel() {DeviceModels = DatabaseManager.getDeviceModels()};
+            DeviceManageModel pageModel = new DeviceManageModel() { DeviceModels = DatabaseManager.getDeviceModels() };
             return View(pageModel);
         }
- 
         [HttpGet]
         public IActionResult Error()
         {
