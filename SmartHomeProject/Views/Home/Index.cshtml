@@ -1,24 +1,53 @@
 ﻿@model SmartHomeProject.Models.DeviceManageModel
 @{
-ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";
 }
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
 
+    var soundFile = document.createElement("audio");
+    soundFile.preload = "auto";
+    var src = document.createElement("source");
+    src.src = "../sound/welcome.mp3";
+    soundFile.appendChild(src);
+
+    soundFile.load();
+    soundFile.volume = 0.0;
+    soundFile.play();
+
+    function playSound() {
+        soundFile.currentTime = 0.00;
+        soundFile.volume = 1;
+        soundFile.play();
+    }
+
+</script>
+<div class="jumbotron">
+    <h1 class="display-3">Wilkommen zurück!</h1>
+    <p class="lead">Mein Name ist Jarvis, ich bin hier, um dich Tag und Nacht zu unterstützen.</p>
+    <hr class="my-4">
+    <p>© David Noll und Tarik Azzouzi</p>
+    <p class="lead">
+        <button class="btn btn-primary btn-lg" role="button" onclick="playSound()">Klicke hier, um mehr zu erfahren.</button>
+    </p>
+</div>
 <div class="text-center">
     <form style="margin-top: 5%">
-       <table class="table table-hover">
+        <table class="table table-hover">
             <tr class="table-primary">
+                <th>Name</th>
                 <th>Raum</th>
-                <th>Name<th>
+                <th>Status</th>
             </tr>
-    @foreach (var device in Model.DeviceModels)
+            @foreach (var device in Model.DeviceModels)
             {
                 <tr>
-                <td>@device.Location</td>
-                <td>@device.Name</td>
-                <td><button type="button" class="btn btn-info">AN/AUS</button></td>
+                    <td class="devicename">@device.Name</td>
+                    <td>@device.Location</td>
+                    <td><span id="@(device.Name)-status" class="badge badge-danger">Offline</span></td>
                 </tr>
             }
-
+        </table>
     </form>
-
+    <script src="js/DeviceStatus.js"></script>
 </div>

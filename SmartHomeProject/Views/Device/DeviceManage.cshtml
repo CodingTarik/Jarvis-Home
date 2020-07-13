@@ -7,7 +7,7 @@
 
 
 <div class="text-center">
-    <h1 class="display-4">Geräte</h1>
+    <h1 class="display-4">Geräte verwalten</h1>
     @{
         if (!Model.deleteErrored && !String.IsNullOrEmpty(Model.deletedDeviceName))
         {
@@ -31,41 +31,46 @@
                 <strong>Tipp:</strong> Mit "Add Device" kannst du neue Geräte hinzufügen.
             </div>
         }
-        Console.WriteLine(Model.deleteErrored + " string: " + Model.deletedDeviceName);
+       
     }
     <table class="table table-hover">
-            <tr class="table-primary">
-                <th>Device name</th>
-                <th>Symbol</th>
-                <th>Type</th>
-                <th>Location</th>
-                <th>Port</th>
-                <th>Edit</th>
-                <th>Delete</th>
+        <tr class="table-primary">
+            <th>Device name</th>
+            <th>Symbol</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>IP</th>
+            <th>Port</th>
+            <th>Status</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @foreach (var device in Model.DeviceModels)
+        {
+            <tr>
+                <td class="devicename">@device.Name</td>
+                <td>
+                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.Image))" width="20%" height="20%" />
+                </td>
+                <td>@device.Type</td>
+                <td>@device.Location</td>
+                <td>@device.ip</td>
+                <td>@device.port</td>
+                <td><span id="@(device.Name)-status" class="badge badge-danger">Offline</span></td>
+                <td>
+                    <form asp-controller="Device" asp-action="EditDevice" method="post">
+                        <input type="hidden" name="model" value="@device.Name" />
+                        <input type="submit" class="btn btn-primary" name="Edit" value="Edit" />
+                    </form>
+                </td>
+                <td>
+                    <form asp-controller="Device" asp-action="DeleteDevice" asp-route-returnURL="@Context.Request.Path" method="post">
+                        <input type="hidden" name="model" value="@device.Name" />
+                        <input type="submit" class="btn btn-danger" name="Delete" value="Delete" />
+                    </form>
+                </td>
             </tr>
-            @foreach (var device in Model.DeviceModels)
-            {
-                <tr>
-                    <td>@device.Name</td>
-                    <td>
-                        <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.Image))" width="20%" height="20%" />
-                    </td>
-                    <td>@device.Type</td>
-                    <td>@device.Location</td>
-                    <td>@device.port</td>
-                    <td>
-                        <form asp-controller="Device" asp-action="EditDevice" method="post">
-                            <input type="hidden" name="model" value="@device.Name" />
-                            <input type="submit" class="btn btn-primary" name="Edit" value="Edit" />
-                        </form>
-                    </td>
-                    <td>
-                        <form asp-controller="Device" asp-action="DeleteDevice" asp-route-returnURL="@Context.Request.Path" method="post">
-                            <input type="hidden" name="model" value="@device.Name" />
-                            <input type="submit" class="btn btn-danger" name="Delete" value="Delete" />
-                        </form>
-                    </td>
-                </tr>
-            }
-        </table>
+        }
+    </table>
+    <script src="../js/DeviceStatus.js"></script>
 </div>

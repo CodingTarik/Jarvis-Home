@@ -1,0 +1,25 @@
+﻿@using System.Data.Entity.Core.Metadata.Edm
+@model SmartHomeProject.Models.DeviceManageModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Funktion hinzufügen</h1>
+    <form>
+        
+        <div class="form-group">
+            <select name="selectedDevice" class="form-control" id="deviceSelect" name="deviceName" onchange="SelectionUpdate()">
+                @foreach (var device in Model.DeviceModels)
+                {
+                    <option name="deviceName" value="@device.Name">@device.Name</option>
+                }
+            </select>
+            <label for="functionname">Funktionsname</label>
+            <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Funktionsname eingeben">
+            <label for="GPIO">GPIO-Pin</label>
+            <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Funktionsname eingeben">
+        </div>
+    </form>
+    <script src="../js/DeviceStatus.js"></script>
+</div>

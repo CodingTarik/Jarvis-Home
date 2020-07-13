@@ -13,6 +13,8 @@ namespace SmartHomeProject.Models
         [BindProperty]
         public string selectedDevice { get; set; }
 
+        public string deviceNameEdited { get; set; }
+        public bool editingFailed { get; set; }
         public void OnPost()
         {
            

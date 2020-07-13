@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SmartHomeProject.Connections;
+using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using SmartHomeProject.Connections;
 
 namespace SmartHomeProject.Models
 {
@@ -28,13 +29,46 @@ namespace SmartHomeProject.Models
         public string Type { get; set; }
         public string Location { get; set; }
         public int port { get; set; }
-        public string ip {get; set; }
+        public string ip { get; set; }
+
+        public bool OnlineStatus
+        {
+            get
+            {
+                try
+                {
+                    Ping p = new Ping();
+                    Console.WriteLine("Sending ping to: " + ip);
+                    PingReply reply = p.Send(ip);
+                    if (reply.Status == IPStatus.Success)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+
+                        return false;
+                    }
+                }
+                catch (PingException ex)
+                {
+                    Console.WriteLine(ex.StackTrace);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+
+            }
+        }
+
         public DeviceConnectionManager connection { get; private set; }
         public List<DeviceModelFunction> DeviceFunctions = new List<DeviceModelFunction>();
 
         public void addDeviceModelFunction(byte GPIO_PIN, string functionname, string location)
         {
-            DeviceFunctions.Add(new DeviceModelFunction(GPIO_PIN, functionname, location, this.connection));
+            DeviceFunctions.Add(new DeviceModelFunction(GPIO_PIN, functionname, location, connection));
         }
         public class DeviceModelFunction
         {
@@ -50,14 +84,14 @@ namespace SmartHomeProject.Models
                 this.functionname = functionname;
                 this.location = location;
                 this.connection = connection;
-                this.status = getStatus();
+                status = getStatus();
 
             }
 
             public bool getStatus()
             {
                 TcpListener listener = new TcpListener(IPAddress.Any, 334);
-                connection.SendMessage("Status:"+GPIO_PIN);
+                connection.SendMessage("Status:" + GPIO_PIN);
                 listener.Start();
                 TcpClient client = listener.AcceptTcpClient();
                 NetworkStream stream = client.GetStream();
@@ -70,14 +104,14 @@ namespace SmartHomeProject.Models
 
             public void executeFunction()
             {
-                connection.SendMessage("Switch:"+GPIO_PIN);
+                connection.SendMessage("Switch:" + GPIO_PIN);
             }
 
         }
     }
 }
 
-    
+
 
 /*
  * GeräteID,FunktionsName,PIN,Location

@@ -30,13 +30,17 @@ namespace SmartHomeProject.ConnectionManager
                 webDBConnection.Open();
                 SQLiteCommand createDeviceQuery = new SQLiteCommand(createDeviceTable, webDBConnection);
                 createDeviceQuery.ExecuteNonQuery();
-                webDBConnection.Close();
+                //webDBConnection.Close();
+            }
+            else
+            {
+                webDBConnection.Open();
             }
         }
 
         internal static bool AddNewDevice(string deviceName, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
-            webDBConnection.Open();
+            //webDBConnection.Open();
             SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
             sqlQuery.CommandText =
                 @"INSERT INTO devices(DeviceName, DeviceType, DeviceDescription, DeviceLocation, DeviceIP, DevicePort)
@@ -53,26 +57,46 @@ namespace SmartHomeProject.ConnectionManager
             sqlQuery.Parameters.AddWithValue("@DevicePort", int.Parse(devicePort));
             sqlQuery.Prepare();
             bool result = sqlQuery.ExecuteNonQuery() != 0;
-            webDBConnection.Close();
+            //webDBConnection.Close();
             return result;
         }
 
         internal static bool DeleteDevice(string deviceName)
         {
-            webDBConnection.Open();
+            //webDBConnection.Open();
             SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
             sqlQuery.CommandText = @"DELETE FROM devices WHERE DeviceName = @DeviceName";
             sqlQuery.Parameters.AddWithValue("@DeviceName", deviceName);
             sqlQuery.Prepare();
-            bool result = sqlQuery.ExecuteNonQuery() != 0;
-            webDBConnection.Close();
+            bool result = sqlQuery.ExecuteNonQuery() > 0;
+            //webDBConnection.Close();
+            return result;
+        }
+
+        internal static bool UpdateDevice(string selectedDevice, string deviceNameNew, string deviceType,
+            string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
+        {
+           
+            SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+            sqlQuery.CommandText = @"UPDATE devices 
+            SET DeviceName = @deviceNameNew, DeviceType = @deviceType, DeviceDescription = @deviceDescription, DeviceLocation = @deviceLocation, DeviceIP = @deviceIP, DevicePort = @DevicePort
+            WHERE DeviceName = @deviceName;";
+            sqlQuery.Parameters.AddWithValue("@deviceName", selectedDevice);
+            sqlQuery.Parameters.AddWithValue("@deviceNameNew", deviceNameNew);
+            sqlQuery.Parameters.AddWithValue("@deviceType", deviceType);
+            sqlQuery.Parameters.AddWithValue("@deviceDescription", deviceDescription);
+            sqlQuery.Parameters.AddWithValue("@deviceLocation", deviceLocation);
+            sqlQuery.Parameters.AddWithValue("@devicePort", devicePort);
+            sqlQuery.Parameters.AddWithValue("@deviceIP", deviceIP);
+            sqlQuery.Prepare();
+            bool result = sqlQuery.ExecuteNonQuery() > 0;
             return result;
         }
 
         internal static DeviceModel[] getDeviceModels()
         {
             string query = "SELECT * FROM devices";
-            webDBConnection.Open();
+            //webDBConnection.Open();
             SQLiteCommand sqlQuery = new SQLiteCommand(query, webDBConnection);
             SQLiteDataReader resultReader = sqlQuery.ExecuteReader();
             List<DeviceModel> models = new List<DeviceModel>();
@@ -84,7 +108,7 @@ namespace SmartHomeProject.ConnectionManager
                     {
                         Image = Properties.Resources.raspi, Name = resultReader.GetString(0),
                         Location = resultReader.GetString(3), Type = resultReader.GetString(1),
-                        description = resultReader.GetString(3)
+                        description = resultReader.GetString(2)
                     };
                     models.Add(model);
                 }
@@ -96,7 +120,7 @@ namespace SmartHomeProject.ConnectionManager
 
 
 
-            webDBConnection.Close();
+            //webDBConnection.Close();
             return models.ToArray();
 
         }

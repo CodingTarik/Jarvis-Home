@@ -17,6 +17,14 @@ namespace SmartHomeProject.Controllers
             _logger = logger;
         }
 
+        [HttpPost]
+        public IActionResult EditDeviceSettings(string selectedDevice, string deviceNameNew, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
+        {
+            bool result = DatabaseManager.UpdateDevice(selectedDevice, deviceNameNew, deviceType, deviceDescription,
+                deviceIP, devicePort, deviceLocation);
+            DeviceEditModel pageModel = new DeviceEditModel() { selectedDevice = deviceNameNew, DeviceModels = DatabaseManager.getDeviceModels(), deviceNameEdited = selectedDevice, editingFailed = !result};
+            return View("EditDevice", pageModel);
+        }
         [HttpGet]
         public IActionResult DeviceManage()
         {
