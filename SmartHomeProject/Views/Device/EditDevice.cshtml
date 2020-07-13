@@ -1,51 +1,84 @@
-﻿@model SmartHomeProject.Models.DeviceManageModel
+﻿@using System.Security.Cryptography.X509Certificates
+@model DeviceEditModel
+
 @{
     ViewData["Title"] = "Edit Devie";
 }
+
+<script type="text/javascript">
+    var devices = new Array();
+    @foreach (var device in Model.DeviceModels)
+    {
+       @:devices.push({name: "@device.Name", description: "@device.description", type: "@device.Type", location: "@device.Location", port: "@device.port", ip: "@device.ip"});
+        
+    }
+    function SelectionUpdate() {
+        var name= document.getElementById("deviceSelect").value;
+        for (i = 0; i < devices.length; i++)
+        {
+            if (devices[i].name == name) {
+                document.getElementById("deviceNameNew").value = devices[i].name;
+                document.getElementById("deviceType").value = devices[i].type;
+                document.getElementById("deviceDescription").value = devices[i].description;
+                document.getElementById("deviceLocation").value = devices[i].location;
+                document.getElementById("deviceIP").value = devices[i].ip;
+                document.getElementById("devicePort").value = devices[i].port;
+                return;
+            }
+        }
+    }
+</script>
 <legend>Edit Device</legend>
 <div class="text-center">
     <form method="POST">
         <label for="exampleSelect1">Select Device</label>
-        <select class="form-control" id="deviceSelect" name="deviceType">
+        <select name="selectedDevice" class="form-control" id="deviceSelect" name="deviceName" onchange="SelectionUpdate()"  >
             @foreach (var device in Model.DeviceModels)
             {
-                <option value="@device.Name">@device.Name</option>
+                if (!(device.Name == Model.selectedDeviceName))
+                {
+                    <option name="deviceName" value="@device.Name">@device.Name</option>
+                }
+                else
+                {
+                    <option selected="selected" name="deviceName" value="@device.Name">@device.Name</option>
+                }
             }
-
         </select>
-        <form>
-            <div class="form-group">
-                <label for="deviceName">Geräte Name</label>
-                <input type="text" class="form-control" id="deviceName" value="@Model.DeviceModels[0].Name" name="deviceName" placeholder="Geräte Name eingeben">
-            </div>
-            <div class="form-group">
-                <label for="deviceType">Geräte Typ</label>
-                <select class="form-control" id="deviceType" value="" name="deviceType">
-                    <option value="Raspberry PI">Raspberry Pi</option>
-                    <option value="Arduino">Arduino</option>
-                    <option>Philips hue</option>
-                    <option>Sonstige</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="deviceDescription">Beschreibung</label>
-                <textarea class="form-control" id="deviceDescription" value="@Model.DeviceModels[0].description" name="deviceDescription" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="deviceIP">Geräte-IP</label>
-                <input type="text" value="@Model.DeviceModels[0].ip" class="form-control" id="deviceIP" name="deviceIP" placeholder="IP-Addresse eingeben">
-            </div>
-            <div class="form-group">
-                <label for="devicePort">Geräte-Port</label>
-                <input type="text" class="form-control" id="devicePort" value="@Model.DeviceModels[0].port" name="devicePort" placeholder="Port Eingeben">
-            </div>
-            <div class="form-group">
-                <label for="deviceLocation">Gerätestandort</label>
-                <input type="text" class="form-control" id="deviceLocation" value="@Model.DeviceModels[0].Location" name="deviceLocation" placeholder="Standort eingeben">
-            </div>
-            <input value="Submit" class="btn btn-primary" />
-        </form>
+        <div class="form-group">
+            <label for="deviceNameNew">Geräte Name</label>
+            <input type="text" class="form-control" id="deviceNameNew"  name="deviceNameNew" placeholder="Geräte Name eingeben">
+        </div>
+        <div class="form-group">
+            <label for="deviceType">Geräte Typ</label>
+            <select class="form-control" id="deviceType" value="" name="deviceType">
+                <option value="Raspberry PI">Raspberry Pi</option>
+                <option value="Arduino">Arduino</option>
+                <option>Philips hue</option>
+                <option>Sonstige</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="deviceDescription">Beschreibung</label>
+            <textarea class="form-control" id="deviceDescription"  name="deviceDescription" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="deviceIP">Geräte-IP</label>
+            <input type="text"  class="form-control" id="deviceIP" name="deviceIP" placeholder="IP-Addresse eingeben">
+        </div>
+        <div class="form-group">
+            <label for="devicePort">Geräte-Port</label>
+            <input type="text" class="form-control" id="devicePort"  name="devicePort" placeholder="Port Eingeben">
+        </div>
+        <div class="form-group">
+            <label for="deviceLocation">Gerätestandort</label>
+            <input type="text" class="form-control" id="deviceLocation"  name="deviceLocation" placeholder="Standort eingeben">
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary" />
     </form>
-    
 
+
+    <script>
+        SelectionUpdate();
+    </script>
 </div>

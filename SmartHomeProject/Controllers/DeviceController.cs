@@ -31,22 +31,21 @@ namespace SmartHomeProject.Controllers
         [HttpGet]
         public IActionResult EditDevice()
         {
-            DeviceManageModel pageModel = new DeviceManageModel() { DeviceModels = DatabaseManager.getDeviceModels() };
-            return View(pageModel);
+            DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels()};
+            return View("EditDevice", pageModel);
         }
+       
         [HttpPost]
-
-        public IActionResult EditDevice(string returnUrl, string model)
+        public IActionResult EditDevice(string model)
         {
-
-               return View();
+            DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels(), selectedDeviceName = model};
+            return View("EditDevice", pageModel);
         }
         [HttpPost]
         public IActionResult DeleteDevice(string returnUrl, string model)
         {
             bool result = DatabaseManager.DeleteDevice(model);
             DeviceManageModel pageModel = new DeviceManageModel() { deleteErrored = !result, deletedDeviceName = model, DeviceModels = DatabaseManager.getDeviceModels() };
-            Console.WriteLine("returnUrl: " + returnUrl + " " + pageModel.deleteErrored + " " + pageModel.deletedDeviceName);
             return View("DeviceManage", pageModel);
 
         }
@@ -62,5 +61,7 @@ namespace SmartHomeProject.Controllers
             DatabaseManager.AddNewDevice(deviceName, deviceType, deviceDescription, deviceIP, devicePort, deviceLocation);
             return View();
         }
+
+        
     }
 }
