@@ -1,0 +1,17 @@
+﻿Tarik
+
+
+
+
+
+
+
+Dave
+
+Connection Managment und methoden für senden und empfhangen der messages implementieren 
+
+Testen mit Raspberry pi
+
+JarvisControl fertig machen und testen ob message gesendet wird
+
+

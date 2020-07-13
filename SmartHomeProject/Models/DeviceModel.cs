@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using Exception = System.Exception;
 
 namespace SmartHomeProject.Models
 {
@@ -25,6 +26,7 @@ namespace SmartHomeProject.Models
         {
             get; set;
         }
+        public int deviceID { get; set; }
         public string description { get; set; }
         public string Type { get; set; }
         public string Location { get; set; }
@@ -64,21 +66,27 @@ namespace SmartHomeProject.Models
         }
 
         public DeviceConnectionManager connection { get; private set; }
-        public List<DeviceModelFunction> DeviceFunctions = new List<DeviceModelFunction>();
+        public List<DeviceModelFunction> DeviceFunctions { get; set; }
 
-        public void addDeviceModelFunction(byte GPIO_PIN, string functionname, string location)
+        public void addDeviceModelFunction(int functionID, byte GPIO_PIN, string functionname, string location)
         {
-            DeviceFunctions.Add(new DeviceModelFunction(GPIO_PIN, functionname, location, connection));
+            if (DeviceFunctions == null)
+            {
+                DeviceFunctions = new List<DeviceModelFunction>();
+            }
+
+            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, connection));
         }
         public class DeviceModelFunction
         {
+            public int functionID { get; set; }
             public byte GPIO_PIN { get; private set; }
             public string functionname { get; set; }
             public string location { get; set; }
             public bool status { get; set; }
             private DeviceConnectionManager connection;
 
-            public DeviceModelFunction(byte GPIO_PIN, string functionname, string location, DeviceConnectionManager connection)
+            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, DeviceConnectionManager connection)
             {
                 this.GPIO_PIN = GPIO_PIN;
                 this.functionname = functionname;
@@ -90,16 +98,23 @@ namespace SmartHomeProject.Models
 
             public bool getStatus()
             {
-                TcpListener listener = new TcpListener(IPAddress.Any, 334);
-                connection.SendMessage("Status:" + GPIO_PIN);
-                listener.Start();
-                TcpClient client = listener.AcceptTcpClient();
-                NetworkStream stream = client.GetStream();
-                byte[] bytes = new byte[1024];
-                stream.Read(bytes, 0, bytes.Length);
-                stream.Close();
-                client.Close();
-                return BitConverter.ToInt32(bytes) == 1;
+                try
+                {
+                    TcpListener listener = new TcpListener(IPAddress.Any, 334);
+                    connection.SendMessage("Status:" + GPIO_PIN);
+                    listener.Start();
+                    TcpClient client = listener.AcceptTcpClient();
+                    NetworkStream stream = client.GetStream();
+                    byte[] bytes = new byte[1024];
+                    stream.Read(bytes, 0, bytes.Length);
+                    stream.Close();
+                    client.Close();
+                    return BitConverter.ToInt32(bytes) == 1;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
             }
 
             public void executeFunction()

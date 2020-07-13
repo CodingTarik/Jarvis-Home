@@ -9,7 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ConnectionManager\NewFile.txt" />
+    <None Remove="NewFile.txt" />
+    <None Remove="ToDo.txt#" />
   </ItemGroup>
 
   <ItemGroup>

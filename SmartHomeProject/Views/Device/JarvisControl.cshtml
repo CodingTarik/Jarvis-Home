@@ -1,0 +1,23 @@
+@model SmartHomeProject.Controllers.ControlModel
+@{
+    ViewData["Title"] = "Jarvis Control";
+}
+
+<html>
+    @foreach (var device in Model.DeviceModels)
+    {   
+        if (device.DeviceFunctions == null)
+        { 
+
+        }
+        else { 
+        foreach (var funtion in device.DeviceFunctions)
+            {
+             <p>funtion</p>
+            }
+        }
+    }
+
+
+
+</html>

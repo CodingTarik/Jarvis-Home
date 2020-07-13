@@ -16,13 +16,43 @@ namespace SmartHomeProject.Controllers
         {
             _logger = logger;
         }
+        [HttpGet]
+        public IActionResult JarvisControl()
+            {
+            
+                ControlModel pageModel = new ControlModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+                return View(pageModel);
+            }
 
+
+        [HttpGet]
+        public IActionResult DeviceFunctions()
+        {
+            DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+            return View(pageModel);
+        }
+        [HttpPost]
+        public IActionResult addDeviceFunction(int deviceID, string functionname, int functionpin)
+        {
+            bool result = false;
+            try
+            {
+                result = DatabaseManager.AddFunctionToDevice(deviceID, functionname, (byte)functionpin);
+            }
+            catch (Exception e)
+            {
+                result = false;
+                Console.WriteLine("Fehler: " + e.Message);
+            }
+            DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), addedFunction = true, addedSuccess = result, deviceSelected = true, functionNameAdded = functionname, selectedDeviceID = deviceID};
+            return View("DeviceFunctions", pageModel);
+        }
         [HttpPost]
         public IActionResult EditDeviceSettings(string selectedDevice, string deviceNameNew, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
             bool result = DatabaseManager.UpdateDevice(selectedDevice, deviceNameNew, deviceType, deviceDescription,
                 deviceIP, devicePort, deviceLocation);
-            DeviceEditModel pageModel = new DeviceEditModel() { selectedDevice = deviceNameNew, DeviceModels = DatabaseManager.getDeviceModels(), deviceNameEdited = selectedDevice, editingFailed = !result};
+            DeviceEditModel pageModel = new DeviceEditModel() { selectedDevice = deviceNameNew, DeviceModels = DatabaseManager.getDeviceModels(), deviceNameEdited = selectedDevice, editingFailed = !result };
             return View("EditDevice", pageModel);
         }
         [HttpGet]
@@ -39,14 +69,14 @@ namespace SmartHomeProject.Controllers
         [HttpGet]
         public IActionResult EditDevice()
         {
-            DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels()};
+            DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels() };
             return View("EditDevice", pageModel);
         }
-       
+
         [HttpPost]
         public IActionResult EditDevice(string model)
         {
-            DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels(), selectedDeviceName = model};
+            DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels(), selectedDeviceName = model };
             return View("EditDevice", pageModel);
         }
         [HttpPost]
@@ -66,10 +96,11 @@ namespace SmartHomeProject.Controllers
         [HttpPost]
         public ActionResult AddDevice(string deviceName, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
-            DatabaseManager.AddNewDevice(deviceName, deviceType, deviceDescription, deviceIP, devicePort, deviceLocation);
-            return View();
+            bool result = DatabaseManager.AddNewDevice(deviceName, deviceType, deviceDescription, deviceIP, devicePort, deviceLocation);
+            DeviceAddModel pageModel = new DeviceAddModel() {successAdded = result, deviceName = deviceName};
+            return View(pageModel);
         }
 
-        
+
     }
 }

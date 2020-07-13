@@ -1,10 +1,31 @@
-﻿@{
+﻿@model DeviceAddModel
+
+@{
     Layout = "_Layout";
     ViewData["Title"] = "Add Device";
 }
      
     <div class="text-center">
         <h1 class="display-4">Gerät hinzufügen</h1>
+        @{
+            if (Model != null)
+            {
+                if (Model.successAdded && !String.IsNullOrEmpty(Model.deviceName))
+                {
+                    <div class="alert alert-dismissible alert-success">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Hinzufügen erfolgreich!</strong> Das Gerät <strong>@Model.deviceName</strong> wurde erfolgreich hinzugefügt.
+                    </div>
+                }
+                else if (!Model.successAdded && !String.IsNullOrEmpty(Model.deviceName))
+                {
+                    <div class="alert alert-dismissible alert-danger">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Hinzufügen nicht erfolgreich!</strong> Das Gerät <strong>@Model.deviceName</strong> konnte nicht hinzugefügt werden.
+                    </div>
+                }
+            }
+        }
         <form method="POST">
             <div class="form-group">
                 <label for="deviceName">Geräte Name</label>
