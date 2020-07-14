@@ -3,21 +3,28 @@
     ViewData["Title"] = "Jarvis Control";
 }
 
-<html>
+    <html>
     @foreach (var device in Model.DeviceModels)
-    {   
+    {
+        <h1>@device.Name</h1>
         if (device.DeviceFunctions == null)
-        { 
-
+        {
+        <hr />
         }
-        else { 
-        foreach (var funtion in device.DeviceFunctions)
+        else
+        {
+
+            foreach (var funtion in device.DeviceFunctions)
             {
-             <p>funtion</p>
+                <div method="post">
+                    <input type="submit" class="btn btn-primary" name="@funtion.functionname" value="@funtion.functionname" />
+                </div>
+                //Es wird nur eine Funktion aufgelistet !? 
             }
+            <hr />
         }
     }
 
 
 
-</html>
+    </html>

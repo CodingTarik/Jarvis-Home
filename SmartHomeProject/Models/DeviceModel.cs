@@ -12,11 +12,11 @@ namespace SmartHomeProject.Models
     {
         public DeviceModel()
         {
-            connection = new DeviceConnectionManager(ip, port);
+            
         }
         public DeviceModel(string ip, int port)
         {
-            connection = new DeviceConnectionManager(ip, port);
+            
             this.ip = ip;
             this.port = port;
         }
@@ -65,7 +65,7 @@ namespace SmartHomeProject.Models
             }
         }
 
-        public DeviceConnectionManager connection { get; private set; }
+    
         public List<DeviceModelFunction> DeviceFunctions { get; set; }
 
         public void addDeviceModelFunction(int functionID, byte GPIO_PIN, string functionname, string location)
@@ -75,7 +75,7 @@ namespace SmartHomeProject.Models
                 DeviceFunctions = new List<DeviceModelFunction>();
             }
 
-            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, connection));
+            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location));
         }
         public class DeviceModelFunction
         {
@@ -84,44 +84,22 @@ namespace SmartHomeProject.Models
             public string functionname { get; set; }
             public string location { get; set; }
             public bool status { get; set; }
-            private DeviceConnectionManager connection;
+            
 
-            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, DeviceConnectionManager connection)
+            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location)
             {
                 this.GPIO_PIN = GPIO_PIN;
                 this.functionname = functionname;
                 this.location = location;
-                this.connection = connection;
-                status = getStatus();
 
             }
 
-            public bool getStatus()
+            public bool getStatus(int pin) 
             {
-                try
-                {
-                    TcpListener listener = new TcpListener(IPAddress.Any, 334);
-                    connection.SendMessage("Status:" + GPIO_PIN);
-                    listener.Start();
-                    TcpClient client = listener.AcceptTcpClient();
-                    NetworkStream stream = client.GetStream();
-                    byte[] bytes = new byte[1024];
-                    stream.Read(bytes, 0, bytes.Length);
-                    stream.Close();
-                    client.Close();
-                    return BitConverter.ToInt32(bytes) == 1;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
+                //Hier muss das aus Conections die sendmessage methode aufgerufen werden
+                return false;
 
-            public void executeFunction()
-            {
-                connection.SendMessage("Switch:" + GPIO_PIN);
             }
-
         }
     }
 }
