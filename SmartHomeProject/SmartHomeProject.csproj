@@ -9,6 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\NewFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="NewFile.txt" />
     <None Remove="ToDo.txt#" />
   </ItemGroup>

@@ -5,10 +5,12 @@
 
     <html>
     @foreach (var device in Model.DeviceModels)
-    {
+    {   
+        
         <h1>@device.Name</h1>
-        if (device.DeviceFunctions == null)
+        if (@device.DeviceFunctions == null)
         {
+                   
         <hr />
         }
         else
@@ -16,15 +18,19 @@
 
             foreach (var funtion in device.DeviceFunctions)
             {
-                <div method="post">
-                    <input type="submit" class="btn btn-primary" name="@funtion.functionname" value="@funtion.functionname" />
+                <div class="card text-white bg-success mb-3" id="(@device.Name@funtion.functionID)card" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
+                    <div class="card-header"><h1>@funtion.functionname</h1></div>
+                        <div class="card-body">
+                            <input type="submit" id="(@device.Name@funtion.functionID)button" value="Ausschalten" class="btn btn-danger" />
+                            
+                    </div>
                 </div>
-                //Es wird nur eine Funktion aufgelistet !? 
             }
             <hr />
         }
     }
-
-
-
+    <script src="../lib/jquery/dist/jquery.min.js"></script>
+    <script src="../js/JarvisRefresh.js"></script>
+    
     </html>
+    

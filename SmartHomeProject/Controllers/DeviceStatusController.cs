@@ -16,9 +16,9 @@ namespace SmartHomeProject.Controllers
     {
         // GET: api/<DeviceStatusController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<DeviceModel> Get()
         {
-            return new string[] { "value1", "value2" };
+            return DatabaseManager.getDeviceModels();
         }
 
         // GET api/<DeviceStatusController>/5

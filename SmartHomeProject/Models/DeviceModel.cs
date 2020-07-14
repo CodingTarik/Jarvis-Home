@@ -91,12 +91,14 @@ namespace SmartHomeProject.Models
                 this.GPIO_PIN = GPIO_PIN;
                 this.functionname = functionname;
                 this.location = location;
+                this.functionID = id;
 
             }
 
             public bool getStatus(int pin) 
             {
                 //Hier muss das aus Conections die sendmessage methode aufgerufen werden
+                // sendMessage("Status:", pin)
                 return false;
 
             }

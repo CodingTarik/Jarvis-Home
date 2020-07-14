@@ -5,15 +5,19 @@
 }
 
     <div class="text-center">
-        <h1 class="display-4">Funktionen bearbeiten</h1>
+        <h1 class="display-4">Gerätefunktionen verwalten</h1>
+        <hr />
+        <br />
         <h3 class="display-6">Gerät auswählen</h3>
-        <select name="selectedDevice" class="form-control" id="deviceSelect" name="deviceName" onchange="SelectionUpdateDevice()">
+        <select name="selectedDevice" class="form-control" id="deviceSelect" onchange="SelectionUpdateDevice()">
             @foreach (var device in Model.DeviceModels)
             {
                 <option name="deviceName" value="@device.deviceID">@device.Name</option>
             }
         </select>
-        <hr/>
+        <hr />
+        <br/>
+        <h3 class="display-6">Funktion hinzufügen</h3>
         @{
             if (Model != null)
             {
@@ -33,73 +37,94 @@
                 }
             }
         }
-        <form method="post" asp-controller="Device" asp-action="addDeviceFunction" style="margin-top: 1rem;" >
-            <div>
-                <input type="hidden" id="deviceAddID" name="deviceID" value=""/>
+        <form method="post" asp-controller="Device" asp-action="addDeviceFunction" style="margin-top: 1rem;">
+            <div style="margin-top: 2rem">
+                <input type="hidden" id="deviceAddID" name="deviceID" value="" />
                 <div id="Functionname" style="display: inline-block; float: left; width: 32%;">
                     <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionname">Funktionsname</label>
-                    <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Funktionsname eingeben"/>
+                    <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Funktionsname eingeben" />
                 </div>
                 <div id="Functionname" style="display: inline-block; width: 32%; font-family: 'Roboto Medium';">
                     <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionpin">GPIO-Pin</label>
-                    <input type="text" class="form-control" id="functionpin" name="functionpin" placeholder="GPIO-Pin eingeben"/>
+                    <input type="text" class="form-control" id="functionpin" name="functionpin" placeholder="GPIO-Pin eingeben" />
                 </div>
                 <div id="Functionname" style="display: inline-block; float: right; width: 32%;">
                     <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">Speichern</label>
-                    <input type="submit" class="btn btn-info" style="width: 100%" id="Bestätigen" value="Funktion Hinzufügen"/>
+                    <input type="submit" class="btn btn-info" style="width: 100%" id="Bestätigen" value="Funktion Hinzufügen" />
+                </div>
+            </div>
+        </form>
+        <br />
+        <hr />
+        <h3 class="display-6">Funktion bearbeiten</h3>
+        <form style="margin-top: 1rem;">
+            <div style="margin-top: 2rem">
+                <div id="SelectFunctionEdit" style="display: inline-block; width: 25%; margin-right: 2%">
+                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Funktion auswählen</label>
+                    <select name="deviceFunctions" class="form-control" id="deviceFunctions" onchange="SelectionUpdateFunctionEdit()"><option value="0">Vibrator</option><option value="0">Vibrator</option></select>
+                </div>
+                <div style="display: inline-block; width: 25%; margin-right: 2%;">
+                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionnameEdit">Funktionsname</label>
+                    <input type="text" class="form-control" id="functionnameEdit" name="functionnameEdit" placeholder="Funktionsname">
+                </div>
+                <div style="display: inline-block; width: 10%; margin-right: 2%;">
+                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="pinEdit">GPIO-PIN</label>
+                    <input type="text" class="form-control" id="pinEdit" name="pinEdit" placeholder="GPIO-PIN">
+                </div>
+                <div style="display: inline-block; width: 15%; margin-right: 2%">
+                    <br>
+                    <input type="submit" class="btn btn-info" style="width: 100%" id="BestätigenEdit" value="Speichern">
+                </div>
+                <div style="display: inline-block; width: 15%;">
+                    <br>
+                    <br>
+                    <input type="submit" class="btn btn-danger" style="width: 100%" id="BstätigenDelete" value="Löschen">
                 </div>
             </div>
         </form>
         <hr />
-        <form style="margin-top: 1rem;">
-            <div>
-                <div id="SelectFunction">
-                    <label>Funktion Auswählen</label>
-                     <select name="deviceFunctions" class="form-control" id="deviceFunctions" name="deviceFunctions" onchange="SelectionUpdateFunction()">
-                     </select>
-                </div>
-                
-            </div>
-        </form>
-        <!--
-        Tabell wo die funktionen des ausgewählten gerätes aufgelistet werden
-        -->
         <script type="text/javascript">
-             
+
             var devices = new Array();
             @foreach (var device in Model.DeviceModels)
             {
                 @:devices.push({
                 @:deviceFunctions: [
                 @if(device.DeviceFunctions != null)
-                    foreach (var fun in device.DeviceFunctions) 
-                    { 
-                        @:{ GPIO: @(fun.GPIO_PIN), Name: @(fun.functionname), ID:@(fun.functionID)},
+                    foreach (var fun in device.DeviceFunctions)
+                    {
+                        @:{ GPIO: @(fun.GPIO_PIN), Name: "@(fun.functionname)", ID:@(fun.functionID)},
                     }@:],
                 @:id: "@(device.deviceID)", name: "@(device.Name)", description: "@(device.description)", type: "@(device.Type)", location: "@(device.Location)", port: "@(device.port)", ip: "@(device.ip)"
                 @:});
 
             }
             SelectionUpdateDevice();
+
             function SelectionUpdateDevice() {
-                var deviceID= document.getElementById("deviceSelect").value;
-                for (i = 0; i < devices.length; i++)
-                {
+                var deviceID = document.getElementById("deviceSelect").value;
+                for (i = 0; i < devices.length; i++) {
                     if (devices[i].id == deviceID) {
                         var deviceFunctions = document.getElementById("deviceFunctions");
+                        deviceFunctions.innerHTML = "";
                         var hiddenID = document.getElementById("deviceAddID");
                         hiddenID.value = devices[i].id;
-                        /*for(let dvcFunc of deviceFunctions)
-                        var option = deviceFunctions.createElement("option");
-                        option.text = 
-                        
-                        option.value = 
-                        
-                        return;*/
+                        for (let dvcFunc of devices[i].deviceFunctions) {
+                            var option = document.createElement("option");
+                            option.text = dvcFunc.Name;
+                            option.value = dvcFunc.ID;
+                            deviceFunctions.appendChild(option);
+                        }
+                        return;
 
                     }
                 }
             }
+
+            function SelectionUpdateFunctionEdit() {
+
+            }
         </script>
+         
         <script src="../js/DeviceStatus.js"></script>
     </div>
