@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using Exception = System.Exception;
+using SmartHomeProject.Connections;
 
 namespace SmartHomeProject.Models
 {
@@ -12,11 +13,11 @@ namespace SmartHomeProject.Models
     {
         public DeviceModel()
         {
-            
+            connection = new Connections.Connections(ip, port);
         }
         public DeviceModel(string ip, int port)
         {
-            
+            connection = new Connections.Connections(ip, port);
             this.ip = ip;
             this.port = port;
         }
@@ -65,7 +66,7 @@ namespace SmartHomeProject.Models
             }
         }
 
-    
+        public Connections.Connections connection { get; private set; }
         public List<DeviceModelFunction> DeviceFunctions { get; set; }
 
         public void addDeviceModelFunction(int functionID, byte GPIO_PIN, string functionname, string location)
@@ -75,7 +76,7 @@ namespace SmartHomeProject.Models
                 DeviceFunctions = new List<DeviceModelFunction>();
             }
 
-            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location));
+            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, connection));
         }
         public class DeviceModelFunction
         {
@@ -84,24 +85,47 @@ namespace SmartHomeProject.Models
             public string functionname { get; set; }
             public string location { get; set; }
             public bool status { get; set; }
-            
+            private Connections.Connections connection;
 
-            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location)
+            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, Connections.Connections connection)
             {
                 this.GPIO_PIN = GPIO_PIN;
                 this.functionname = functionname;
                 this.location = location;
+                this.connection = connection;
                 this.functionID = id;
+                status = getStatus();
 
             }
 
-            public bool getStatus(int pin) 
+            public bool getStatus()
             {
-                //Hier muss das aus Conections die sendmessage methode aufgerufen werden
-                // sendMessage("Status:", pin)
-                return false;
-
+                try
+                {
+                    //TODO PORT RANDOM GENERIEREN
+                    /*TcpListener listener = new TcpListener(IPAddress.Any, 334);
+                    connection.SendMessage("Status", GPIO_PIN);
+                    listener.Start();
+                    TcpClient client = listener.AcceptTcpClient();
+                    NetworkStream stream = client.GetStream();
+                    byte[] bytes = new byte[1024];
+                    stream.Read(bytes, 0, bytes.Length);
+                    stream.Close();
+                    client.Close();
+                    return BitConverter.ToInt32(bytes) == 1;*/
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
             }
+
+            public void executeFunction()
+            {
+                connection.SendMessage("Switch",  GPIO_PIN);
+            }
+
         }
     }
 }

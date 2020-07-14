@@ -12,20 +12,18 @@ namespace SmartHomeProject.Connections
     {
         string _ip;
         int _port;
-        string _name;
-        public Connections(string ip, int port, string name ){
+        
+        public Connections(string ip, int port){
+            
             this._port = port;
             this._ip = ip;
-            this._name = name;
+          
 
         }
 
-        public string getName()
-        {
-            return this._name;
-        }
+       
 
-        public void SendMessage(string operation,string pin){
+        public void SendMessage(string operation, byte pin){
             
             TcpClient client = new TcpClient(this._ip,this._port);
 
