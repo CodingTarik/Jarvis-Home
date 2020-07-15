@@ -49,13 +49,39 @@ namespace SmartHomeProject.Controllers
             return View("DeviceFunctions", pageModel);
         }
         [HttpPost]
-        public IActionResult ControlFunction(int functionID) 
+        public IActionResult ControlFunction(int functionID, string deviceName) 
         {
-            Console.WriteLine("Test");
-            Console.WriteLine(functionID);
-
+           
             ControlModel pageModel = new ControlModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+            DeviceManageModel modelsD = new DeviceManageModel() { DeviceModels = DatabaseManager.getDeviceModels() };
 
+            
+            for( int i = 0; i < modelsD.DeviceModels.Length; i++)
+            {
+            
+                if(modelsD.DeviceModels[i].Name == deviceName)
+                {
+                    for(int k = 0; k < modelsD.DeviceModels[i].DeviceFunctions.Count; k++)
+                    {
+                    
+                        if(modelsD.DeviceModels[i].DeviceFunctions[k].functionID == functionID)
+                            {
+                            //Hier müsste dann an den server geschickt werden und der state geändert werden umgehe das erstmal
+                            modelsD.DeviceModels[i].DeviceFunctions[k].setFunctionState();
+
+                            }
+
+                    }    
+
+                
+                }
+
+
+            }
+            
+
+
+            
             return View("JarvisControl", pageModel);
             
 
@@ -64,6 +90,7 @@ namespace SmartHomeProject.Controllers
         [HttpPost]
         public IActionResult EditDeviceSettings(string selectedDevice, string deviceNameNew, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
+            Console.WriteLine("DESCRIPTION: " + deviceDescription);
             bool result = DatabaseManager.UpdateDevice(selectedDevice, deviceNameNew, deviceType, deviceDescription,
                 deviceIP, devicePort, deviceLocation);
             DeviceEditModel pageModel = new DeviceEditModel() { selectedDevice = deviceNameNew, DeviceModels = DatabaseManager.getDeviceModels(), deviceNameEdited = selectedDevice, editingFailed = !result };
@@ -92,6 +119,48 @@ namespace SmartHomeProject.Controllers
         {
             DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels(), selectedDeviceName = model };
             return View("EditDevice", pageModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditDeviceFunction(int deviceFunctions, string functionnameEdit, int pinEdit, string method)
+        {
+            
+            bool editResult = false;
+            bool save = false;
+            bool delete = false;
+            bool deleteResult = false;
+            Console.WriteLine("Speichere...2222");
+            Console.WriteLine("Methode"+method);
+            if (method == "Speichern")
+            {
+                save = true;
+                try
+                {
+                    Console.WriteLine("Speichere...");
+                    editResult = DatabaseManager.UpdateDeviceFunction(deviceFunctions, functionnameEdit, (byte)pinEdit, null);
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine(e);
+                    editResult = false;
+                }
+               
+            }
+            else if (method == "Löschen")
+            {
+                delete = true;
+                try
+                {
+                    deleteResult = DatabaseManager.DeleteDeviceFunction(deviceFunctions);
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine(e);
+                    deleteResult = false;
+                }
+            }
+            DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), functionEdited = save, functionEditSuccess = editResult, functionDelete = delete, functionDeleteSuccess = deleteResult, functionNameAdded = functionnameEdit };
+            return View("DeviceFunctions", pageModel);
         }
         [HttpPost]
         public IActionResult DeleteDevice(string returnUrl, string model)

@@ -4,86 +4,119 @@
     ViewData["Title"] = "Home Page";
 }
 
-    <div class="text-center">
-        <h1 class="display-4">Gerätefunktionen verwalten</h1>
-        <hr />
-        <br />
-        <h3 class="display-6">Gerät auswählen</h3>
-        <select name="selectedDevice" class="form-control" id="deviceSelect" onchange="SelectionUpdateDevice()">
-            @foreach (var device in Model.DeviceModels)
+<div class="text-center">
+    <h1 class="display-4">Gerätefunktionen verwalten</h1>
+    <hr />
+    <br />
+    <h3 class="display-6">Gerät auswählen</h3>
+    <select name="selectedDevice" class="form-control" id="deviceSelect" onchange="SelectionUpdateDevice()">
+        @foreach (var device in Model.DeviceModels)
+        {
+        <option name="deviceName" value="@device.deviceID">@device.Name</option>
+        }
+    </select>
+    <hr />
+    <br />
+    <h3 class="display-6">Funktion hinzufügen</h3>
+    @{
+        if (Model != null)
+        {
+        if (Model.addedFunction && Model.addedSuccess)
+        {
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Hinzufügen erfolgreich!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> wurde erfolgreich hinzugefügt.
+        </div>
+        }
+        else if (Model.addedFunction && !Model.addedSuccess)
+        {
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Hinzufügen nicht erfolgreich!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> konnte nicht hinzugefügt werden.
+        </div>
+        }
+        }
+    }
+    <form method="post" asp-controller="Device" asp-action="addDeviceFunction" style="margin-top: 1rem;">
+        <div style="margin-top: 2rem">
+            <input type="hidden" id="deviceAddID" name="deviceID" value="" />
+            <div id="Functionname" style="display: inline-block; float: left; width: 32%;">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionname">Funktionsname</label>
+                <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Funktionsname eingeben" />
+            </div>
+            <div id="Functionname" style="display: inline-block; width: 32%; font-family: 'Roboto Medium';">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionpin">GPIO-Pin</label>
+                <input type="text" class="form-control" id="functionpin" name="functionpin" placeholder="GPIO-Pin eingeben" />
+            </div>
+            <div id="Functionname" style="display: inline-block; float: right; width: 32%;">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">Speichern</label>
+                <input type="submit" class="btn btn-info" style="width: 100%" id="Bestätigen" value="Funktion Hinzufügen" />
+            </div>
+        </div>
+    </form>
+    <br />
+    <hr />
+    <h3 class="display-6">Funktion bearbeiten</h3>
+    @{
+        if (Model != null)
+        {
+            if (Model.functionEdited && Model.functionEditSuccess)
             {
-                <option name="deviceName" value="@device.deviceID">@device.Name</option>
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Bearbeiten erfolgreich!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> wurde erfolgreich bearbeitet.
+                </div>
             }
-        </select>
-        <hr />
-        <br/>
-        <h3 class="display-6">Funktion hinzufügen</h3>
-        @{
-            if (Model != null)
+            else if (Model.functionEdited && !Model.functionEditSuccess)
             {
-                if (Model.addedFunction && Model.addedSuccess)
-                {
-                    <div class="alert alert-dismissible alert-success">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>Hinzufügen erfolgreich!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> wurde erfolgreich hinzugefügt.
-                    </div>
-                }
-                else if (Model.addedFunction && !Model.addedSuccess)
-                {
-                    <div class="alert alert-dismissible alert-danger">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>Hinzufügen nicht erfolgreich!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> konnte nicht hinzugefügt werden.
-                    </div>
-                }
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Bearbeitung nicht erfolgreich!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> konnte nicht bearbeitet werden.
+                </div>
+            }
+            else if (Model.functionDelete && Model.functionDeleteSuccess)
+            {
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Löschung erfolgreich!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> wurde erfolgreich gelöscht.
+                </div>
+            }
+            else if (Model.functionDelete && !Model.functionDeleteSuccess)
+            {
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Löschung nicht erfolgreich!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> konnte nicht gelöscht werden.
+                </div>
             }
         }
-        <form method="post" asp-controller="Device" asp-action="addDeviceFunction" style="margin-top: 1rem;">
-            <div style="margin-top: 2rem">
-                <input type="hidden" id="deviceAddID" name="deviceID" value="" />
-                <div id="Functionname" style="display: inline-block; float: left; width: 32%;">
-                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionname">Funktionsname</label>
-                    <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Funktionsname eingeben" />
-                </div>
-                <div id="Functionname" style="display: inline-block; width: 32%; font-family: 'Roboto Medium';">
-                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionpin">GPIO-Pin</label>
-                    <input type="text" class="form-control" id="functionpin" name="functionpin" placeholder="GPIO-Pin eingeben" />
-                </div>
-                <div id="Functionname" style="display: inline-block; float: right; width: 32%;">
-                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">Speichern</label>
-                    <input type="submit" class="btn btn-info" style="width: 100%" id="Bestätigen" value="Funktion Hinzufügen" />
-                </div>
+    }
+    <form asp-controller="Device" asp-action="EditDeviceFunction" method="post" style="margin-top: 1rem;">
+        <div style="margin-top: 2rem">
+            <div id="SelectFunctionEdit" style="display: inline-block; width: 25%; margin-right: 2%">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Funktion auswählen</label>
+                <select name="deviceFunctions" class="form-control" id="deviceFunctions" onchange="SelectionUpdateFunctionEdit()"></select>
             </div>
-        </form>
-        <br />
-        <hr />
-        <h3 class="display-6">Funktion bearbeiten</h3>
-        <form style="margin-top: 1rem;">
-            <div style="margin-top: 2rem">
-                <div id="SelectFunctionEdit" style="display: inline-block; width: 25%; margin-right: 2%">
-                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Funktion auswählen</label>
-                    <select name="deviceFunctions" class="form-control" id="deviceFunctions" onchange="SelectionUpdateFunctionEdit()"><option value="0">Vibrator</option><option value="0">Vibrator</option></select>
-                </div>
-                <div style="display: inline-block; width: 25%; margin-right: 2%;">
-                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionnameEdit">Funktionsname</label>
-                    <input type="text" class="form-control" id="functionnameEdit" name="functionnameEdit" placeholder="Funktionsname">
-                </div>
-                <div style="display: inline-block; width: 10%; margin-right: 2%;">
-                    <label style="font-weight: bold; font-family: 'Roboto Medium';" for="pinEdit">GPIO-PIN</label>
-                    <input type="text" class="form-control" id="pinEdit" name="pinEdit" placeholder="GPIO-PIN">
-                </div>
-                <div style="display: inline-block; width: 15%; margin-right: 2%">
-                    <br>
-                    <input type="submit" class="btn btn-info" style="width: 100%" id="BestätigenEdit" value="Speichern">
-                </div>
-                <div style="display: inline-block; width: 15%;">
-                    <br>
-                    <br>
-                    <input type="submit" class="btn btn-danger" style="width: 100%" id="BstätigenDelete" value="Löschen">
-                </div>
+            <div style="display: inline-block; width: 25%; margin-right: 2%;">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionnameEdit">Funktionsname</label>
+                <input type="text" class="form-control" id="functionnameEdit" name="functionnameEdit" placeholder="Funktionsname">
             </div>
-        </form>
-        <hr />
-        <script type="text/javascript">
+            <div style="display: inline-block; width: 10%; margin-right: 2%;">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="pinEdit">GPIO-PIN</label>
+                <input type="text" class="form-control" id="pinEdit" name="pinEdit" placeholder="GPIO-PIN">
+            </div>
+            <!-- umbenennen von Buttons "value" könnte zu Problemen führen-->
+            <div style="display: inline-block; width: 15%; margin-right: 2%">
+                <br>
+                <input type="submit" class="btn btn-info" style="width: 100%" id="BestätigenEdit" name="method" value="Speichern">
+            </div>
+            <div style="display: inline-block; width: 15%;">
+                <br>
+                <input type="submit" class="btn btn-danger" style="width: 100%" id="BstätigenDelete" name="method" value="Löschen">
+            </div>
+        </div>
+    </form>
+    <hr />
+    <script type="text/javascript">
 
             var devices = new Array();
             @foreach (var device in Model.DeviceModels)
@@ -100,7 +133,7 @@
 
             }
             SelectionUpdateDevice();
-
+            SelectionUpdateFunctionEdit();
             function SelectionUpdateDevice() {
                 var deviceID = document.getElementById("deviceSelect").value;
                 for (i = 0; i < devices.length; i++) {
@@ -122,9 +155,22 @@
             }
 
             function SelectionUpdateFunctionEdit() {
-
+                var deviceID = document.getElementById("deviceSelect").value;
+                var option = document.getElementById("deviceFunctions").value;
+                for (i = 0; i < devices.length; i++) {
+                    if (devices[i].id == deviceID) {
+                        for (let dvcFunc of devices[i].deviceFunctions) {
+                            console.log(option + " " + dvcFunc.ID);
+                            if (dvcFunc.ID == option) {
+                                document.getElementById("functionnameEdit").value = dvcFunc.Name;
+                                document.getElementById("pinEdit").value = dvcFunc.GPIO;
+                            }
+                        }
+                    }
+                }
             }
-        </script>
-         
-        <script src="../js/DeviceStatus.js"></script>
-    </div>
+
+    </script>
+
+    <script src="../js/DeviceStatus.js"></script>
+</div>
