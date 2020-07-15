@@ -3,34 +3,40 @@
     ViewData["Title"] = "Jarvis Control";
 }
 
-    <html>
-    @foreach (var device in Model.DeviceModels)
-    {   
-        
-        <h1>@device.Name</h1>
-        if (@device.DeviceFunctions == null)
-        {
-                   
+
+@foreach (var device in Model.DeviceModels)
+{
+
+    <h1>@device.Name</h1>
+    if (@device.DeviceFunctions == null)
+    {
+
         <hr />
-        }
-        else
+    }
+    else
+    {
+
+        foreach (var funtion in device.DeviceFunctions)
         {
 
-            foreach (var funtion in device.DeviceFunctions)
-            {
-                <div class="card text-white bg-success mb-3" id="(@device.Name@funtion.functionID)card" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
+
+            <div class="card text-white bg-success mb-3" id="(@device.Name@funtion.functionID)card" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
+                <form asp-controller="Device" asp-action="ControlFunction" method="post">
                     <div class="card-header"><h1>@funtion.functionname</h1></div>
-                        <div class="card-body">
-                            <input type="submit" id="(@device.Name@funtion.functionID)button" value="Ausschalten" class="btn btn-danger" />
-                            
+                        <input type="hidden" value="@funtion.functionID" name="functionID"/>
+                    <div class="card-body">
+
+                        <input type="submit" id="(@device.Name@funtion.functionID)button" value="Ausschalten" class="btn btn-danger" />
+
                     </div>
-                </div>
-            }
-            <hr />
+                </form>
+            </div>
+            
         }
+        <hr />
     }
-    <script src="../lib/jquery/dist/jquery.min.js"></script>
-    <script src="../js/JarvisRefresh.js"></script>
-    
-    </html>
-    
+}
+<script src="../lib/jquery/dist/jquery.min.js"></script>
+<script src="../js/JarvisRefresh.js"></script>
+
+

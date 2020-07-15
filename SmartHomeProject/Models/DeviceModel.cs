@@ -34,6 +34,8 @@ namespace SmartHomeProject.Models
         public int port { get; set; }
         public string ip { get; set; }
 
+        
+
         public bool OnlineStatus
         {
             get
@@ -96,6 +98,18 @@ namespace SmartHomeProject.Models
                 this.functionID = id;
                 status = getStatus();
 
+            }
+
+            public void setFunctionState() 
+            {
+                if (this.status == true) 
+                {
+                    this.status = false;
+                }
+                else 
+                {
+                    this.status = true;
+                }
             }
 
             public bool getStatus()
