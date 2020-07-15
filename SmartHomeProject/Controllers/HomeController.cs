@@ -18,6 +18,12 @@ namespace SmartHomeProject.Controllers
         {
             _logger = logger;
         }
+        [HttpGet]
+        public IActionResult Donation() 
+        {
+            return View();
+        }
+
 
        [HttpGet]
         public IActionResult Index()

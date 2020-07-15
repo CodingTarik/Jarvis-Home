@@ -182,3 +182,4 @@ C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netc
 C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\Razor\Views\Device\JarvisControl.cshtml.g.cs
 C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\Razor\Views\Device\DeviceFunctions.cshtml.g.cs
 C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\Razor\Views\Device\JarvisControl.cshtml.g.cs
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\Razor\Views\Home\Donation.cshtml.g.cs
