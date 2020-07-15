@@ -100,17 +100,7 @@ namespace SmartHomeProject.Models
 
             }
 
-            public void setFunctionState() 
-            {
-                if (this.status == true) 
-                {
-                    this.status = false;
-                }
-                else 
-                {
-                    this.status = true;
-                }
-            }
+      
 
             public bool getStatus()
             {
