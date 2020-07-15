@@ -143,6 +143,49 @@ namespace SmartHomeProject.ConnectionManager
          
         }
 
+        internal static bool UpdateDeviceFunction(int functionID, string functionname, byte GPIO_PIN, string location)
+        {
+            try
+            {
+                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                sqlQuery.CommandText = @"UPDATE deviceFunctions
+                SET Functionname = @functionname, GPIO_PIN = @GPIO_PIN, LOCATION = @location
+                WHERE FunctionID = @functionID";
+                sqlQuery.Parameters.AddWithValue("@functionID", functionID);
+                sqlQuery.Parameters.AddWithValue("@functionname", functionname);
+                sqlQuery.Parameters.AddWithValue("@GPIO_PIN", GPIO_PIN);
+                sqlQuery.Parameters.AddWithValue("@location", location);
+                sqlQuery.Prepare();
+                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message);
+                return false;
+            }
+          
+        }
+
+        internal static bool DeleteDeviceFunction(int functionID)
+        {
+            try
+            {
+                //webDBConnection.Open();
+                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                sqlQuery.CommandText = @"DELETE FROM deviceFunctions WHERE FunctionID = @FunctionID";
+                sqlQuery.Parameters.AddWithValue("@FunctionID", functionID);
+                sqlQuery.Prepare();
+                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                //webDBConnection.Close();
+                return result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Fehler: " + e.Message);
+                return false;
+            }
+        }
         internal static bool AddFunctionToDevice(int deviceid, string functionname, byte GPIO_PIN)
         {
             try
@@ -185,6 +228,7 @@ namespace SmartHomeProject.ConnectionManager
                         description = resultReader.GetString(2),
                         deviceID = resultReader.GetInt32(6)
                     };
+                    Console.WriteLine("MO:"+model.description);
                     SQLiteCommand functionQuery = new SQLiteCommand(webDBConnection);
                     functionQuery.CommandText = @"SELECT * FROM deviceFunctions WHERE deviceFunctions.DeviceID = @DeviceID";
                     functionQuery.Parameters.AddWithValue("@DeviceID", model.deviceID);

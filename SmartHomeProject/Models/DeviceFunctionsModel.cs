@@ -13,5 +13,9 @@ namespace SmartHomeProject.Models
         public string functionNameAdded { get; set; }
         public bool addedFunction { get; set; }
         public bool addedSuccess { get; set; }
+        public bool functionEdited { get;  set; }
+        public bool functionEditSuccess { get;  set; }
+        public bool functionDelete { get;  set; }
+        public bool functionDeleteSuccess { get; set; }
     }
 }

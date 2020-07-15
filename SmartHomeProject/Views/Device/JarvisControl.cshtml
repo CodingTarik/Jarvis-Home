@@ -23,7 +23,8 @@
             <div class="card text-white bg-success mb-3" id="(@device.Name@funtion.functionID)card" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
                 <form asp-controller="Device" asp-action="ControlFunction" method="post">
                     <div class="card-header"><h1>@funtion.functionname</h1></div>
-                        <input type="hidden" value="@funtion.functionID" name="functionID"/>
+                    <input type="hidden" value="@funtion.functionID" name="functionID" />
+                    <input type="hidden" value="@device.Name" name="deviceName" />
                     <div class="card-body">
 
                         <input type="submit" id="(@device.Name@funtion.functionID)button" value="Ausschalten" class="btn btn-danger" />

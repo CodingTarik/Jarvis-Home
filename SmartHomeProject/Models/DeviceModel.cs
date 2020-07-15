@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using Exception = System.Exception;
-using SmartHomeProject.Connections;
 
 namespace SmartHomeProject.Models
 {
@@ -96,11 +95,23 @@ namespace SmartHomeProject.Models
                 this.location = location;
                 this.connection = connection;
                 this.functionID = id;
-                status = getStatus();
+                status = false; //getStatus();
 
             }
 
-      
+            public void setFunctionState()
+            {
+                if (status == true)
+                {
+                    status = false;
+                }
+                else
+                {
+                    status = true;
+                }
+            }
+
+
 
             public bool getStatus()
             {
