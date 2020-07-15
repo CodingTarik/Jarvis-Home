@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SmartHomeProject.ConnectionManager;
 using SmartHomeProject.Models;
@@ -47,6 +48,19 @@ namespace SmartHomeProject.Controllers
             DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), addedFunction = true, addedSuccess = result, deviceSelected = true, functionNameAdded = functionname, selectedDeviceID = deviceID};
             return View("DeviceFunctions", pageModel);
         }
+        [HttpPost]
+        public IActionResult ControlFunction(int functionID) 
+        {
+            Console.WriteLine("Test");
+            Console.WriteLine(functionID);
+
+            ControlModel pageModel = new ControlModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+
+            return View("JarvisControl", pageModel);
+            
+
+        }
+
         [HttpPost]
         public IActionResult EditDeviceSettings(string selectedDevice, string deviceNameNew, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
