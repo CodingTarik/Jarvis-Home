@@ -83,7 +83,7 @@ namespace SmartHomeProject.Models
         }
         public class DeviceModelFunction
         {
-            private const double TIMEOUTMILSECONDS = 100;
+            private const double TIMEOUTMILSECONDS = 250;
             public int functionID { get; set; }
             public byte GPIO_PIN { get; private set; }
             public string functionname { get; set; }
