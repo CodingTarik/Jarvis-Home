@@ -108,9 +108,10 @@ namespace SmartHomeProject.Models
             {
                 try
                 {
-                    var task = System.Threading.Tasks.Task.Run(() => connection.SendMessage("Status", GPIO_PIN));
+                    var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Status", GPIO_PIN));
                     if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
                     {
+                       
                         return task.Result;
                     }
                     else
@@ -119,6 +120,7 @@ namespace SmartHomeProject.Models
                         return false;
                     }
 
+                   
                 }
                 catch (Exception ex)
                 {
@@ -130,7 +132,7 @@ namespace SmartHomeProject.Models
             {
                 try
                 {
-                    var task = System.Threading.Tasks.Task.Run(() => connection.SendMessage("Switch", GPIO_PIN));
+                    var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Switch",  GPIO_PIN));
                     if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
                     {
                         return task.Result;
@@ -146,6 +148,8 @@ namespace SmartHomeProject.Models
                 {
                     return false;
                 }
+
+                 
 
             }
 
