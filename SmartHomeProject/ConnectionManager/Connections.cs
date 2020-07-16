@@ -23,7 +23,7 @@ namespace SmartHomeProject.Connections
 
        
 
-        public void SendMessage(string operation, byte pin){
+        public bool SendMessage(string operation, byte pin){
             
             TcpClient client = new TcpClient(this._ip,this._port);
 
@@ -38,11 +38,42 @@ namespace SmartHomeProject.Connections
             NetworkStream stream = client.GetStream();
 
             stream.Write(sendDater,0,sendDater.Length);
-
             
-
             stream.Close();    
             client.Close();
+
+            TcpListener listener = new TcpListener(IPAddress.Any, 334);
+            listener.Start();
+            TcpClient clientrecv = listener.AcceptTcpClient();
+            NetworkStream streamrecv = client.GetStream();
+            byte[] bytes = new byte[1024];
+            stream.Read(bytes, 0, bytes.Length);
+            stream.Close();
+            client.Close();
+            return BitConverter.ToInt32(bytes) == 1;
+
+        }
+
+        public bool recvMessage() 
+        {
+            try
+            {
+                TcpListener listener = new TcpListener(IPAddress.Any, 334);
+                listener.Start();
+                TcpClient client = listener.AcceptTcpClient();
+                NetworkStream stream = client.GetStream();
+                byte[] bytes = new byte[1024];
+                stream.Read(bytes, 0, bytes.Length);
+                stream.Close();
+                client.Close();
+                return BitConverter.ToInt32(bytes) == 1;
+            }
+
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+           
         }
 
         

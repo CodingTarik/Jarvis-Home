@@ -67,7 +67,7 @@ namespace SmartHomeProject.Controllers
                         if(modelsD.DeviceModels[i].DeviceFunctions[k].functionID == functionID)
                             {
                             //Hier müsste dann an den server geschickt werden und der state geändert werden umgehe das erstmal
-                            modelsD.DeviceModels[i].DeviceFunctions[k].setFunctionState();
+                            modelsD.DeviceModels[i].DeviceFunctions[k].executeFunction();
 
                             }
 
