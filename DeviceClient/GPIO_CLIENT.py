@@ -11,20 +11,23 @@ def waitForMessage():
         msg = clientsocket.recv(1024)
         print(msg)
         msgsplit = msg.split(":")
-        print(msgsplit)
-
+        s.close
+        print(getGPIOState(int(msgsplit[1])))
+        se = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        se.connect((address[0],int(msgsplit[2])))
         if msgsplit[0] == "Switch":
             switchGPIOState(int(msgsplit[1]))
             print(msgsplit)
             state = getGPIOState(int(msgsplit[1]))
-            clientsocket.send(str.encode(state))
+            se.send(str.encode(state))
 
         elif msgsplit[0] == "Status":
             print(msgsplit)
             state = getGPIOState(int(msgsplit[1]))
-            clientsocket.send(str.encode(state))
+            print(getGPIOState(int(msgsplit[1])))
+            se.send(str.encode(state))
         else:
-            clientsocket.send(str.encode("Layer-8-Error"))
+            se.send(str.encode("Layer-8-Error"))
        
         
 def getGPIOState(gpioToCheck):

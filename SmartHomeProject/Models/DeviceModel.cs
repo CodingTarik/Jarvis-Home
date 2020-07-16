@@ -104,7 +104,7 @@ namespace SmartHomeProject.Models
             {
                 try
                 {
-                   return connection.SendMessage("Status", GPIO_PIN);
+                   return connection.recvMessage("Status", GPIO_PIN);
                 }
                 catch (Exception ex)
                 {
@@ -114,7 +114,7 @@ namespace SmartHomeProject.Models
 
             public void executeFunction()
             {
-                connection.SendMessage("Switch",  GPIO_PIN);
+                connection.recvMessage("Switch",  GPIO_PIN);
             }
 
         }
