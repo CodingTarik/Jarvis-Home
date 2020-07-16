@@ -94,41 +94,18 @@ namespace SmartHomeProject.Models
                 this.functionname = functionname;
                 this.location = location;
                 this.connection = connection;
-                functionID = id;
-                status = false; //getStatus();
+                this.functionID = id;
+                status = getStatus();
+
 
             }
-
-            public void setFunctionState()
-            {
-                if (status == true)
-                {
-                    status = false;
-                }
-                else
-                {
-                    status = true;
-                }
-            }
-
 
 
             public bool getStatus()
             {
                 try
                 {
-                    //TODO PORT RANDOM GENERIEREN
-                    /*TcpListener listener = new TcpListener(IPAddress.Any, 334);
-                    connection.SendMessage("Status", GPIO_PIN);
-                    listener.Start();
-                    TcpClient client = listener.AcceptTcpClient();
-                    NetworkStream stream = client.GetStream();
-                    byte[] bytes = new byte[1024];
-                    stream.Read(bytes, 0, bytes.Length);
-                    stream.Close();
-                    client.Close();
-                    return BitConverter.ToInt32(bytes) == 1;*/
-                    return false;
+                   return connection.SendMessage("Status", GPIO_PIN);
                 }
                 catch (Exception ex)
                 {

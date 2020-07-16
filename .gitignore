@@ -8,6 +8,8 @@
 *.pdb
 *.suo
 *.dll.config
+**/bin/Debug/
+**/obj/Debug/
 *.cache
 *.suo
 # Include dlls if they’re in the NuGet packages directory
