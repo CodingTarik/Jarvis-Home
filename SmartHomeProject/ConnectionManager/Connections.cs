@@ -29,9 +29,9 @@ namespace SmartHomeProject.Connections
         {
             try
             {
-            TcpClient client = new TcpClient(this._ip, this._port);
+                TcpClient client = new TcpClient(this._ip, this._port);
 
-            string message = operation + ":" + pin + ":" + port;
+                string message = operation + ":" + pin + ":" + port;
 
                 int byteCount = Encoding.ASCII.GetByteCount(message);
 
@@ -41,15 +41,16 @@ namespace SmartHomeProject.Connections
 
                 NetworkStream stream = client.GetStream();
 
-            stream.Write(sendDater, 0, sendDater.Length);
+                stream.Write(sendDater, 0, sendDater.Length);
 
-            stream.Close();
-            client.Close();
-            } catch(Exception ex)
-            {
-                
+                stream.Close();
+                client.Close();
             }
-            
+            catch (Exception ex)
+            {
+
+            }
+
 
 
         }
@@ -60,12 +61,12 @@ namespace SmartHomeProject.Connections
 
             try
             {
-                int port = 456; 
+                int port = 456;
                 bool isAvailable = false;
                 var rand = new Random();
                 IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
                 TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
-                while (isAvailable == false) 
+                while (isAvailable == false)
                 {
                     port = rand.Next(1024, 65535);
 
@@ -88,14 +89,13 @@ namespace SmartHomeProject.Connections
                             stream.Read(bytes, 0, bytes.Length);
                             stream.Close();
                             client.Close();
-                            Console.WriteLine(BitConverter.ToInt32(bytes));
-                            return BitConverter.ToInt32(bytes) == 1;
+                            return BitConverter.ToInt32(bytes) == 49;
 
                         }
                     }
-                } 
+                }
                 return false;
-                
+
             }
 
             catch (Exception ex)
