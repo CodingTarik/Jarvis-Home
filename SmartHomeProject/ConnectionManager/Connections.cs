@@ -24,33 +24,41 @@ namespace SmartHomeProject.Connections
        
 
         public bool SendMessage(string operation, byte pin){
-            
-            TcpClient client = new TcpClient(this._ip,this._port);
+            try
+            {
+                TcpClient client = new TcpClient(this._ip, this._port);
 
-            string message = operation + ":" + pin;
+                string message = operation + ":" + pin;
 
-            int byteCount = Encoding.ASCII.GetByteCount(message);
+                int byteCount = Encoding.ASCII.GetByteCount(message);
 
-            byte[] sendDater = new byte[byteCount];
+                byte[] sendDater = new byte[byteCount];
 
-            sendDater = Encoding.ASCII.GetBytes(message);
+                sendDater = Encoding.ASCII.GetBytes(message);
 
-            NetworkStream stream = client.GetStream();
+                NetworkStream stream = client.GetStream();
 
-            stream.Write(sendDater,0,sendDater.Length);
-            
-            stream.Close();    
-            client.Close();
+                stream.Write(sendDater, 0, sendDater.Length);
 
-            TcpListener listener = new TcpListener(IPAddress.Any, 334);
-            listener.Start();
-            TcpClient clientrecv = listener.AcceptTcpClient();
-            NetworkStream streamrecv = client.GetStream();
-            byte[] bytes = new byte[1024];
-            stream.Read(bytes, 0, bytes.Length);
-            stream.Close();
-            client.Close();
-            return BitConverter.ToInt32(bytes) == 1;
+                stream.Close();
+                client.Close();
+
+                TcpListener listener = new TcpListener(IPAddress.Any, 334);
+                listener.Start();
+                TcpClient clientrecv = listener.AcceptTcpClient();
+                NetworkStream streamrecv = client.GetStream();
+                byte[] bytes = new byte[1024];
+                stream.Read(bytes, 0, bytes.Length);
+                stream.Close();
+                client.Close();
+                return BitConverter.ToInt32(bytes) == 1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+           
 
         }
 
