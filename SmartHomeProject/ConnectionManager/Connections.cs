@@ -56,12 +56,11 @@ namespace SmartHomeProject.Connections
             try
             {
                 int port = 456; 
-                bool isAvailable = true;
+                bool isAvailable = false;
                 var rand = new Random();
-
                 IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
                 TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
-                do
+                while (isAvailable == false) 
                 {
                     port = rand.Next(1024, 65535);
 
@@ -74,15 +73,14 @@ namespace SmartHomeProject.Connections
                         }
                         else
                         {
+                            ASCIIEncoding ascii = new ASCIIEncoding();
                             TcpListener listener = new TcpListener(IPAddress.Any, port);
                             SendMessage(operation, pin, port);
-                            Console.WriteLine("Versuche zu starten");
                             listener.Start();
                             TcpClient client = listener.AcceptTcpClient();
                             NetworkStream stream = client.GetStream();
                             byte[] bytes = new byte[1024];
                             stream.Read(bytes, 0, bytes.Length);
-                            Console.WriteLine("Habe gestartet");
                             stream.Close();
                             client.Close();
                             Console.WriteLine(BitConverter.ToInt32(bytes));
@@ -90,7 +88,7 @@ namespace SmartHomeProject.Connections
 
                         }
                     }
-                } while (isAvailable == false);
+                } 
                 return false;
                 
             }

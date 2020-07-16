@@ -193,3 +193,12 @@ C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netc
 C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll
 C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\SmartHomeProject.csproj.CoreCompileInputs.cache
 C:\Users\Tarik\Documents\GitHub\SmartHomeProject\SmartHomeProject\obj\Debug\netcoreapp3.1\SmartHomeProject.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.dll
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Options.dll
+C:\Users\paula\OneDrive\Music\Dokumente\GitHub\SmartHomeProject\SmartHomeProject\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Primitives.dll

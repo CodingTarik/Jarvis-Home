@@ -19,13 +19,13 @@ def waitForMessage():
             switchGPIOState(int(msgsplit[1]))
             print(msgsplit)
             state = getGPIOState(int(msgsplit[1]))
-            se.send(str.encode(state))
+            se.send(state)
 
         elif msgsplit[0] == "Status":
             print(msgsplit)
             state = getGPIOState(int(msgsplit[1]))
             print(getGPIOState(int(msgsplit[1])))
-            se.send(str.encode(state))
+            se.send(state)
         else:
             se.send(str.encode("Layer-8-Error"))
        
@@ -33,9 +33,9 @@ def waitForMessage():
 def getGPIOState(gpioToCheck):
     GPIO.setup(gpioToCheck, GPIO.OUT)
     if GPIO.input(gpioToCheck) == True:
-        return "High"
+        return "1"
     else:
-        return "Low"
+        return "0"
         print(GPIO.input(gpioToCheck))
 
 def switchGPIOState(toSwitch):
