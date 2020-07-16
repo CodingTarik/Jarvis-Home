@@ -27,23 +27,28 @@ namespace SmartHomeProject.Connections
 
         public void SendMessage(string operation, byte pin, int port)
         {
-
+            try
+            {
             TcpClient client = new TcpClient(this._ip, this._port);
 
             string message = operation + ":" + pin + ":" + port;
 
-            int byteCount = Encoding.ASCII.GetByteCount(message);
+                int byteCount = Encoding.ASCII.GetByteCount(message);
 
-            byte[] sendDater = new byte[byteCount];
+                byte[] sendDater = new byte[byteCount];
 
-            sendDater = Encoding.ASCII.GetBytes(message);
+                sendDater = Encoding.ASCII.GetBytes(message);
 
-            NetworkStream stream = client.GetStream();
+                NetworkStream stream = client.GetStream();
 
             stream.Write(sendDater, 0, sendDater.Length);
 
             stream.Close();
             client.Close();
+            } catch(Exception ex)
+            {
+                
+            }
             
 
 

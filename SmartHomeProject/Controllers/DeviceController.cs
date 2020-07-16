@@ -50,7 +50,7 @@ namespace SmartHomeProject.Controllers
             DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), addedFunction = true, addedSuccess = result, deviceSelected = true, functionNameAdded = functionname, selectedDeviceID = deviceID};
             return View("DeviceFunctions", pageModel);
         }
-        [HttpPost]
+        [HttpGet]
         public IActionResult ControlFunction(int functionID, string deviceName) 
         {
            
@@ -80,11 +80,11 @@ namespace SmartHomeProject.Controllers
 
 
             }
-            
 
 
-            
-            return View("JarvisControl", pageModel);
+
+            return RedirectToAction("JarvisControl", pageModel);
+            //return View("JarvisControl", pageModel);
             
 
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Exception = System.Exception;
 
@@ -6,6 +7,7 @@ namespace SmartHomeProject.Models
 {
     public class DeviceModel
     {
+        private const int TIMEOUTMILSECONDS = 50;
         public DeviceModel()
         {
             connection = new Connections.Connections(ip, port);
@@ -43,7 +45,7 @@ namespace SmartHomeProject.Models
                         Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Sending ping to IP " + ip);
                     }
 
-                    PingReply reply = p.Send(ip);
+                    PingReply reply = p.Send(ip, TIMEOUTMILSECONDS);
                     if (reply.Status == IPStatus.Success)
                     {
                         return true;
@@ -81,6 +83,7 @@ namespace SmartHomeProject.Models
         }
         public class DeviceModelFunction
         {
+            private const double TIMEOUTMILSECONDS = 100;
             public int functionID { get; set; }
             public byte GPIO_PIN { get; private set; }
             public string functionname { get; set; }
@@ -94,7 +97,7 @@ namespace SmartHomeProject.Models
                 this.functionname = functionname;
                 this.location = location;
                 this.connection = connection;
-                this.functionID = id;
+                functionID = id;
                 status = getStatus();
 
 
@@ -105,7 +108,19 @@ namespace SmartHomeProject.Models
             {
                 try
                 {
-                   return connection.recvMessage("Status", GPIO_PIN);
+                    var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Status", GPIO_PIN));
+                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
+                    {
+                       
+                        return task.Result;
+                    }
+                    else
+                    {
+                        Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Timeout for function status check for function " + functionname);
+                        return false;
+                    }
+
+                   
                 }
                 catch (Exception ex)
                 {
@@ -113,10 +128,28 @@ namespace SmartHomeProject.Models
                 }
             }
 
-            public void executeFunction()
+            public bool executeFunction()
             {
+                try
+                {
+                    var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Switch",  GPIO_PIN));
+                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
+                    {
+                        return task.Result;
+                    }
+                    else
+                    {
+                        Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Timeout for function status check for function " + functionname);
+                        return false;
+                    }
 
-                connection.recvMessage("Switch",  GPIO_PIN);
+                }
+                catch (Exception ex)
+                {
+                    return false;
+                }
+
+                 
 
             }
 

@@ -4,7 +4,6 @@ function refreshDevice() {
 
     $.ajax({ type: "GET", dataType: "json", url: location.origin + "/api/devicestatus/", success: success });
 
-
 }
 
 function success(data) {
