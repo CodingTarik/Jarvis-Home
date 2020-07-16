@@ -81,7 +81,7 @@ namespace SmartHomeProject.Controllers
 
             }
 
-
+           
 
             return RedirectToAction("JarvisControl", pageModel);
             //return View("JarvisControl", pageModel);
