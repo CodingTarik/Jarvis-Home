@@ -1,9 +1,5 @@
-﻿using SmartHomeProject.Connections;
-using System;
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using Exception = System.Exception;
 
 namespace SmartHomeProject.Models
@@ -33,7 +29,7 @@ namespace SmartHomeProject.Models
         public int port { get; set; }
         public string ip { get; set; }
 
-        
+
 
         public bool OnlineStatus
         {
@@ -42,7 +38,11 @@ namespace SmartHomeProject.Models
                 try
                 {
                     Ping p = new Ping();
-                    Console.WriteLine("Sending ping to: " + ip);
+                    if (Logger.Logger.VERBOSE_LOG)
+                    {
+                        Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Sending ping to IP " + ip);
+                    }
+
                     PingReply reply = p.Send(ip);
                     if (reply.Status == IPStatus.Success)
                     {
@@ -56,7 +56,7 @@ namespace SmartHomeProject.Models
                 }
                 catch (PingException ex)
                 {
-                    Console.WriteLine(ex.StackTrace);
+                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
                     return false;
                 }
                 catch (Exception ex)
@@ -94,7 +94,7 @@ namespace SmartHomeProject.Models
                 this.functionname = functionname;
                 this.location = location;
                 this.connection = connection;
-                this.functionID = id;
+                functionID = id;
                 status = false; //getStatus();
 
             }
@@ -138,7 +138,7 @@ namespace SmartHomeProject.Models
 
             public void executeFunction()
             {
-                connection.SendMessage("Switch",  GPIO_PIN);
+                connection.SendMessage("Switch", GPIO_PIN);
             }
 
         }

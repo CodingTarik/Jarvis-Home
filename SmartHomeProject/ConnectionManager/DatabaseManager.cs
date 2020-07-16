@@ -88,10 +88,10 @@ namespace SmartHomeProject.ConnectionManager
             }
             catch (Exception e)
             {
-                Console.WriteLine("Fehler: " + e.Message);
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                 return false;
             }
-         
+
         }
 
         internal static bool DeleteDevice(string deviceName)
@@ -109,10 +109,10 @@ namespace SmartHomeProject.ConnectionManager
             }
             catch (Exception e)
             {
-                Console.WriteLine("Fehler: " + e.Message);
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                 return false;
             }
-          
+
         }
 
         internal static bool UpdateDevice(string selectedDevice, string deviceNameNew, string deviceType,
@@ -137,10 +137,10 @@ namespace SmartHomeProject.ConnectionManager
             }
             catch (Exception e)
             {
-                Console.WriteLine("Fehler: " + e.Message);
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                 return false;
             }
-         
+
         }
 
         internal static bool UpdateDeviceFunction(int functionID, string functionname, byte GPIO_PIN, string location)
@@ -161,10 +161,10 @@ namespace SmartHomeProject.ConnectionManager
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine(ex.Message);
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
                 return false;
             }
-          
+
         }
 
         internal static bool DeleteDeviceFunction(int functionID)
@@ -182,7 +182,7 @@ namespace SmartHomeProject.ConnectionManager
             }
             catch (Exception e)
             {
-                Console.WriteLine("Fehler: " + e.Message);
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                 return false;
             }
         }
@@ -203,7 +203,7 @@ namespace SmartHomeProject.ConnectionManager
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Fehler: " + ex.Message);
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
                 return false;
             }
 
@@ -228,7 +228,6 @@ namespace SmartHomeProject.ConnectionManager
                         description = resultReader.GetString(2),
                         deviceID = resultReader.GetInt32(6)
                     };
-                    Console.WriteLine("MO:"+model.description);
                     SQLiteCommand functionQuery = new SQLiteCommand(webDBConnection);
                     functionQuery.CommandText = @"SELECT * FROM deviceFunctions WHERE deviceFunctions.DeviceID = @DeviceID";
                     functionQuery.Parameters.AddWithValue("@DeviceID", model.deviceID);
@@ -236,16 +235,14 @@ namespace SmartHomeProject.ConnectionManager
                     SQLiteDataReader functionReader = functionQuery.ExecuteReader();
                     while (functionReader.Read())
                     {
-                        Console.WriteLine(functionReader.GetDataTypeName(2) + functionReader.GetDataTypeName(4));
-                        
                         model.addDeviceModelFunction(functionReader.GetInt32(1), (byte)functionReader.GetInt32(3), functionReader.IsDBNull(2) ? null : functionReader.GetString(2), functionReader.IsDBNull(4) ? null : functionReader.GetString(4));
                     }
                     models.Add(model);
                 }
                 catch (Exception ex)
-               {
-                    Console.WriteLine("Fehler: " + ex.Message + ex.StackTrace);
-               }
+                {
+                    Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
+                }
             }
 
 

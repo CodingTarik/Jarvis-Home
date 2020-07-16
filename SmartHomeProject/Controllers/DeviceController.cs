@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using SmartHomeProject.ConnectionManager;
 using SmartHomeProject.Models;
 using static SmartHomeProject.Program;
+using SmartHomeProject.Logger;
 
 
 namespace SmartHomeProject.Controllers
@@ -16,6 +17,7 @@ namespace SmartHomeProject.Controllers
         public DeviceController(ILogger<DeviceController> logger)
         {
             _logger = logger;
+            
         }
         [HttpGet]
         public IActionResult JarvisControl()
@@ -43,7 +45,7 @@ namespace SmartHomeProject.Controllers
             catch (Exception e)
             {
                 result = false;
-                Console.WriteLine("Fehler: " + e.Message);
+                Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
             }
             DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), addedFunction = true, addedSuccess = result, deviceSelected = true, functionNameAdded = functionname, selectedDeviceID = deviceID};
             return View("DeviceFunctions", pageModel);
@@ -90,7 +92,6 @@ namespace SmartHomeProject.Controllers
         [HttpPost]
         public IActionResult EditDeviceSettings(string selectedDevice, string deviceNameNew, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
-            Console.WriteLine("DESCRIPTION: " + deviceDescription);
             bool result = DatabaseManager.UpdateDevice(selectedDevice, deviceNameNew, deviceType, deviceDescription,
                 deviceIP, devicePort, deviceLocation);
             DeviceEditModel pageModel = new DeviceEditModel() { selectedDevice = deviceNameNew, DeviceModels = DatabaseManager.getDeviceModels(), deviceNameEdited = selectedDevice, editingFailed = !result };
@@ -129,19 +130,16 @@ namespace SmartHomeProject.Controllers
             bool save = false;
             bool delete = false;
             bool deleteResult = false;
-            Console.WriteLine("Speichere...2222");
-            Console.WriteLine("Methode"+method);
             if (method == "Speichern")
             {
                 save = true;
                 try
                 {
-                    Console.WriteLine("Speichere...");
                     editResult = DatabaseManager.UpdateDeviceFunction(deviceFunctions, functionnameEdit, (byte)pinEdit, null);
                 }
                 catch (Exception e)
                 {
-                    System.Console.WriteLine(e);
+                    Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
                     editResult = false;
                 }
                
@@ -155,7 +153,7 @@ namespace SmartHomeProject.Controllers
                 }
                 catch (Exception e)
                 {
-                    System.Console.WriteLine(e);
+                    Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
                     deleteResult = false;
                 }
             }
