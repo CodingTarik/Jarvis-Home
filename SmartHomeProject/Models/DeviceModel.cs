@@ -132,6 +132,10 @@ namespace SmartHomeProject.Models
                 }
                 catch (Exception ex)
                 {
+                    if (Logger.Logger.VERBOSE_LOG)
+                    {
+                        Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    }
                     return false;
                 }
             }
@@ -153,6 +157,10 @@ namespace SmartHomeProject.Models
                 }
                 catch (Exception ex)
                 {
+                    if (Logger.Logger.VERBOSE_LOG)
+                    {
+                        Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    }
                     return false;
                 }
             }

@@ -48,7 +48,10 @@ namespace SmartHomeProject.Connections
             }
             catch (Exception ex)
             {
-
+                if (Logger.Logger.VERBOSE_LOG)
+                {
+                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                }
             }
 
 

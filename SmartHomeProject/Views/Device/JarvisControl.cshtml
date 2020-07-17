@@ -7,7 +7,7 @@
 @foreach (var device in Model.DeviceModels)
 {
 
-    <h1 id="(@device.Name)head">@device.Name</h1>
+    <h1 id="(@device.name)head">@device.name</h1>
     if (@device.DeviceFunctions == null)
     {
 
@@ -22,14 +22,14 @@
         {
 
 
-            <div class="card text-white bg-success mb-3" id="(@device.Name@funtion.functionID)card" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
+            <div class="card text-white bg-success mb-3" id="(@device.name@funtion.functionID)card" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
                 <form asp-controller="Device" asp-action="ControlFunction" method="get">
                     <div class="card-header"><h1>@funtion.functionname</h1></div>
                     <input type="hidden" value="@funtion.functionID" name="functionID" />
-                    <input type="hidden" value="@device.Name" name="deviceName" />
+                    <input type="hidden" value="@device.name" name="deviceName" />
                     <div class="card-body">
 
-                        <input type="submit" id="(@device.Name@funtion.functionID)button" value="Ausschalten" class="btn btn-danger" />
+                        <input type="submit" id="(@device.name@funtion.functionID)button" value="Ausschalten" class="btn btn-danger" />
 
                     </div>
                 </form>
