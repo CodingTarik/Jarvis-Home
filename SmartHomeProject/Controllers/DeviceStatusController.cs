@@ -25,7 +25,7 @@ namespace SmartHomeProject.Controllers
         [HttpGet("{model}")]
         public DeviceModel Get(string model)
         {
-            return DatabaseManager.getDeviceModels().Where(device => device.Name == model).FirstOrDefault();
+            return DatabaseManager.getDeviceModels().Where(device => device.name == model).FirstOrDefault();
         }
 
         // POST api/<DeviceStatusController>

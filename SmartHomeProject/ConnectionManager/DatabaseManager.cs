@@ -19,15 +19,15 @@ namespace SmartHomeProject.ConnectionManager
               DeviceDescription VARCHAR(255),
               DeviceLocation VARCHAR(255),
               DeviceIP VARCHAR(24),
-              DevicePort INT,
+              DevicePort INT DEFAULT(333) NOT NULL,
               DeviceID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT(0)
              );";
 
         private const string createFunctionTable = @"CREATE TABLE deviceFunctions (
-                DeviceID INTEGER,
+                DeviceID INTEGER NOT NULL,
                 FunctionID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT(0),
                 Functionname VARCHAR(255),
-                GPIO_PIN BYTE,
+                GPIO_PIN BYTE NOT NULL,
                 LOCATION VARCHAR(255),
                 FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
                );";
@@ -221,10 +221,10 @@ namespace SmartHomeProject.ConnectionManager
                 {
                     DeviceModel model = new DeviceModel(resultReader.GetString(4), resultReader.GetInt32(5))
                     {
-                        Image = Properties.Resources.raspi,
-                        Name = resultReader.GetString(0),
-                        Location = resultReader.GetString(3),
-                        Type = resultReader.GetString(1),
+                        image = Properties.Resources.raspi,
+                        name = resultReader.GetString(0),
+                        location = resultReader.GetString(3),
+                        type = resultReader.GetString(1),
                         description = resultReader.GetString(2),
                         deviceID = resultReader.GetInt32(6)
                     };

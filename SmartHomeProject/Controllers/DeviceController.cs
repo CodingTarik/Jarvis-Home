@@ -17,15 +17,15 @@ namespace SmartHomeProject.Controllers
         public DeviceController(ILogger<DeviceController> logger)
         {
             _logger = logger;
-            
+
         }
         [HttpGet]
         public IActionResult JarvisControl()
-            {
-            
-                ControlModel pageModel = new ControlModel() { DeviceModels = DatabaseManager.getDeviceModels() };
-                return View(pageModel);
-            }
+        {
+
+            ControlModel pageModel = new ControlModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+            return View(pageModel);
+        }
 
 
         [HttpGet]
@@ -47,45 +47,45 @@ namespace SmartHomeProject.Controllers
                 result = false;
                 Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
             }
-            DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), addedFunction = true, addedSuccess = result, deviceSelected = true, functionNameAdded = functionname, selectedDeviceID = deviceID};
+            DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), addedFunction = true, addedSuccess = result, deviceSelected = true, functionNameAdded = functionname, selectedDeviceID = deviceID };
             return View("DeviceFunctions", pageModel);
         }
         [HttpGet]
-        public IActionResult ControlFunction(int functionID, string deviceName) 
+        public IActionResult ControlFunction(int functionID, string deviceName)
         {
-           
+
             ControlModel pageModel = new ControlModel() { DeviceModels = DatabaseManager.getDeviceModels() };
             DeviceManageModel modelsD = new DeviceManageModel() { DeviceModels = DatabaseManager.getDeviceModels() };
 
-            
-            for( int i = 0; i < modelsD.DeviceModels.Length; i++)
+
+            for (int i = 0; i < modelsD.DeviceModels.Length; i++)
             {
-            
-                if(modelsD.DeviceModels[i].Name == deviceName)
+
+                if (modelsD.DeviceModels[i].name == deviceName)
                 {
-                    for(int k = 0; k < modelsD.DeviceModels[i].DeviceFunctions.Count; k++)
+                    for (int k = 0; k < modelsD.DeviceModels[i].DeviceFunctions.Count; k++)
                     {
-                    
-                        if(modelsD.DeviceModels[i].DeviceFunctions[k].functionID == functionID)
-                            {
+
+                        if (modelsD.DeviceModels[i].DeviceFunctions[k].functionID == functionID)
+                        {
                             //Hier müsste dann an den server geschickt werden und der state geändert werden umgehe das erstmal
                             modelsD.DeviceModels[i].DeviceFunctions[k].executeFunction();
 
-                            }
+                        }
 
-                    }    
+                    }
 
-                
+
                 }
 
 
             }
 
-           
+
 
             return RedirectToAction("JarvisControl", pageModel);
             //return View("JarvisControl", pageModel);
-            
+
 
         }
 
@@ -125,12 +125,12 @@ namespace SmartHomeProject.Controllers
         [HttpPost]
         public ActionResult EditDeviceFunction(int deviceFunctions, string functionnameEdit, int pinEdit, string method)
         {
-            
+
             bool editResult = false;
             bool save = false;
             bool delete = false;
             bool deleteResult = false;
-            if (method == "Speichern")
+            if (method == "Save")
             {
                 save = true;
                 try
@@ -142,9 +142,9 @@ namespace SmartHomeProject.Controllers
                     Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
                     editResult = false;
                 }
-               
+
             }
-            else if (method == "Löschen")
+            else if (method == "Delete")
             {
                 delete = true;
                 try
@@ -178,7 +178,7 @@ namespace SmartHomeProject.Controllers
         public ActionResult AddDevice(string deviceName, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
             bool result = DatabaseManager.AddNewDevice(deviceName, deviceType, deviceDescription, deviceIP, devicePort, deviceLocation);
-            DeviceAddModel pageModel = new DeviceAddModel() {successAdded = result, deviceName = deviceName};
+            DeviceAddModel pageModel = new DeviceAddModel() { successAdded = result, deviceName = deviceName };
             return View(pageModel);
         }
 

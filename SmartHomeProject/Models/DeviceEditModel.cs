@@ -23,7 +23,7 @@ namespace SmartHomeProject.Models
         {
             for (int i = 0; i < DeviceModels.Length; i++)
             {
-                if (DeviceModels[i].Name == deviceName)
+                if (DeviceModels[i].name == deviceName)
                 {
                     return DeviceModels[i];
 
