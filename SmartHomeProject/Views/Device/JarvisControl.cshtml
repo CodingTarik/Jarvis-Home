@@ -7,7 +7,7 @@
 @foreach (var device in Model.DeviceModels)
 {
 
-    <h1>@device.Name</h1>
+    <h1 id="(@device.Name)head">@device.Name</h1>
     if (@device.DeviceFunctions == null)
     {
 
@@ -15,6 +15,8 @@
     }
     else
     {
+
+
 
         foreach (var funtion in device.DeviceFunctions)
         {
@@ -32,9 +34,10 @@
                     </div>
                 </form>
             </div>
-            
+
         }
         <hr />
+
     }
 }
 <script src="../lib/jquery/dist/jquery.min.js"></script>
