@@ -8,9 +8,11 @@ function refreshDevice() {
 
 function success(data) {
 
-    console.log(data);
+    console.log(data[1].onlineStatus);
     
     for (i = 0; i < data.length; i++) {
+
+
 
         if (data[i].deviceFunctions == null) {
 
