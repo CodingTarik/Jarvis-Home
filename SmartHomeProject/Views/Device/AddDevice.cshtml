@@ -5,58 +5,65 @@
     ViewData["Title"] = "Add Device";
 }
      
-    <div class="text-center">
-        <h1 class="display-4">Gerät hinzufügen</h1>
-        @{
-            if (Model != null)
+<div class="text-center">
+    <h1 class="display-4">Add Device</h1>
+    @{
+        if (Model != null)
+        {
+            if (Model.successAdded && !String.IsNullOrEmpty(Model.deviceName))
             {
-                if (Model.successAdded && !String.IsNullOrEmpty(Model.deviceName))
-                {
-                    <div class="alert alert-dismissible alert-success">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>Hinzufügen erfolgreich!</strong> Das Gerät <strong>@Model.deviceName</strong> wurde erfolgreich hinzugefügt.
-                    </div>
-                }
-                else if (!Model.successAdded && !String.IsNullOrEmpty(Model.deviceName))
-                {
-                    <div class="alert alert-dismissible alert-danger">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>Hinzufügen nicht erfolgreich!</strong> Das Gerät <strong>@Model.deviceName</strong> konnte nicht hinzugefügt werden.
-                    </div>
-                }
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Adding successful!</strong> The device <strong>@Model.deviceName</strong> was successfully added.
+        </div>
+            }
+            else if (!Model.successAdded && !String.IsNullOrEmpty(Model.deviceName))
+            {
+<div class="alert alert-dismissible alert-danger">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Adding not successful!</strong> The device <strong>@Model.deviceName</strong> could not be added.
+</div>
             }
         }
-        <form method="POST">
-            <div class="form-group">
-                <label for="deviceName">Geräte Name</label>
-                <input type="text" class="form-control" id="deviceName" name="deviceName" placeholder="Geräte Name eingeben">
-            </div>
-            <div class="form-group">
-                <label for="deviceType">Geräte Typ</label>
-                <select class="form-control" id="deviceType" name="deviceType">
-                    <option>Raspberry Pi</option>
-                    <option>Arduino</option>
-                    <option>Philips hue</option>
-                    <option>Sonstige</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="deviceDescription">Beschreibung</label>
-                <textarea class="form-control" id="deviceDescription" name="deviceDescription" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="deviceIP">Geräte-IP</label>
-                <input type="text" class="form-control" id="deviceIP" name="deviceIP" placeholder="IP-Addresse eingeben">
-            </div>
-            <div class="form-group">
-                <label for="devicePort">Geräte-Port</label>
-                <input type="text" class="form-control" id="devicePort" name="devicePort" placeholder="Port Eingeben" value="333">
-            </div>
-            <div class="form-group">
-                <label for="deviceLocation">Gerätestandort</label>
-                <input type="text" class="form-control" id="deviceLocation" name="deviceLocation" placeholder="Standort eingeben">
-            </div>
-            <input type="submit" value="Submit" class="btn btn-primary" />
-        </form>
+    }
+    <form method="POST">
+        <div class="form-group">
+            <label for="deviceName">Device Name</label>
+            <input type="text" class="form-control" id="deviceName" name="deviceName" placeholder="Enter device name"/>
+        </div>
+        <div class="form-group">
+            <label for="deviceType">Device type</label>
+            <select class="form-control" id="deviceType" name="deviceType">
+                <option>Raspberry Pi</option>
+                <option>Arduino</option>
+                <option>Philips hue</option>
+                <option>Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="deviceDescription">Description</label>
+            <textarea class="form-control" id="deviceDescription" name="deviceDescription" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="deviceIP">Device-IP</label>
+            <input type="text" class="form-control" id="deviceIP" name="deviceIP" placeholder="Enter IP address">
+        </div>
+        <div class="form-group">
+            <label for="devicePort">Device-Port</label>
+            <input type="text" class="form-control" id="devicePort" name="devicePort" placeholder="Enter Port" value="333">
+        </div>
+        <div class="form-group">
+            <label for="deviceLocation">DeviceLocation</label>
+            <input type="text" class="form-control" id="deviceLocation" name="deviceLocation" placeholder="Enter location">
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary" />
+    </form>
 
-    </div>
+</div>
+<script src="../lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('li.active').removeClass('active');
+        $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
+    });
+</script>

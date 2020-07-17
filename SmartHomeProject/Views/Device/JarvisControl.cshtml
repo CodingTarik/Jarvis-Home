@@ -29,7 +29,7 @@
                     <input type="hidden" value="@device.name" name="deviceName" />
                     <div class="card-body">
 
-                        <input type="submit" id="(@device.name@funtion.functionID)button" value="Ausschalten" class="btn btn-danger" />
+                        <input type="submit" id="(@device.name@funtion.functionID)button" value="switch off" class="btn btn-danger" />
 
                     </div>
                 </form>
@@ -42,5 +42,11 @@
 }
 <script src="../lib/jquery/dist/jquery.min.js"></script>
 <script src="../js/JarvisRefresh.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('li.active').removeClass('active');
+        $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+    });
+</script>
 
 

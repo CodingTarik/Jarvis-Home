@@ -2,18 +2,17 @@
 @model SmartHomeProject.Models.DeviceManageModel
 @{
     ViewData["Title"] = "Home Page";
-    Layout = "~/Views/Shared/_DeviceLayout.cshtml";
 }
 
 <script src="../lib/jquery/dist/jquery.min.js"></script>
 <div class="text-center">
-    <h1 class="display-4">Geräte verwalten</h1>
+    <h1 class="display-4">Manage devices</h1>
     @{
         if (!Model.deleteErrored && !String.IsNullOrEmpty(Model.deletedDeviceName))
         {
             <div class="alert alert-dismissible alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Löschung Erfolgreich!</strong> Das Gerät <strong>@Model.deletedDeviceName</strong> wurde erfolgreich gelöscht.
+                <strong>Deletion Successful!</strong> The device <strong>@Model.deletedDeviceName</strong> was successfully deleted.
             </div>
         }
         else if (Model.deleteErrored && !String.IsNullOrEmpty(Model.deletedDeviceName))
@@ -21,17 +20,17 @@
 
             <div class="alert alert-dismissible alert-danger">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Löschung nicht Erfolgreich!</strong> Das Gerät <strong>@Model.deletedDeviceName</strong> konnte nicht gelöscht werden.
+                <strong>Deletion not successful!</strong> The device <strong>@Model.deletedDeviceName</strong> could not be deleted.
             </div>
         }
         else
         {
             <div class="alert alert-dismissible alert-secondary">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <strong>Tipp:</strong> Mit "Add Device" kannst du neue Geräte hinzufügen.
+                <strong>Hint:</strong> With "Add Device" you can add new devices.
             </div>
         }
-       
+
     }
     <table class="table table-hover">
         <tr class="table-primary">
@@ -48,29 +47,35 @@
         @foreach (var device in Model.DeviceModels)
         {
             <tr>
-                <td class="devicename">@device.Name</td>
+                <td class="devicename">@device.name</td>
                 <td>
-                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.Image))" width="20%" height="20%" />
+                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.image))" width="20%" height="20%" />
                 </td>
-                <td>@device.Type</td>
-                <td>@device.Location</td>
+                <td>@device.type</td>
+                <td>@device.location</td>
                 <td>@device.ip</td>
                 <td>@device.port</td>
-                <td><span id="@(device.Name)-status" class="badge badge-danger">Offline</span></td>
+                <td><span id="@(device.name)-status" class="badge badge-danger">Offline</span></td>
                 <td>
                     <form asp-controller="Device" asp-action="EditDevice" method="post">
-                        <input type="hidden" name="model" value="@device.Name" />
-                        <input type="submit" class="btn btn-primary" name="Edit" value="Edit" />
+                        <input type="hidden" name="model" value="@device.name" />
+                        <button type="submit" class="btn btn-primary" name="Edit" value="Edit"><i class="fas fa-code"></i> Edit</button>
                     </form>
                 </td>
                 <td>
                     <form asp-controller="Device" asp-action="DeleteDevice" asp-route-returnURL="@Context.Request.Path" method="post">
-                        <input type="hidden" name="model" value="@device.Name" />
-                        <input type="submit" class="btn btn-danger" name="Delete" value="Delete" />
+                        <input type="hidden" name="model" value="@device.name" />
+                        <button type="submit" class="btn btn-danger" name="Delete" value="Delete"><i class="fas fa-trash-alt"></i> Delete</button>
                     </form>
                 </td>
             </tr>
         }
     </table>
     <script src="../js/DeviceStatus.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('li.active').removeClass('active');
+            $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
+        });
+    </script>
 </div>
