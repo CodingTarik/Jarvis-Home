@@ -7,7 +7,7 @@ namespace SmartHomeProject.Models
 {
     public class DeviceModel
     {
-        private const int TIMEOUTMILSECONDS = 50;
+        private const int TIMEOUTMILSECONDS = 20;
         public DeviceModel()
         {
             connection = new Connections.Connections(ip, port);
@@ -18,16 +18,16 @@ namespace SmartHomeProject.Models
             this.ip = ip;
             this.port = port;
         }
-        public string Name { get; set; }
+        public string name { get; set; }
 
-        public byte[] Image
+        public byte[] image
         {
             get; set;
         }
         public int deviceID { get; set; }
         public string description { get; set; }
-        public string Type { get; set; }
-        public string Location { get; set; }
+        public string type { get; set; }
+        public string location { get; set; }
         public int port { get; set; }
         public string ip { get; set; }
 
@@ -58,11 +58,17 @@ namespace SmartHomeProject.Models
                 }
                 catch (PingException ex)
                 {
-                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    if (Logger.Logger.VERBOSE_LOG)
+                    {
+                        Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    }
+                    Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Device with IP " + ip + " *probably* not reachable");
+
                     return false;
                 }
                 catch (Exception ex)
                 {
+                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
                     return false;
                 }
 
@@ -83,7 +89,7 @@ namespace SmartHomeProject.Models
         }
         public class DeviceModelFunction
         {
-            private const double TIMEOUTMILSECONDS = 250;
+            private const double TIMEOUTMILSECONDS = 50;
             public int functionID { get; set; }
             public byte GPIO_PIN { get; private set; }
             public string functionname { get; set; }
@@ -99,8 +105,6 @@ namespace SmartHomeProject.Models
                 this.connection = connection;
                 functionID = id;
                 status = getStatus();
-
-
             }
 
 
@@ -111,16 +115,20 @@ namespace SmartHomeProject.Models
                     var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Status", GPIO_PIN));
                     if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
                     {
-                       
+
                         return task.Result;
                     }
                     else
                     {
-                        Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Timeout for function status check for function " + functionname);
+                        if (Logger.Logger.VERBOSE_LOG)
+                        {
+                            Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Timeout for function status check for function " + functionname);
+                        }
+
                         return false;
                     }
 
-                   
+
                 }
                 catch (Exception ex)
                 {
@@ -132,40 +140,23 @@ namespace SmartHomeProject.Models
             {
                 try
                 {
-                    var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Switch",  GPIO_PIN));
+                    var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Switch", GPIO_PIN));
                     if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
                     {
                         return task.Result;
                     }
                     else
                     {
-                        Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Timeout for function status check for function " + functionname);
+                        Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Timeout for function execute for " + functionname);
                         return false;
                     }
-
                 }
                 catch (Exception ex)
                 {
                     return false;
                 }
-
-                 
-
             }
 
         }
     }
 }
-
-
-
-/*
- * GeräteID,FunktionsName,PIN,Location
- * 
- * 
- * PI-Server --> Rasberry-PI { Empfängt message enthalten GPIO PIN und Status, oder Sensor auslesen und andworten} 
- * 
- * 
- * 
- * 
- */

@@ -9,7 +9,7 @@
     var devices = new Array();
     @foreach (var device in Model.DeviceModels)
     {
-        @:devices.push({name: "@device.Name", description: "@Html.Raw(device.description.Replace(System.Environment.NewLine, "\\n"))", type: "@device.Type", location: "@device.Location", port: "@device.port", ip: "@device.ip"});
+        @:devices.push({name: "@device.name", description: "@Html.Raw(device.description.Replace(System.Environment.NewLine, "\\n"))", type: "@device.Type", location: "@device.Location", port: "@device.port", ip: "@device.ip"});
     }
     function SelectionUpdate() {
         var name= document.getElementById("deviceSelect").value;
@@ -54,13 +54,13 @@
         <select name="selectedDevice" class="form-control" id="deviceSelect" name="deviceName" onchange="SelectionUpdate()"  >
             @foreach (var device in Model.DeviceModels)
             {
-                if (!(device.Name == Model.selectedDeviceName))
+                if (!(device.name == Model.selectedDeviceName))
                 {
-                    <option name="deviceName" value="@device.Name">@device.Name</option>
+                    <option name="deviceName" value="@device.name">@device.name</option>
                 }
                 else
                 {
-                    <option selected="selected" name="deviceName" value="@device.Name">@device.Name</option>
+                    <option selected="selected" name="deviceName" value="@device.name">@device.name</option>
                 }
             }
         </select>
