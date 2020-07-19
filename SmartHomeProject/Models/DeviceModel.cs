@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.NetworkInformation;
+using System.Text;
 using Exception = System.Exception;
 
 namespace SmartHomeProject.Models
@@ -86,6 +88,57 @@ namespace SmartHomeProject.Models
             }
 
             DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, connection));
+        }
+
+        public class Sensor
+        {
+            public string sensorname { get; set; }
+            public string python { get; set; }
+            public int sensorID { get; set; }
+            public string status { get; set; }
+            public byte[] GPIO_PINS { get; private set; }
+            public string location { get; set; }
+            public string pythonError { get; set; }
+            private Connections.Connections connection;
+
+            public Sensor(int id, byte[] GPIO_PINS, string python, string sensorname, string location, Connections.Connections connection)
+            {
+                this.GPIO_PINS = GPIO_PINS;
+                this.sensorname = sensorname;
+                this.location = location;
+                this.connection = connection;
+                sensorID = id;
+                status = getStatus();
+            }
+
+            public string getFullPythonExecution()
+            {
+                StringBuilder pythonBuilder = new StringBuilder();
+                StringReader pythonReader = new StringReader(python);
+                pythonBuilder.AppendLine("def sensorValue():");
+                string codeLine;
+                while ((codeLine = pythonReader.ReadLine()) != null)
+                {
+                    pythonBuilder.AppendLine("\t" + codeLine);
+                }
+
+                for (int i = 0; i < GPIO_PINS.Length; i++)
+                {
+                    pythonBuilder.Replace("PIN[" + i + "]", GPIO_PINS[i].ToString());
+                }
+
+                return pythonBuilder.ToString();
+
+            }
+            public string getStatus()
+            {
+
+                connection.recvSensor(getFullPythonExecution());
+                return null;
+            }
+
+
+
         }
         public class DeviceModelFunction
         {
