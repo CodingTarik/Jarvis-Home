@@ -25,13 +25,13 @@ namespace SmartHomeProject.Connections
 
 
 
-        public void SendMessage(string operation, string pin, int port)
+        public void SendMessage(, string pin, int port)
         {
             try
             {
                 TcpClient client = new TcpClient(this._ip, this._port);
 
-                string message = operation + ":" + pin + ":" + port;
+                string message = "Sensor" + ":" + pin + ":" + port;
 
                 int byteCount = Encoding.ASCII.GetByteCount(message);
 
@@ -141,7 +141,7 @@ namespace SmartHomeProject.Connections
 
         }
 
-        public bool recvSensor(string operation, string method)
+        public bool recvSensor(string method)
         {
 
 
@@ -167,7 +167,7 @@ namespace SmartHomeProject.Connections
                         {
                             ASCIIEncoding ascii = new ASCIIEncoding();
                             TcpListener listener = new TcpListener(IPAddress.Any, port);
-                            SendMessage(operation, method, port);
+                            SendMessage( method, port);
                             listener.Start();
                             TcpClient client = listener.AcceptTcpClient();
                             NetworkStream stream = client.GetStream();
