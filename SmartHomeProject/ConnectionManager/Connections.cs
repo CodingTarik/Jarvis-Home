@@ -25,7 +25,7 @@ namespace SmartHomeProject.Connections
 
 
 
-        public void SendMessage(, string pin, int port)
+        public void SendSensor(string pin, int port)
         {
             try
             {
@@ -141,7 +141,7 @@ namespace SmartHomeProject.Connections
 
         }
 
-        public bool recvSensor(string method)
+        public string recvSensor(string method)
         {
 
 
@@ -161,13 +161,13 @@ namespace SmartHomeProject.Connections
                         if (tcpi.LocalEndPoint.Port == port)
                         {
                             isAvailable = false;
-                            return false;
+                            return null;
                         }
                         else
                         {
                             ASCIIEncoding ascii = new ASCIIEncoding();
                             TcpListener listener = new TcpListener(IPAddress.Any, port);
-                            SendMessage( method, port);
+                            SendSensor(method, port);
                             listener.Start();
                             TcpClient client = listener.AcceptTcpClient();
                             NetworkStream stream = client.GetStream();
@@ -175,19 +175,19 @@ namespace SmartHomeProject.Connections
                             stream.Read(bytes, 0, bytes.Length);
                             stream.Close();
                             client.Close();
-                            return BitConverter.ToInt32(bytes) == 49;
+                            return BitConverter.ToString(bytes);
 
                         }
                     }
                 }
-                return false;
+                return null;
 
             }
 
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return false;
+                return null;
             }
 
         }
