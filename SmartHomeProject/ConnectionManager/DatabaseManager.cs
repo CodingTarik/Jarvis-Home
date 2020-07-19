@@ -31,6 +31,15 @@ namespace SmartHomeProject.ConnectionManager
                 LOCATION VARCHAR(255),
                 FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
                );";
+
+        private const string createSensorTable = @"CREATE TABLE Sensors (
+                DeviceID INTEGER NOT NULL,
+                SensorID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT(0),
+                Sensor VARCHAR(255),
+                GPIO_PIN BYTE NOT NULL,
+                LOCATION VARCHAR(255),
+                FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
+               );";
         internal static void CreateWebDatabase()
         {
             if (!File.Exists("WebDatabase.sqlite"))

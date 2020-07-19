@@ -12,7 +12,7 @@
     <select name="selectedDevice" class="form-control" id="deviceSelect" onchange="SelectionUpdateDevice()">
         @foreach (var device in Model.DeviceModels)
         {
-        <option name="deviceName" value="@device.deviceID">@device.name</option>
+            <option name="deviceName" value="@device.deviceID">@device.name</option>
         }
     </select>
     <hr />
@@ -21,20 +21,20 @@
     @{
         if (Model != null)
         {
-        if (Model.addedFunction && Model.addedSuccess)
-        {
-        <div class="alert alert-dismissible alert-success">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Adding successful!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> was successfully added.
-        </div>
-        }
-        else if (Model.addedFunction && !Model.addedSuccess)
-        {
-        <div class="alert alert-dismissible alert-danger">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Adding not successful!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> could not be added.
-        </div>
-        }
+            if (Model.addedFunction && Model.addedSuccess)
+            {
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Adding successful!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> was successfully added.
+                </div>
+            }
+            else if (Model.addedFunction && !Model.addedSuccess)
+            {
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Adding not successful!</strong> Die Funktion <strong>@Model.functionNameAdded</strong> could not be added.
+                </div>
+            }
         }
     }
     <form method="post" asp-controller="Device" asp-action="addDeviceFunction" style="margin-top: 1rem;">
@@ -60,34 +60,34 @@
     @{
         if (Model != null)
         {
-        if (Model.functionEdited && Model.functionEditSuccess)
-        {
-        <div class="alert alert-dismissible alert-success">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Editing successful!</strong> The function <strong>@Model.functionNameAdded</strong> was processed successfully.
-        </div>
-        }
-        else if (Model.functionEdited && !Model.functionEditSuccess)
-        {
-        <div class="alert alert-dismissible alert-danger">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Processing not successful!</strong>  The function <strong>@Model.functionNameAdded</strong> could not be edited.
-        </div>
-        }
-        else if (Model.functionDelete && Model.functionDeleteSuccess)
-        {
-        <div class="alert alert-dismissible alert-success">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Deletion successful!</strong> The function <strong>@Model.functionNameAdded</strong> was successfully deleted.
-        </div>
-        }
-        else if (Model.functionDelete && !Model.functionDeleteSuccess)
-        {
-        <div class="alert alert-dismissible alert-danger">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Deletion not successful!</strong> The function <strong>@Model.functionNameAdded</strong> could not be deleted.
-        </div>
-        }
+            if (Model.functionEdited && Model.functionEditSuccess)
+            {
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Editing successful!</strong> The function <strong>@Model.functionNameAdded</strong> was processed successfully.
+                </div>
+            }
+            else if (Model.functionEdited && !Model.functionEditSuccess)
+            {
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Processing not successful!</strong>  The function <strong>@Model.functionNameAdded</strong> could not be edited.
+                </div>
+            }
+            else if (Model.functionDelete && Model.functionDeleteSuccess)
+            {
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Deletion successful!</strong> The function <strong>@Model.functionNameAdded</strong> was successfully deleted.
+                </div>
+            }
+            else if (Model.functionDelete && !Model.functionDeleteSuccess)
+            {
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Deletion not successful!</strong> The function <strong>@Model.functionNameAdded</strong> could not be deleted.
+                </div>
+            }
         }
     }
     <form asp-controller="Device" asp-action="EditDeviceFunction" method="post" style="margin-top: 1rem;">
@@ -116,68 +116,101 @@
         </div>
     </form>
     <hr />
-    <script type="text/javascript">
-
-            var devices = new Array();
-            @foreach (var device in Model.DeviceModels)
-            {
-                @:devices.push({
-                @:deviceFunctions: [
-                @if(device.DeviceFunctions != null)
-                    foreach (var fun in device.DeviceFunctions)
-                    {
-                        @:{ GPIO: @(fun.GPIO_PIN), Name: "@(fun.functionname)", ID:@(fun.functionID)},
-                    }@:],
-                @:id: "@(device.deviceID)", name: "@(device.name)", description: "@(device.description)", type: "@(device.type)", location: "@(device.location)", port: "@(device.port)", ip: "@(device.ip)"
-                @:});
-
-            }
-            SelectionUpdateDevice();
-            SelectionUpdateFunctionEdit();
-            function SelectionUpdateDevice() {
-                var deviceID = document.getElementById("deviceSelect").value;
-                for (i = 0; i < devices.length; i++) {
-                    if (devices[i].id == deviceID) {
-                        var deviceFunctions = document.getElementById("deviceFunctions");
-                        deviceFunctions.innerHTML = "";
-                        var hiddenID = document.getElementById("deviceAddID");
-                        hiddenID.value = devices[i].id;
-                        for (let dvcFunc of devices[i].deviceFunctions) {
-                            var option = document.createElement("option");
-                            option.text = dvcFunc.Name;
-                            option.value = dvcFunc.ID;
-                            deviceFunctions.appendChild(option);
-                        }
-                        return;
-
-                    }
-                }
-            }
-
-            function SelectionUpdateFunctionEdit() {
-                var deviceID = document.getElementById("deviceSelect").value;
-                var option = document.getElementById("deviceFunctions").value;
-                for (i = 0; i < devices.length; i++) {
-                    if (devices[i].id == deviceID) {
-                        for (let dvcFunc of devices[i].deviceFunctions) {
-                            console.log(option + " " + dvcFunc.ID);
-                            if (dvcFunc.ID == option) {
-                                document.getElementById("functionnameEdit").value = dvcFunc.Name;
-                                document.getElementById("pinEdit").value = dvcFunc.GPIO;
-                            }
-                        }
-                    }
-                }
-            }
-
-    </script>
-
-    <script src="../js/DeviceStatus.js"></script>
-    <script src="../lib/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('li.active').removeClass('active');
-            $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
-        });
-    </script> 
 </div>
+<form method="get" id="code">
+
+    <div class="form-group">
+        <label for="Title">Title</label>
+        <input id="Sensorname" class="form-control" type="text" />
+    </div>
+
+    <div class="form-group">
+        <label for="Content">Content</label>
+        <div id="Content" style="min-height: 200px;"></div>
+    </div>
+
+    <button class="btn btn-primary">Submit</button>
+</form>
+<script type="text/javascript">
+
+        var devices = new Array();
+        @foreach (var device in Model.DeviceModels)
+        {
+            @:devices.push({
+            @:deviceFunctions: [
+            @if(device.DeviceFunctions != null)
+                foreach (var fun in device.DeviceFunctions)
+                {
+                    @:{ GPIO: @(fun.GPIO_PIN), Name: "@(fun.functionname)", ID:@(fun.functionID)},
+                }@:],
+            @:id: "@(device.deviceID)", name: "@(device.name)", description: "@(device.description)", type: "@(device.type)", location: "@(device.location)", port: "@(device.port)", ip: "@(device.ip)"
+            @:});
+
+        }
+        SelectionUpdateDevice();
+        SelectionUpdateFunctionEdit();
+        function SelectionUpdateDevice() {
+            var deviceID = document.getElementById("deviceSelect").value;
+            for (i = 0; i < devices.length; i++) {
+                if (devices[i].id == deviceID) {
+                    var deviceFunctions = document.getElementById("deviceFunctions");
+                    deviceFunctions.innerHTML = "";
+                    var hiddenID = document.getElementById("deviceAddID");
+                    hiddenID.value = devices[i].id;
+                    for (let dvcFunc of devices[i].deviceFunctions) {
+                        var option = document.createElement("option");
+                        option.text = dvcFunc.Name;
+                        option.value = dvcFunc.ID;
+                        deviceFunctions.appendChild(option);
+                    }
+                    return;
+
+                }
+            }
+        }
+
+        function SelectionUpdateFunctionEdit() {
+            var deviceID = document.getElementById("deviceSelect").value;
+            var option = document.getElementById("deviceFunctions").value;
+            for (i = 0; i < devices.length; i++) {
+                if (devices[i].id == deviceID) {
+                    for (let dvcFunc of devices[i].deviceFunctions) {
+                        console.log(option + " " + dvcFunc.ID);
+                        if (dvcFunc.ID == option) {
+                            document.getElementById("functionnameEdit").value = dvcFunc.Name;
+                            document.getElementById("pinEdit").value = dvcFunc.GPIO;
+                        }
+                    }
+                }
+            }
+        }
+
+</script>
+
+<script src="../js/DeviceStatus.js"></script>
+<script src="../lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('li.active').removeClass('active');
+        $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+    });
+</script>
+
+
+
+<script src="/vs/min/vs/loader.js"></script>
+<script>
+    require.config({ paths: { 'vs': '/vs/min/vs' } });
+    require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('Content'), {
+            value: [
+                'import RPi.GPIO as GPIO',
+                'GPIO.setup(PIN[0], GPIO.IN)',
+                'return GPIO.input(PIN[0])'
+            ].join('\n'),
+            language: 'python',
+            theme: 'vs-dark'
+            
+        });
+    });
+</script>
