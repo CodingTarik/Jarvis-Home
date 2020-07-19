@@ -26,6 +26,8 @@ def waitForMessage():
             state = getGPIOState(int(msgsplit[1]))
             print(getGPIOState(int(msgsplit[1])))
             se.send(state)
+        elif msgsplit[0] == "Sensor":
+            print("Sensor")
         else:
             se.send(str.encode("Layer-8-Error"))
        
