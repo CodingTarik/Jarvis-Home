@@ -35,12 +35,12 @@ namespace SmartHomeProject.Controllers
             return View(pageModel);
         }
         [HttpPost]
-        public IActionResult addDeviceFunction(int deviceID, string functionname, int functionpin)
+        public IActionResult addDeviceFunction(int deviceID, string functionname, int functionpin, bool RGB)
         {
             bool result = false;
             try
             {
-                result = DatabaseManager.AddFunctionToDevice(deviceID, functionname, (byte)functionpin);
+                result = DatabaseManager.AddFunctionToDevice(deviceID, functionname, (byte)functionpin, RGB);
             }
             catch (Exception e)
             {
@@ -123,7 +123,7 @@ namespace SmartHomeProject.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditDeviceFunction(int deviceFunctions, string functionnameEdit, int pinEdit, string method)
+        public ActionResult EditDeviceFunction(int deviceFunctions, string functionnameEdit, int pinEdit, string method, bool rgbEdit)
         {
 
             bool editResult = false;
@@ -135,7 +135,7 @@ namespace SmartHomeProject.Controllers
                 save = true;
                 try
                 {
-                    editResult = DatabaseManager.UpdateDeviceFunction(deviceFunctions, functionnameEdit, (byte)pinEdit, null);
+                    editResult = DatabaseManager.UpdateDeviceFunction(deviceFunctions, functionnameEdit, (byte)pinEdit, null, rgbEdit);
                 }
                 catch (Exception e)
                 {

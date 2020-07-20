@@ -40,18 +40,23 @@
     <form method="post" asp-controller="Device" asp-action="addDeviceFunction" style="margin-top: 1rem;">
         <div style="margin-top: 2rem">
             <input type="hidden" id="deviceAddID" name="deviceID" value="" />
-            <div id="Functionname" style="display: inline-block; float: left; width: 32%;">
+            <div id="Functionname" style="display: inline-block; float: left; width: 30%;">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionname">Function name</label>
                 <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Enter function name" />
             </div>
-            <div id="Functionname" style="display: inline-block; width: 32%; font-family: 'Roboto Medium';">
+            <div id="Functionname" style="display: inline-block; width: 30%; font-family: 'Roboto Medium';">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionpin">GPIO-Pin</label>
                 <input type="text" class="form-control" id="functionpin" name="functionpin" placeholder="Enter GPIO pin" />
             </div>
-            <div id="Functionname" style="display: inline-block; float: right; width: 32%;">
+            <div id="Functionname" style="display: inline-block; width: 6%;">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">RGB-Function</label>
+                <input type="checkbox" class="btn btn-info" style="width: 100%" id="RGB" name="RGB"/>
+            </div>
+            <div id="Functionname" style="display: inline-block; float: right; width: 30%;">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">Save</label>
                 <input type="submit" class="btn btn-info" style="width: 100%" id="Bestätigen" value="Function Add" />
             </div>
+            
         </div>
     </form>
     <br />
@@ -96,13 +101,17 @@
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Select function</label>
                 <select name="deviceFunctions" class="form-control" id="deviceFunctions" onchange="SelectionUpdateFunctionEdit()"></select>
             </div>
-            <div style="display: inline-block; width: 25%; margin-right: 2%;">
+            <div style="display: inline-block; width: 20%; margin-right: 2%;">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionnameEdit">Function name</label>
                 <input type="text" class="form-control" id="functionnameEdit" name="functionnameEdit" placeholder="Function name">
             </div>
             <div style="display: inline-block; width: 10%; margin-right: 2%;">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="pinEdit">GPIO-PIN</label>
                 <input type="text" class="form-control" id="pinEdit" name="pinEdit" placeholder="GPIO-PIN">
+            </div>
+            <div id="Functionname" style="display: inline-block; width: 4%;">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">RGB-Function</label>
+                <input type="checkbox" class="btn btn-info" style="width: 100%" id="rgbEdit" name="rgbEdit"/>
             </div>
             <!-- umbenennen von Buttons "value" könnte zu Problemen führen-->
             <div style="display: inline-block; width: 15%; margin-right: 2%">
@@ -117,7 +126,7 @@
     </form>
     <hr />
 </div>
-<form method="get" id="code">
+<form method="post" id="code">
 
     <div class="form-group">
         <label for="Title">Title</label>
@@ -179,6 +188,7 @@
                         if (dvcFunc.ID == option) {
                             document.getElementById("functionnameEdit").value = dvcFunc.Name;
                             document.getElementById("pinEdit").value = dvcFunc.GPIO;
+                            document.getElementByID("RGB").value = dvcFunc.RGB;
                         }
                     }
                 }

@@ -79,15 +79,25 @@ namespace SmartHomeProject.Models
 
         public Connections.Connections connection { get; private set; }
         public List<DeviceModelFunction> DeviceFunctions { get; set; }
+        public List<Sensor> Sensors { get; set; }
 
-        public void addDeviceModelFunction(int functionID, byte GPIO_PIN, string functionname, string location)
+        public void addDeviceSensors(int sensorID, byte[] GPIO_PINS, string python, string sensorname, string location)
+        {
+            if (Sensors == null)
+            {
+                Sensors = new List<Sensor>();
+            }
+            Sensors.Add((new Sensor(sensorID, GPIO_PINS, python, sensorname, location, this.connection)));
+        }
+
+        public void addDeviceModelFunction(int functionID, byte GPIO_PIN, string functionname, string location, bool RGB)
         {
             if (DeviceFunctions == null)
             {
                 DeviceFunctions = new List<DeviceModelFunction>();
             }
 
-            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, connection));
+            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, RGB, connection));
         }
 
         public class Sensor
@@ -179,13 +189,15 @@ namespace SmartHomeProject.Models
             public string location { get; set; }
             public bool status { get; set; }
             private Connections.Connections connection;
+            public bool RGB { get; set; }
 
-            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, Connections.Connections connection)
+            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, bool RGB, Connections.Connections connection)
             {
                 this.GPIO_PIN = GPIO_PIN;
                 this.functionname = functionname;
                 this.location = location;
                 this.connection = connection;
+                this.RGB = RGB;
                 functionID = id;
                 status = getStatus();
             }
