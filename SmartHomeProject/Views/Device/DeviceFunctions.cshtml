@@ -111,7 +111,7 @@
             </div>
             <div id="Functionname" style="display: inline-block; width: 10%;">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">RGB-Function</label>
-                <input type="checkbox" class="btn btn-info" style="width: 100%" id="rgbEdit" name="rgbEdit" value="false"/>
+                @Html.CheckBox("rgbEdit")
             </div>
             <!-- umbenennen von Buttons "value" könnte zu Problemen führen-->
             <div style="display: inline-block; width: 13%; margin-right: 2%">
@@ -126,19 +126,39 @@
     </form>
     <hr />
 </div>
-<form method="post" id="code">
-
-    <div class="form-group">
-        <label for="Title">Title</label>
-        <input id="Sensorname" class="form-control" type="text" />
+<form>
+    <div>
+        <input type="submit" class="btn btn-info" style="width: 100%" id="BestätigenEdit" name="method" value="Create new sensor">
     </div>
-
+</form>
+<form method="post" id="code">
+    <div id="SelectFunctionEdit">
+        <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Select sensor</label>
+        <select name="deviceFunctions" class="form-control" id="deviceFunctions" onchange="SelectionUpdateFunctionEdit()"></select>
+    </div>
     <div class="form-group">
-        <label for="Content">Content</label>
+        <label for="Title">Sensorname</label>
+        <input id="Sensorname" class="form-control" type="text" placeholder="Enter Sensorname" />
+    </div>
+    <div class="form-group">
+        <label for="Title">GPIO-Pins:</label>
+        <input id="SensorGPIO_PINS" class="form-control" type="text" placeholder="Enter used PINS e.g. 4;23;56;23" />
+    </div>
+    <div class="form-group">
+        <label for="Title">Sensor Location:</label>
+        <input id="SensorLocation" class="form-control" type="text" placeholder="Enter location here" />
+    </div>
+    <div class="form-group">
+        <label for="Content">Python-Code</label>
         <div id="Content" style="min-height: 200px;"></div>
     </div>
-
-    <button class="btn btn-primary">Submit</button>
+    <div   >
+        <input type="submit" class="btn btn-info" style="width: 100%" name="method" value="Save">
+        <br />
+    </div>
+    <div style="margin-top: 1rem;">
+        <input type="submit" class="btn btn-danger" style="width: 100%" name="method" value="Delete">
+    </div>
 </form>
 <script type="text/javascript">
 
@@ -146,6 +166,13 @@
         @foreach (var device in Model.DeviceModels)
         {
             @:devices.push({
+            @:sensors: [
+            @if (device.Sensors != null)
+                foreach (var sens in device.Sensors)
+                {
+                    @:{ ID: @(sens.sensorID), Name: @(sens.sensorname), Location: @(sens.location), GPIO_PINS: @(sens.GPIO_PINS), Python: @(sens.python) }
+                }
+            @: ],
             @:deviceFunctions: [
             @if(device.DeviceFunctions != null)
                 foreach (var fun in device.DeviceFunctions)
@@ -172,6 +199,10 @@
                         option.value = dvcFunc.ID;
                         deviceFunctions.appendChild(option);
                     }
+                    for (let sens of devices[i].sensors)
+                    {
+
+                        }
                     return;
 
                 }
