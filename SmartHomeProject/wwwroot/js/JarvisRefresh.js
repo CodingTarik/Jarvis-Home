@@ -18,7 +18,7 @@ function success(data) {
         }
         else {
             for (k = 0; k < data[i].deviceFunctions.length; k++) {
-
+                console.log(data[i].deviceFunctions[k].RGB)
 
 
                 if (data[i].deviceFunctions[k].status == true) {
@@ -65,9 +65,7 @@ function success(data) {
         }
 
         if (data[i].onlineStatus == false) {
-            console.log(data[i].onlineStatus);
             var id = "(" + data[i].name + ")" + "head";
-            console.log(id)
             document.getElementById(id).innerHTML = data[i].name + " OFFLINE!!";
 
 
