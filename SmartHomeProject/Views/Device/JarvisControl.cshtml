@@ -30,6 +30,10 @@
                     <div class="card-body">
 
                         <input type="submit" id="(@device.name@funtion.functionID)button" value="switch off" class="btn btn-danger" />
+                        @if (funtion.RGB == true) { 
+                        
+                            <div id="picker"></div>
+                        }
 
                     </div>
                 </form>
@@ -42,6 +46,7 @@
 }
 <script src="../lib/jquery/dist/jquery.min.js"></script>
 <script src="../js/JarvisRefresh.js"></script>
+<script src="../js/utill.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('li.active').removeClass('active');

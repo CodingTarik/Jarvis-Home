@@ -6,19 +6,20 @@ function refreshDevice() {
 
 }
 
+
 function success(data) {
 
 
-
+    
     for (i = 0; i < data.length; i++) {
-
+        
 
         if (data[i].deviceFunctions == null) {
 
         }
         else {
             for (k = 0; k < data[i].deviceFunctions.length; k++) {
-                console.log(data[i].deviceFunctions[k].RGB)
+                
 
 
                 if (data[i].deviceFunctions[k].status == true) {
