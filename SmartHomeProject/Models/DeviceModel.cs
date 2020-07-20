@@ -132,9 +132,39 @@ namespace SmartHomeProject.Models
             }
             public string getStatus()
             {
+                try
+                {
+                    var task = System.Threading.Tasks.Task.Run(() => connection.recvSensor(getFullPythonExecution()));
+                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS+30)))
+                    {
+                        string result = task.Result;
+                        string[] resultStrings = result.Split(':');
+                        if (resultStrings[0] == "error")
+                        {
+                            if (Logger.Logger.VERBOSE_LOG)
+                            {
+                                Logger.Logger.logError(Logger.Logger.Category.PYTHON, resultStrings[1], null);
+                            }
 
-                connection.recvSensor(getFullPythonExecution());
-                return null;
+                            return "ERROR:" + resultStrings[1];
+                        }
+                        else
+                        {
+                            return resultStrings[1];
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (Logger.Logger.VERBOSE_LOG)
+                    {
+                        Logger.Logger.logError(Logger.Logger.Category.NETWORK + ", " + Logger.Logger.Category.PYTHON, e.Message, e);
+                        
+                    }
+                }
+
+                return "ERROR";
+
             }
 
 
