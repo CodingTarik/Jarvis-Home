@@ -10,10 +10,11 @@ namespace SmartHomeProject.Logger
         public const bool VERBOSE_LOG = true;
         public static class Category
         {
-            public const string NETWORK = "Network";
+            public const string NETWORK = "NETWORK";
             public const string DEVICE_FUNCTION = "DEVICE_FUNCTION";
             public const string DEVICE_CONTROLLER = "DEVICE_CONTROLLER";
-            public const string DATABASE = "Database";
+            public const string DATABASE = "DATABASE";
+            public const string PYTHON = "PYTHON";
         }
 
         public static void logInfo(string category, string message, [CallerLineNumber] int lineNumber = 0,
@@ -30,9 +31,12 @@ namespace SmartHomeProject.Logger
             Console.WriteLine(category + " (ERROR): " + message + " /// caller: " + caller + " /// line: " + lineNumber + " in " + path.Split("\\").Last());
             if (VERBOSE_LOG)
             {
-                foreach (string stackLine in ex.StackTrace.Split("\r\n").Take(STACK_TRACE_LINE_COUNT))
+                if (ex != null)
                 {
-                    Console.WriteLine("/// STACKTRACE : " + stackLine);
+                    foreach (string stackLine in ex.StackTrace.Split("\r\n").Take(STACK_TRACE_LINE_COUNT))
+                    {
+                        Console.WriteLine("/// STACKTRACE : " + stackLine);
+                    }
                 }
             }
 
