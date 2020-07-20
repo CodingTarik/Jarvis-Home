@@ -44,13 +44,13 @@
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionname">Function name</label>
                 <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Enter function name" />
             </div>
-            <div id="Functionname" style="display: inline-block; width: 30%; font-family: 'Roboto Medium';">
+            <div id="Functionname" style="display: inline-block; width: 25%; font-family: 'Roboto Medium';">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionpin">GPIO-Pin</label>
                 <input type="text" class="form-control" id="functionpin" name="functionpin" placeholder="Enter GPIO pin" />
             </div>
-            <div id="Functionname" style="display: inline-block; width: 6%;">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">RGB-Function</label>
-                <input type="checkbox" class="btn btn-info" style="width: 100%" id="RGB" name="RGB"/>
+            <div id="Functionname" style="display: inline-block; width: 10%;">
+                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="RGB">RGB-Function</label>
+                @Html.CheckBox("RGB")
             </div>
             <div id="Functionname" style="display: inline-block; float: right; width: 30%;">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">Save</label>
@@ -97,7 +97,7 @@
     }
     <form asp-controller="Device" asp-action="EditDeviceFunction" method="post" style="margin-top: 1rem;">
         <div style="margin-top: 2rem">
-            <div id="SelectFunctionEdit" style="display: inline-block; width: 25%; margin-right: 2%">
+            <div id="SelectFunctionEdit" style="display: inline-block; width: 20%; margin-right: 2%">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Select function</label>
                 <select name="deviceFunctions" class="form-control" id="deviceFunctions" onchange="SelectionUpdateFunctionEdit()"></select>
             </div>
@@ -109,16 +109,16 @@
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="pinEdit">GPIO-PIN</label>
                 <input type="text" class="form-control" id="pinEdit" name="pinEdit" placeholder="GPIO-PIN">
             </div>
-            <div id="Functionname" style="display: inline-block; width: 4%;">
+            <div id="Functionname" style="display: inline-block; width: 10%;">
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">RGB-Function</label>
-                <input type="checkbox" class="btn btn-info" style="width: 100%" id="rgbEdit" name="rgbEdit"/>
+                <input type="checkbox" class="btn btn-info" style="width: 100%" id="rgbEdit" name="rgbEdit" value="false"/>
             </div>
             <!-- umbenennen von Buttons "value" könnte zu Problemen führen-->
-            <div style="display: inline-block; width: 15%; margin-right: 2%">
+            <div style="display: inline-block; width: 13%; margin-right: 2%">
                 <br>
                 <input type="submit" class="btn btn-info" style="width: 100%" id="BestätigenEdit" name="method" value="Save">
             </div>
-            <div style="display: inline-block; width: 15%;">
+            <div style="display: inline-block; width: 13%;">
                 <br>
                 <input type="submit" class="btn btn-danger" style="width: 100%" id="BstätigenDelete" name="method" value="Delete">
             </div>
@@ -150,7 +150,7 @@
             @if(device.DeviceFunctions != null)
                 foreach (var fun in device.DeviceFunctions)
                 {
-                    @:{ GPIO: @(fun.GPIO_PIN), Name: "@(fun.functionname)", ID:@(fun.functionID)},
+                    @:{ GPIO: @(fun.GPIO_PIN), Name: "@(fun.functionname)", ID:@(fun.functionID), RGB:"@(fun.RGB)"},
                 }@:],
             @:id: "@(device.deviceID)", name: "@(device.name)", description: "@(device.description)", type: "@(device.type)", location: "@(device.location)", port: "@(device.port)", ip: "@(device.ip)"
             @:});
@@ -188,7 +188,7 @@
                         if (dvcFunc.ID == option) {
                             document.getElementById("functionnameEdit").value = dvcFunc.Name;
                             document.getElementById("pinEdit").value = dvcFunc.GPIO;
-                            document.getElementByID("RGB").value = dvcFunc.RGB;
+                            document.getElementById("rgbEdit").checked = dvcFunc.RGB == 'True';
                         }
                     }
                 }

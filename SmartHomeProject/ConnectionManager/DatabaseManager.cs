@@ -34,7 +34,7 @@ namespace SmartHomeProject.ConnectionManager
                 FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
                );";
 
-        private const string createSensorTable = @"CREATE TABLE Sensors (
+        private const string createSensorTable = @"CREATE TABLE sensors (
                 DeviceID INTEGER NOT NULL,
                 SensorID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT(0),
                 Sensor VARCHAR(255),
