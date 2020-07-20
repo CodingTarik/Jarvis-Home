@@ -28,9 +28,12 @@ def waitForMessage():
             se.send(state)
         elif msgsplit[0] == "Sensor":
             se.send(str.encode("Sensor??"));
-            #Here you can implement Sensors
-            #Just use msgsplit[1] to get the GPIO pin
-       else:
+            
+            exec(msgsplit[1])
+            sensorValue = sensorValue()
+            se.send(str.encode(sensorValue))
+
+        else:
             se.send(str.encode("Layer-8-Error"))
        
         
