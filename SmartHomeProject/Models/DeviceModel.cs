@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartHomeProject.Connections;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
@@ -9,32 +10,76 @@ namespace SmartHomeProject.Models
 {
     public class DeviceModel
     {
+        /// <summary>
+        /// Timeout for ping
+        /// </summary>
         private const int TIMEOUTMILSECONDS = 20;
+        /// <summary>
+        /// Creates a new device model with deviceconnectionamanger (ip, port)
+        /// </summary>
         public DeviceModel()
         {
-            connection = new Connections.Connections(ip, port);
+            DeviceConnectionManager = new Connections.DeviceConnectionManager(ip, port);
         }
+        /// <summary>
+        ///  Creates a new device model with deviceconnectionamanger (ip, port)
+        /// </summary>
+        /// <param name="ip">IP</param>
+        /// <param name="port">Port</param>
         public DeviceModel(string ip, int port)
         {
-            connection = new Connections.Connections(ip, port);
+            DeviceConnectionManager = new Connections.DeviceConnectionManager(ip, port);
             this.ip = ip;
             this.port = port;
         }
+        /// <summary>
+        /// Name of the device
+        /// </summary>
         public string name { get; set; }
-
-        public byte[] image
-        {
-            get; set;
-        }
+        /// <summary>
+        /// Unique device ID
+        /// </summary>
         public int deviceID { get; set; }
+        /// <summary>
+        /// Description of the device
+        /// </summary>
         public string description { get; set; }
+        /// <summary>
+        /// Type of the device e.g. rapsberry, arduino etc.
+        /// </summary>
         public string type { get; set; }
+        /// <summary>
+        /// Location of the device
+        /// </summary>
         public string location { get; set; }
+        /// <summary>
+        /// Device port for connections
+        /// </summary>
         public int port { get; set; }
+        /// <summary>
+        /// Device ip for connections
+        /// </summary>
         public string ip { get; set; }
+        /// <summary>
+        /// Image for the device model
+        /// </summary>
+        public byte[] image { get; set; }
+        /// <summary>
+        /// Manages connection to a device
+        /// </summary>
+        public DeviceConnectionManager DeviceConnectionManager { get; private set; }
+        /// <summary>
+        /// List of all functions the device has
+        /// </summary>
+        public List<DeviceModelFunction> DeviceFunctions { get; set; }
+        /// <summary>
+        /// List of all sensors the device has
+        /// </summary>
+        public List<Sensor> Sensors { get; set; }
 
-
-
+        /// <summary>
+        /// Checks if device is online with a ping request
+        /// </summary>
         public bool OnlineStatus
         {
             get
@@ -77,19 +122,31 @@ namespace SmartHomeProject.Models
             }
         }
 
-        public Connections.Connections connection { get; private set; }
-        public List<DeviceModelFunction> DeviceFunctions { get; set; }
-        public List<Sensor> Sensors { get; set; }
 
+        /// <summary>
+        /// Adds a new sensor to the sensor list for this device
+        /// </summary>
+        /// <param name="sensorID">Unique sensor ID</param>
+        /// <param name="GPIO_PINS">Pins used for this sensor</param>
+        /// <param name="python">python script executed for data processing</param>
+        /// <param name="sensorname">Name of the sensor</param>
+        /// <param name="location">location of the sensor</param>
         public void addDeviceSensors(int sensorID, byte[] GPIO_PINS, string python, string sensorname, string location)
         {
             if (Sensors == null)
             {
                 Sensors = new List<Sensor>();
             }
-            Sensors.Add((new Sensor(sensorID, GPIO_PINS, python, sensorname, location, this.connection)));
+            Sensors.Add((new Sensor(sensorID, GPIO_PINS, python, sensorname, location, DeviceConnectionManager)));
         }
-
+        /// <summary>
+        /// Adds a new function to a device
+        /// </summary>
+        /// <param name="functionID">unqiue function id</param>
+        /// <param name="GPIO_PIN">GPIO Pin</param>
+        /// <param name="functionname">functionname</param>
+        /// <param name="location">location</param>
+        /// <param name="RGB">is function a dimming function?</param>
         public void addDeviceModelFunction(int functionID, byte GPIO_PIN, string functionname, string location, bool RGB)
         {
             if (DeviceFunctions == null)
@@ -97,11 +154,18 @@ namespace SmartHomeProject.Models
                 DeviceFunctions = new List<DeviceModelFunction>();
             }
 
-            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, RGB, connection));
+            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, RGB, DeviceConnectionManager));
         }
 
+        /// <summary>
+        /// Class for handeling sensors
+        /// </summary>
         public class Sensor
         {
+            /// <summary>
+            /// Timeout for network communication
+            /// </summary>
+            private const double TIMEOUTMILSECONDS = 20;
             public string sensorname { get; set; }
             public string python { get; set; }
             public int sensorID { get; set; }
@@ -109,14 +173,15 @@ namespace SmartHomeProject.Models
             public byte[] GPIO_PINS { get; private set; }
             public string location { get; set; }
             public string pythonError { get; set; }
-            private Connections.Connections connection;
+            private Connections.DeviceConnectionManager _deviceConnectionManager;
 
-            public Sensor(int id, byte[] GPIO_PINS, string python, string sensorname, string location, Connections.Connections connection)
+            public Sensor(int id, byte[] GPIO_PINS, string python, string sensorname, string location, Connections.DeviceConnectionManager deviceConnectionManager)
             {
                 this.GPIO_PINS = GPIO_PINS;
                 this.sensorname = sensorname;
                 this.location = location;
-                this.connection = connection;
+                _deviceConnectionManager = deviceConnectionManager;
+                this.python = python;
                 sensorID = id;
                 status = getStatus();
             }
@@ -144,8 +209,8 @@ namespace SmartHomeProject.Models
             {
                 try
                 {
-                    var task = System.Threading.Tasks.Task.Run(() => connection.recvSensor(getFullPythonExecution()));
-                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS+30)))
+                    var task = System.Threading.Tasks.Task.Run(() => _deviceConnectionManager.recvSensor(getFullPythonExecution()));
+                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
                     {
                         string result = task.Result;
                         string[] resultStrings = result.Split(':');
@@ -169,7 +234,7 @@ namespace SmartHomeProject.Models
                     if (Logger.Logger.VERBOSE_LOG)
                     {
                         Logger.Logger.logError(Logger.Logger.Category.NETWORK + ", " + Logger.Logger.Category.PYTHON, e.Message, e);
-                        
+
                     }
                 }
 
@@ -180,23 +245,29 @@ namespace SmartHomeProject.Models
 
 
         }
+        /// <summary>
+        /// Class for handeling functions
+        /// </summary>
         public class DeviceModelFunction
         {
-            private const double TIMEOUTMILSECONDS = 50;
+            /// <summary>
+            /// Timeout for network communication
+            /// </summary>
+            private const double TIMEOUTMILSECONDS = 20;
             public int functionID { get; set; }
             public byte GPIO_PIN { get; private set; }
             public string functionname { get; set; }
             public string location { get; set; }
             public bool status { get; set; }
-            private Connections.Connections connection;
+            private Connections.DeviceConnectionManager _deviceConnectionManager;
             public bool RGB { get; set; }
 
-            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, bool RGB, Connections.Connections connection)
+            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, bool RGB, Connections.DeviceConnectionManager deviceConnectionManager)
             {
                 this.GPIO_PIN = GPIO_PIN;
                 this.functionname = functionname;
                 this.location = location;
-                this.connection = connection;
+                _deviceConnectionManager = deviceConnectionManager;
                 this.RGB = RGB;
                 functionID = id;
                 status = getStatus();
@@ -207,7 +278,7 @@ namespace SmartHomeProject.Models
             {
                 try
                 {
-                    var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Status", GPIO_PIN));
+                    var task = System.Threading.Tasks.Task.Run(() => _deviceConnectionManager.recvMessage("Status", GPIO_PIN));
                     if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
                     {
 
@@ -239,7 +310,7 @@ namespace SmartHomeProject.Models
             {
                 try
                 {
-                    var task = System.Threading.Tasks.Task.Run(() => connection.recvMessage("Switch", GPIO_PIN));
+                    var task = System.Threading.Tasks.Task.Run(() => _deviceConnectionManager.recvMessage("Switch", GPIO_PIN));
                     if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
                     {
                         return task.Result;

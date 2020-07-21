@@ -17,5 +17,8 @@ namespace SmartHomeProject.Models
         public bool functionEditSuccess { get;  set; }
         public bool functionDelete { get;  set; }
         public bool functionDeleteSuccess { get; set; }
+        public bool sensorAdded { get; set; }
+        public bool sensorAddSuccess { get; set; }
+        public string sensorName { get; set; }
     }
 }

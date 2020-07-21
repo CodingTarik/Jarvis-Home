@@ -7,6 +7,8 @@
     <title>@ViewData["Title"] - SmartHomeProject</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/booststrap-Litera.css"/>
     <link rel="stylesheet" href="~/css/site.css"/>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 <header>
@@ -44,20 +46,19 @@
         </div>
     </nav>
 </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - SmartHomeProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy🔐</a>  <a asp-area="" asp-controller="Home" asp-action="Donation">Support us with a donation❤</a> <a href="https://github.com/CodingTarik/SmartHomeProject">GitHub<i class="fab fa-github"></i></a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+<footer class="border-top footer text-muted">
+    <div class="container">
+        &copy; 2020 - SmartHomeProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy🔐</a>  <a asp-area="" asp-controller="Home" asp-action="Donation">Support us with a donation❤</a> <a href="https://github.com/CodingTarik/SmartHomeProject">GitHub<i class="fab fa-github"></i></a>
+    </div>
+</footer>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="/js/NavbarSelect.js"></script>
+@RenderSection("Scripts", required: false)
 </body>
 </html>

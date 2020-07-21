@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -121,7 +122,38 @@ namespace SmartHomeProject.Controllers
             DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels(), selectedDeviceName = model };
             return View("EditDevice", pageModel);
         }
+        [HttpPost]
+        public IActionResult AddNewSensor(int deviceIDSensor)
+        {
+            Random rnd = new Random();
+            const string python = "GPIO.setup(PIN[0], GPIO.IN)\r\nreturn GPIO.input(PIN[0])";
+            bool result = false;
+            string sensorname = "New Sensor <" + rnd.Next(0, 9999) + ">";
+            try
+            {
+                result = DatabaseManager.AddSensorToDevice(deviceIDSensor, sensorname, new byte[] { },
+                    python, null);
+            }
+            catch (Exception e)
+            {
+                if (Logger.Logger.VERBOSE_LOG)
+                {
+                    Logger.Logger.logError(Logger.Logger.Category.DEVICE_FUNCTION, e.Message, e);
+                }
 
+                result = false;
+            }
+            
+            DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
+            {
+                selectedDeviceID = deviceIDSensor, deviceSelected = true,
+                DeviceModels = DatabaseManager.getDeviceModels(),
+                sensorName = sensorname,
+                sensorAdded = true,
+                sensorAddSuccess = result
+            };
+            return View("DeviceFunctions", pageModel);
+        }
         [HttpPost]
         public ActionResult EditDeviceFunction(int deviceFunctions, string functionnameEdit, int pinEdit, string method, bool rgbEdit)
         {

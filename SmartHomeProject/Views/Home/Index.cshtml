@@ -2,26 +2,7 @@
 @{
     ViewData["Title"] = "Jarvis Home";
 }
-<script src="lib/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript">
 
-    var soundFile = document.createElement("audio");
-    soundFile.preload = "auto";
-    var src = document.createElement("source");
-    src.src = "../sound/welcome.mp3";
-    soundFile.appendChild(src);
-
-    soundFile.load();
-    soundFile.volume = 0.0;
-    soundFile.play();
-
-    function playSound() {
-        soundFile.currentTime = 0.00;
-        soundFile.volume = 1;
-        soundFile.play();
-    }
-
-</script>
 <div class="jumbotron">
     <h1 class="display-3">Welcome back!</h1>
     <img src="https://image.flaticon.com/icons/png/512/270/270137.png" style="width: 20%; height: auto;"/>
@@ -50,5 +31,7 @@
             }
         </table>
     </form>
-    <script src="../js/DeviceStatus.js"></script>
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="/js/DeviceStatus.js"></script>
+    <script src="/js/JarvisSound.js"></script>
 </div>

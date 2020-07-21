@@ -56,7 +56,7 @@
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">Save</label>
                 <input type="submit" class="btn btn-info" style="width: 100%" id="Bestätigen" value="Function Add" />
             </div>
-            
+
         </div>
     </form>
     <br />
@@ -113,7 +113,7 @@
                 <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">RGB-Function</label>
                 @Html.CheckBox("rgbEdit")
             </div>
-            <!-- umbenennen von Buttons "value" könnte zu Problemen führen-->
+            <!-- umbenennen von Buttons "value" könnte zu Problemen führen, weil der Controller diese benötigt-->
             <div style="display: inline-block; width: 13%; margin-right: 2%">
                 <br>
                 <input type="submit" class="btn btn-info" style="width: 100%" id="BestätigenEdit" name="method" value="Save">
@@ -126,15 +126,38 @@
     </form>
     <hr />
 </div>
-<form>
+@{
+    if (Model != null)
+    {
+        if (Model.sensorAdded)
+        {
+            if (Model.sensorAddSuccess)
+            {
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Sensor add successful!</strong> The sensor <strong>@Model.sensorName</strong> was successfully added.
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Sensor add not successful!</strong> There couldn't be added a new sensor.
+                </div>
+            }
+        }
+    }
+}
+<form asp-controller="Device" asp-action="AddNewSensor">
     <div>
-        <input type="submit" class="btn btn-info" style="width: 100%" id="BestätigenEdit" name="method" value="Create new sensor">
+        <input type="submit" class="btn btn-info" style="width: 100%" id="AddSensor" name="method" value="Create new sensor">
+        <input type="hidden" id="deviceIDSensor" name="deviceIDSensor" value="" />
     </div>
 </form>
 <form method="post" id="code">
     <div id="SelectFunctionEdit">
         <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Select sensor</label>
-        <select name="deviceFunctions" class="form-control" id="deviceFunctions" onchange="SelectionUpdateFunctionEdit()"></select>
+        <select name="sensorOptions" class="form-control" id="sensorOptions" onchange="SelectionUpdateSensors()"></select>
     </div>
     <div class="form-group">
         <label for="Title">Sensorname</label>
@@ -149,10 +172,11 @@
         <input id="SensorLocation" class="form-control" type="text" placeholder="Enter location here" />
     </div>
     <div class="form-group">
-        <label for="Content">Python-Code</label>
-        <div id="Content" style="min-height: 200px;"></div>
+        <label for="content">Python-Code</label>
+        <div id="container" style="min-height: 200px;"></div>
+        <script type="text/javascript" src="/vscode/app.js"></script>
     </div>
-    <div   >
+    <div>
         <input type="submit" class="btn btn-info" style="width: 100%" name="method" value="Save">
         <br />
     </div>
@@ -161,97 +185,126 @@
     </div>
 </form>
 <script type="text/javascript">
-
-        var devices = new Array();
-        @foreach (var device in Model.DeviceModels)
+    var devices = new Array();
+    @foreach (var device in Model.DeviceModels)
         {
             @:devices.push({
             @:sensors: [
             @if (device.Sensors != null)
-                foreach (var sens in device.Sensors)
+                @foreach (var sens in device.Sensors)
                 {
-                    @:{ ID: @(sens.sensorID), Name: @(sens.sensorname), Location: @(sens.location), GPIO_PINS: @(sens.GPIO_PINS), Python: @(sens.python) }
+                    @:{ ID: @(sens.sensorID), Name: "@Html.Raw(sens.sensorname)", Location: "@(sens.location)", GPIO_PINS: "@foreach (var num in sens.GPIO_PINS) {Html.Raw(num + ";");}", Python: `@Html.Raw(sens.python)` },
                 }
-            @: ],
+            @:],
             @:deviceFunctions: [
             @if(device.DeviceFunctions != null)
                 foreach (var fun in device.DeviceFunctions)
                 {
                     @:{ GPIO: @(fun.GPIO_PIN), Name: "@(fun.functionname)", ID:@(fun.functionID), RGB:"@(fun.RGB)"},
                 }@:],
-            @:id: "@(device.deviceID)", name: "@(device.name)", description: "@(device.description)", type: "@(device.type)", location: "@(device.location)", port: "@(device.port)", ip: "@(device.ip)"
+            @:id: "@(device.deviceID)", name: "@(device.name)", description: `@(device.description)`, type: "@(device.type)", location: "@(device.location)", port: "@(device.port)", ip: "@(device.ip)"
             @:});
 
         }
-        SelectionUpdateDevice();
-        SelectionUpdateFunctionEdit();
-        function SelectionUpdateDevice() {
-            var deviceID = document.getElementById("deviceSelect").value;
-            for (i = 0; i < devices.length; i++) {
-                if (devices[i].id == deviceID) {
-                    var deviceFunctions = document.getElementById("deviceFunctions");
-                    deviceFunctions.innerHTML = "";
-                    var hiddenID = document.getElementById("deviceAddID");
-                    hiddenID.value = devices[i].id;
-                    for (let dvcFunc of devices[i].deviceFunctions) {
-                        var option = document.createElement("option");
-                        option.text = dvcFunc.Name;
-                        option.value = dvcFunc.ID;
-                        deviceFunctions.appendChild(option);
+
+    function SelectionUpdateDevice() {
+        var deviceID = document.getElementById("deviceSelect").value;
+        for (i = 0; i < devices.length; i++) {
+            if (devices[i].id == deviceID) {
+                var deviceFunctions = document.getElementById("deviceFunctions");
+                deviceFunctions.innerHTML = "";
+                var hiddenID = document.getElementById("deviceAddID");
+                hiddenID.value = devices[i].id;
+                hiddenID = document.getElementById("deviceIDSensor");
+                hiddenID.value = devices[i].id;
+                for (let dvcFunc of devices[i].deviceFunctions) {
+                    var option = document.createElement("option");
+                    option.text = dvcFunc.Name;
+                    option.value = dvcFunc.ID;
+                    deviceFunctions.appendChild(option);
+                }
+                var sensorOptions = document.getElementById("sensorOptions");
+                sensorOptions.innerHTML = "";
+                for (let sens of devices[i].sensors) {
+                    var sensorOpt = document.createElement("option");
+                    sensorOpt.text = sens.Name;
+                    sensorOpt.value = sens.ID;
+                    sensorOpt.setAttribute("name", "sensorOptionName");
+                    sensorOptions.appendChild(sensorOpt);
+                }
+                return;
+
+            }
+        }
+    }
+
+    function SelectionUpdateFunctionEdit() {
+        var deviceID = document.getElementById("deviceSelect").value;
+        var option = document.getElementById("deviceFunctions").value;
+        for (i = 0; i < devices.length; i++) {
+            if (devices[i].id == deviceID) {
+                for (let dvcFunc of devices[i].deviceFunctions) {
+                    if (dvcFunc.ID == option) {
+                        document.getElementById("functionnameEdit").value = dvcFunc.Name;
+                        document.getElementById("pinEdit").value = dvcFunc.GPIO;
+                        document.getElementById("rgbEdit").checked = dvcFunc.RGB == 'True';
                     }
-                    for (let sens of devices[i].sensors)
-                    {
-
-                        }
-                    return;
-
                 }
             }
         }
+    }
 
-        function SelectionUpdateFunctionEdit() {
-            var deviceID = document.getElementById("deviceSelect").value;
-            var option = document.getElementById("deviceFunctions").value;
-            for (i = 0; i < devices.length; i++) {
-                if (devices[i].id == deviceID) {
-                    for (let dvcFunc of devices[i].deviceFunctions) {
-                        console.log(option + " " + dvcFunc.ID);
-                        if (dvcFunc.ID == option) {
-                            document.getElementById("functionnameEdit").value = dvcFunc.Name;
-                            document.getElementById("pinEdit").value = dvcFunc.GPIO;
-                            document.getElementById("rgbEdit").checked = dvcFunc.RGB == 'True';
-                        }
+    function SelectionUpdateSensors() {
+        var deviceID = document.getElementById("deviceSelect").value;
+        var sensorID = document.getElementById("sensorOptions").value;
+        for (i = 0; i < devices.length; i++) {
+            if (devices[i].id == deviceID)
+            {
+                for (let sens of devices[i].sensors) {
+                    if (sens.ID == sensorID) {
+                        document.getElementById("Sensorname").value = sens.Name;
+                        document.getElementById("SensorGPIO_PINS").value = sens.GPIO_PINS;
+                        document.getElementById("SensorLocation").value = sens.Location;
+                        window.editor.setValue(sens.Python);
                     }
                 }
             }
+
         }
+    }
+
+    SelectionUpdateDevice();
+
+    @if (Model != null)
+    {
+        if (Model.deviceSelected)
+        {
+            @:for (let element of document.getElementsByName("deviceName"))
+            @:{
+                @:if (element.value == @(Model.selectedDeviceID))
+                    @:element.selected = 'selected';
+            @:  SelectionUpdateDevice();
+            @:}
+        }
+        if (Model.sensorAdded)
+        {
+            @:for (let element of document.getElementsByName("sensorOptionName"))
+            @:{ console.log(element); console.log(element.text);
+                @:if (element.text == "@Html.Raw(Model.sensorName)")
+                    @:element.selected = 'selected';
+            @:}
+        }
+    }
+
+    SelectionUpdateFunctionEdit();
+    SelectionUpdateSensors();
 
 </script>
 
 <script src="../js/DeviceStatus.js"></script>
 <script src="../lib/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('li.active').removeClass('active');
-        $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
-    });
-</script>
 
 
 
-<script src="/vs/min/vs/loader.js"></script>
-<script>
-    require.config({ paths: { 'vs': '/vs/min/vs' } });
-    require(['vs/editor/editor.main'], function () {
-        var editor = monaco.editor.create(document.getElementById('Content'), {
-            value: [
-                'import RPi.GPIO as GPIO',
-                'GPIO.setup(PIN[0], GPIO.IN)',
-                'return GPIO.input(PIN[0])'
-            ].join('\n'),
-            language: 'python',
-            theme: 'vs-dark'
-            
-        });
-    });
-</script>
+
+
