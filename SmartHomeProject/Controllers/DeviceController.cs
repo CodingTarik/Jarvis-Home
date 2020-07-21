@@ -1,12 +1,9 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartHomeProject.ConnectionManager;
 using SmartHomeProject.Models;
-using static SmartHomeProject.Program;
-using SmartHomeProject.Logger;
+using System;
+using System.Collections.Generic;
 
 
 namespace SmartHomeProject.Controllers
@@ -18,7 +15,6 @@ namespace SmartHomeProject.Controllers
         public DeviceController(ILogger<DeviceController> logger)
         {
             _logger = logger;
-
         }
         [HttpGet]
         public IActionResult JarvisControl()
@@ -82,8 +78,6 @@ namespace SmartHomeProject.Controllers
 
             }
 
-
-
             return RedirectToAction("JarvisControl", pageModel);
             //return View("JarvisControl", pageModel);
 
@@ -132,7 +126,7 @@ namespace SmartHomeProject.Controllers
             try
             {
                 result = DatabaseManager.AddSensorToDevice(deviceIDSensor, sensorname, new byte[] { },
-                    python, null);
+                    python, "");
             }
             catch (Exception e)
             {
@@ -143,10 +137,11 @@ namespace SmartHomeProject.Controllers
 
                 result = false;
             }
-            
+
             DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
             {
-                selectedDeviceID = deviceIDSensor, deviceSelected = true,
+                selectedDeviceID = deviceIDSensor,
+                deviceSelected = true,
                 DeviceModels = DatabaseManager.getDeviceModels(),
                 sensorName = sensorname,
                 sensorAdded = true,
@@ -154,10 +149,81 @@ namespace SmartHomeProject.Controllers
             };
             return View("DeviceFunctions", pageModel);
         }
+
+        [HttpPost]
+        public IActionResult EditSensor(int deviceIDSensor, int sensorOptions, string sensorname, string SensorGPIO_PINS,
+            string SensorLocation, string content, string method)
+        {
+            try
+            {
+                Console.WriteLine("Werte: " + deviceIDSensor + " " + sensorOptions + " " + sensorname + " " + SensorGPIO_PINS + " " + SensorLocation + " " + content + " " + method );
+                bool result = false;
+                if (method == "Delete")
+                {
+                    result = DatabaseManager.DeleteSensor(sensorOptions);
+                }
+                else
+                {
+                    List<byte> pins = new List<byte>();
+                    string[] split = SensorGPIO_PINS.Split(";");
+                    for (int i = 0; i < split.Length; i++)
+                    {
+                        split[i] = split[i].Trim();
+                        if (!String.IsNullOrEmpty(split[i]))
+                        {
+                            pins.Add(Byte.Parse(split[i]));
+                        }
+                    }
+
+                    result = DatabaseManager.UpdateSensor(sensorOptions, sensorname, pins.ToArray(), content, SensorLocation);
+                }
+
+                if (result)
+                {
+                    DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
+                    {
+                        sensorEdited = true,
+                        sensorEditetSuccess = result,
+                        sensorName = sensorname,
+                        deviceSelected = true,
+                        selectedDeviceID = deviceIDSensor,
+                        DeviceModels = DatabaseManager.getDeviceModels()
+                    };
+                    return View("DeviceFunctions", pageModel);
+                }
+                else
+                {
+                    DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
+                    {
+                        sensorEdited = true,
+                        sensorEditetSuccess = result,
+                        sensorName = DatabaseManager.getSensornameById(sensorOptions),
+                        deviceSelected = true,
+                        selectedDeviceID = deviceIDSensor,
+                        DeviceModels = DatabaseManager.getDeviceModels()
+                    };
+                    return View("DeviceFunctions", pageModel);
+                }
+            }
+            catch (Exception e)
+            {
+                if (Logger.Logger.VERBOSE_LOG)
+                {
+                    Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
+                }
+
+                DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
+                {
+                    sensorEdited = true,
+                    sensorEditetSuccess = false
+                };
+                return View("DeviceFunctions", pageModel);
+            }
+
+        }
         [HttpPost]
         public ActionResult EditDeviceFunction(int deviceFunctions, string functionnameEdit, int pinEdit, string method, bool rgbEdit)
         {
-
             bool editResult = false;
             bool save = false;
             bool delete = false;
@@ -213,7 +279,6 @@ namespace SmartHomeProject.Controllers
             DeviceAddModel pageModel = new DeviceAddModel() { successAdded = result, deviceName = deviceName };
             return View(pageModel);
         }
-
 
     }
 }

@@ -146,6 +146,23 @@
                 </div>
             }
         }
+        else if (Model.sensorEdited)
+        {
+            if (Model.sensorEditetSuccess)
+            {
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>Sensor edit successful!</strong> The sensor <strong>@Model.sensorName</strong> was successfully edited.
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>A problem occured while editing the sensor!</strong> 
+                </div>
+            }
+        }
     }
 }
 <form asp-controller="Device" asp-action="AddNewSensor">
@@ -154,28 +171,30 @@
         <input type="hidden" id="deviceIDSensor" name="deviceIDSensor" value="" />
     </div>
 </form>
-<form method="post" id="code">
+<form method="post" id="code" asp-controller="Device" asp-action="EditSensor">
+    <input type="hidden" id="deviceIDSensorEdit" name="deviceIDSensor" value="" />
     <div id="SelectFunctionEdit">
         <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Select sensor</label>
         <select name="sensorOptions" class="form-control" id="sensorOptions" onchange="SelectionUpdateSensors()"></select>
     </div>
     <div class="form-group">
         <label for="Title">Sensorname</label>
-        <input id="Sensorname" class="form-control" type="text" placeholder="Enter Sensorname" />
+        <input id="Sensorname" name="Sensorname" class="form-control" type="text" placeholder="Enter Sensorname" />
     </div>
     <div class="form-group">
         <label for="Title">GPIO-Pins:</label>
-        <input id="SensorGPIO_PINS" class="form-control" type="text" placeholder="Enter used PINS e.g. 4;23;56;23" />
+        <input id="SensorGPIO_PINS" name="SensorGPIO_PINS" class="form-control" type="text" placeholder="Enter used PINS e.g. 4;23;56;23" />
     </div>
     <div class="form-group">
         <label for="Title">Sensor Location:</label>
-        <input id="SensorLocation" class="form-control" type="text" placeholder="Enter location here" />
+        <input id="SensorLocation" name="SensorLocation" class="form-control" type="text" placeholder="Enter location here" />
     </div>
     <div class="form-group">
         <label for="content">Python-Code</label>
-        <div id="container" style="min-height: 200px;"></div>
+        <div id="container" name="python" style="min-height: 200px;"></div>
         <script type="text/javascript" src="/vscode/app.js"></script>
     </div>
+    <!-- Renaming buttons could lead to problems in controller in EditSensor-->
     <div>
         <input type="submit" class="btn btn-info" style="width: 100%" name="method" value="Save">
         <br />
@@ -193,7 +212,7 @@
             @if (device.Sensors != null)
                 @foreach (var sens in device.Sensors)
                 {
-                    @:{ ID: @(sens.sensorID), Name: "@Html.Raw(sens.sensorname)", Location: "@(sens.location)", GPIO_PINS: "@foreach (var num in sens.GPIO_PINS) {Html.Raw(num + ";");}", Python: `@Html.Raw(sens.python)` },
+                    @:{ ID: @(sens.sensorID), Name: "@Html.Raw(sens.sensorname)", Location: "@(sens.location)", GPIO_PINS: "@foreach (var num in sens.GPIO_PINS) {@(num + ";")}", Python: `@Html.Raw(sens.python)` },
                 }
             @:],
             @:deviceFunctions: [
@@ -217,6 +236,8 @@
                 hiddenID.value = devices[i].id;
                 hiddenID = document.getElementById("deviceIDSensor");
                 hiddenID.value = devices[i].id;
+                hiddenID = document.getElementById("deviceIDSensorEdit");
+                hiddenID.value = devices[i].id;
                 for (let dvcFunc of devices[i].deviceFunctions) {
                     var option = document.createElement("option");
                     option.text = dvcFunc.Name;
@@ -232,10 +253,14 @@
                     sensorOpt.setAttribute("name", "sensorOptionName");
                     sensorOptions.appendChild(sensorOpt);
                 }
+                console.log('test');
+                SelectionUpdateFunctionEdit();
+                SelectionUpdateSensors();
                 return;
 
             }
         }
+      
     }
 
     function SelectionUpdateFunctionEdit() {
@@ -286,7 +311,7 @@
             @:  SelectionUpdateDevice();
             @:}
         }
-        if (Model.sensorAdded)
+        if (Model.sensorAdded || Model.sensorEdited)
         {
             @:for (let element of document.getElementsByName("sensorOptionName"))
             @:{ console.log(element); console.log(element.text);

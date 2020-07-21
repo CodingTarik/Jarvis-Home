@@ -42,12 +42,31 @@ namespace SmartHomeProject.ConnectionManager
         private const string createSensorTable = @"CREATE TABLE sensors (
                 DeviceID INTEGER NOT NULL,
                 SensorID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT(0),
-                Sensor VARCHAR(255),
+                Sensor VARCHAR(255) NOT NULL,
                 GPIO_PINS VARCHAR(255) NOT NULL,
-                LOCATION VARCHAR(255),
-                PYTHON VARCHAR(32000),
+                LOCATION VARCHAR(255) NOT NULL,
+                PYTHON VARCHAR(32000) NOT NULL,
                 FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
                );";
+
+        internal static string getSensornameById(int id)
+        {
+            try
+            {
+                SQLiteCommand command = new SQLiteCommand(webDBConnection);
+                command.CommandText = "SELECT Sensor FROM sensors WHERE SensorID = @SensorID";
+                command.Parameters.AddWithValue("@SensorID", id);
+                command.Prepare();
+                SQLiteDataReader reader = command.ExecuteReader();
+                return reader.GetString(0);
+            }
+            catch (Exception e)
+            {
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
+                return "ERROR";
+            }
+           
+        }
         /// <summary>
         /// Checks for existance of a sqlite database and creates one 
         /// </summary>
@@ -269,14 +288,14 @@ namespace SmartHomeProject.ConnectionManager
         /// <param name="python"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        internal static bool UpdateSensor(int sensorID, string sensorname, byte[] GPIO_PINS, string python, string location = null)
+        internal static bool UpdateSensor(int sensorID, string sensorname, byte[] GPIO_PINS, string python, string location = "")
         {
             try
             {
                 SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText = @"UPDATE Sensors
-                SET Sensor = @sensorname, GPIO_PIN = @GPIO_PINS, LOCATION = @location, PYTHON = @python
-                WHERE FunctionID = @functionID";
+                SET Sensor = @sensorname, GPIO_PINS = @GPIO_PINS, LOCATION = @location, PYTHON = @python
+                WHERE SensorID = @SensorID";
                 StringBuilder pinBuilder = new StringBuilder();
                 for (int i = 0; i < GPIO_PINS.Length; i++)
                 {
@@ -289,10 +308,11 @@ namespace SmartHomeProject.ConnectionManager
                         pinBuilder.Append(GPIO_PINS[i].ToString() + ";");
                     }
                 }
-                sqlQuery.Parameters.AddWithValue("@Sensor", sensorname);
+                sqlQuery.Parameters.AddWithValue("@sensorname", sensorname);
                 sqlQuery.Parameters.AddWithValue("@GPIO_PINS", pinBuilder.ToString());
-                sqlQuery.Parameters.AddWithValue("@location", null);
+                sqlQuery.Parameters.AddWithValue("@location", location);
                 sqlQuery.Parameters.AddWithValue("@python", python);
+                sqlQuery.Parameters.AddWithValue("@SensorID", sensorID);
                 sqlQuery.Prepare();
                 bool result = sqlQuery.ExecuteNonQuery() > 0;
                 return result;
@@ -388,7 +408,7 @@ namespace SmartHomeProject.ConnectionManager
         /// <param name="python"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        internal static bool AddSensorToDevice(int deviceid, string sensorname, byte[] GPIO_PINS, string python, string location = null)
+        internal static bool AddSensorToDevice(int deviceid, string sensorname, byte[] GPIO_PINS, string python, string location = "")
         {
             try
             {
@@ -411,7 +431,7 @@ namespace SmartHomeProject.ConnectionManager
                 sqlQuery.Parameters.AddWithValue("@deviceID", deviceid);
                 sqlQuery.Parameters.AddWithValue("@sensorname", sensorname);
                 sqlQuery.Parameters.AddWithValue("@GPIO_PINS", pinBuilder.ToString());
-                sqlQuery.Parameters.AddWithValue("@location", null);
+                sqlQuery.Parameters.AddWithValue("@location", location);
                 sqlQuery.Parameters.AddWithValue("@python", python);
                 sqlQuery.Prepare();
                 bool result = sqlQuery.ExecuteNonQuery() > 0;
@@ -485,7 +505,7 @@ namespace SmartHomeProject.ConnectionManager
                                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                             }
                         }
-                        model.addDeviceSensors(sensorReader.GetInt32(1), modelSensors.ToArray(), sensorReader.GetString(5), sensorReader.GetString(2), null);
+                        model.addDeviceSensors(sensorReader.GetInt32(1), modelSensors.ToArray(), sensorReader.GetString(5), sensorReader.GetString(2), sensorReader.GetString(4));
                     }
                     models.Add(model);
                 }

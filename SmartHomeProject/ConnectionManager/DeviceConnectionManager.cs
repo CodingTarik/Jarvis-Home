@@ -20,13 +20,13 @@ namespace SmartHomeProject.Connections
 
         }
 
-        public void SendSensor(string pin, int port)
+        public void SendSensor(string method, int port)
         {
             try
             {
                 TcpClient client = new TcpClient(_ip, _port);
 
-                string message = "Sensor" + ":" + pin + ":" + port;
+                string message = "Sensor" + ":" + port + ":"+ method;
 
                 int byteCount = Encoding.ASCII.GetByteCount(message);
 

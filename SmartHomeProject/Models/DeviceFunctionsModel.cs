@@ -20,5 +20,7 @@ namespace SmartHomeProject.Models
         public bool sensorAdded { get; set; }
         public bool sensorAddSuccess { get; set; }
         public string sensorName { get; set; }
+        public bool sensorEdited { get; set; }
+        public bool sensorEditetSuccess { get; set; }
     }
 }
