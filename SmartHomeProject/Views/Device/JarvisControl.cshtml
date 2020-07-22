@@ -31,8 +31,12 @@
 
                         <input type="submit" id="(@device.name@funtion.functionID)button" value="switch off" class="btn btn-danger" />
                         @if (funtion.RGB == true) { 
-                        
-                            <div id="picker"></div>
+                            <br/>
+                            <div class="" style="margin-top: 1rem;">
+                                <label><strong>RGB color</strong></label>
+                                <input id="color" type="button" class="form-control btn btn-primary" value="rgb(255, 128, 0)"/>
+                            </div>
+                              
                         }
 
                     </div>
@@ -44,9 +48,15 @@
 
     }
 }
-<script src="../lib/jquery/dist/jquery.min.js"></script>
 <script src="../js/JarvisRefresh.js"></script>
-<script src="../js/utill.js"></script>
+<!---<script src="../js/utill.js"></script>-->
  
-
+<script>
+    $(function () {
+        $('#color').colorpicker();
+        $('#color').on('colorpickerChange', function(event) {
+            $('#color').css('background-color', event.color.toString());
+        });
+    });
+</script> 
 
