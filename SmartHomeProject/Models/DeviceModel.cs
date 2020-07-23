@@ -137,7 +137,7 @@ namespace SmartHomeProject.Models
             {
                 Sensors = new List<Sensor>();
             }
-            Sensors.Add((new Sensor(sensorID, GPIO_PINS, python, sensorname, location, DeviceConnectionManager)));
+            Sensors.Add((new Sensor(sensorID, GPIO_PINS, python, sensorname, location, DeviceConnectionManager, OnlineStatus)));
         }
         /// <summary>
         /// Adds a new function to a device
@@ -154,7 +154,7 @@ namespace SmartHomeProject.Models
                 DeviceFunctions = new List<DeviceModelFunction>();
             }
 
-            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, RGB, DeviceConnectionManager));
+            DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, RGB, DeviceConnectionManager, OnlineStatus));
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace SmartHomeProject.Models
             public string pythonError { get; set; }
             private Connections.DeviceConnectionManager _deviceConnectionManager;
 
-            public Sensor(int id, byte[] GPIO_PINS, string python, string sensorname, string location, Connections.DeviceConnectionManager deviceConnectionManager)
+            public Sensor(int id, byte[] GPIO_PINS, string python, string sensorname, string location, Connections.DeviceConnectionManager deviceConnectionManager, bool deviceOnlineStauts)
             {
                 this.GPIO_PINS = GPIO_PINS;
                 this.sensorname = sensorname;
@@ -183,7 +183,10 @@ namespace SmartHomeProject.Models
                 _deviceConnectionManager = deviceConnectionManager;
                 this.python = python;
                 sensorID = id;
-                status = getStatus();
+                if (deviceOnlineStauts)
+                {
+                    status = getStatus();
+                }
             }
 
             public string getFullPythonExecution()
@@ -262,7 +265,7 @@ namespace SmartHomeProject.Models
             private Connections.DeviceConnectionManager _deviceConnectionManager;
             public bool RGB { get; set; }
 
-            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, bool RGB, Connections.DeviceConnectionManager deviceConnectionManager)
+            public DeviceModelFunction(int id, byte GPIO_PIN, string functionname, string location, bool RGB, Connections.DeviceConnectionManager deviceConnectionManager, bool deviceOnlineStauts)
             {
                 this.GPIO_PIN = GPIO_PIN;
                 this.functionname = functionname;
@@ -270,7 +273,10 @@ namespace SmartHomeProject.Models
                 _deviceConnectionManager = deviceConnectionManager;
                 this.RGB = RGB;
                 functionID = id;
-                status = getStatus();
+                if (deviceOnlineStauts)
+                {
+                    status = getStatus();
+                }
             }
 
 

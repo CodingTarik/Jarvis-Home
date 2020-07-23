@@ -6,7 +6,7 @@ namespace SmartHomeProject.Logger
 {
     public class Logger
     {
-        private const int STACK_TRACE_LINE_COUNT = 5;
+        private const int STACK_TRACE_LINE_COUNT = 0;
         public const bool VERBOSE_LOG = true;
         public static class Category
         {

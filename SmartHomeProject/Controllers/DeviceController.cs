@@ -165,13 +165,16 @@ namespace SmartHomeProject.Controllers
                 else
                 {
                     List<byte> pins = new List<byte>();
-                    string[] split = SensorGPIO_PINS.Split(";");
-                    for (int i = 0; i < split.Length; i++)
+                    if (!String.IsNullOrEmpty(SensorGPIO_PINS))
                     {
-                        split[i] = split[i].Trim();
-                        if (!String.IsNullOrEmpty(split[i]))
+                        string[] split = SensorGPIO_PINS.Split(";");
+                        for (int i = 0; i < split.Length; i++)
                         {
-                            pins.Add(Byte.Parse(split[i]));
+                            split[i] = split[i].Trim();
+                            if (!String.IsNullOrEmpty(split[i]))
+                            {
+                                pins.Add(Byte.Parse(split[i]));
+                            }
                         }
                     }
 
@@ -215,7 +218,8 @@ namespace SmartHomeProject.Controllers
                 DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
                 {
                     sensorEdited = true,
-                    sensorEditetSuccess = false
+                    sensorEditetSuccess = false,
+                    DeviceModels = DatabaseManager.getDeviceModels()
                 };
                 return View("DeviceFunctions", pageModel);
             }

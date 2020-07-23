@@ -8,23 +8,15 @@
 {
 
     <h1 id="(@device.name)head">@device.name</h1>
-    if (@device.DeviceFunctions == null)
+    if (@device.DeviceFunctions != null)
     {
-
-        <hr />
-    }
-    else
-    {
-
-
-
         foreach (var funtion in device.DeviceFunctions)
         {
 
 
             <div class="card text-white bg-success mb-3" id="(@device.name@funtion.functionID)card" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
                 <form asp-controller="Device" asp-action="ControlFunction" method="get">
-                    <div class="card-header"><h1>@funtion.functionname</h1></div>
+                    <div class="card-header"><h3>@funtion.functionname</h3></div>
                     <input type="hidden" value="@funtion.functionID" name="functionID" />
                     <input type="hidden" value="@device.name" name="deviceName" />
                     <div class="card-body">
@@ -44,13 +36,24 @@
             </div>
 
         }
-        <hr />
-
     }
+    if (device.Sensors != null)
+    {
+        foreach (var sensor in device.Sensors)
+        {
+            <div class="card text-white bg-success mb-3" id="(@sensor.sensorID)sensorcard" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
+                <div class="card-header">
+                    <h3>@sensor.sensorname</h3>
+                    <h5>@sensor.location</h5></div>
+                <div class="card-body">
+                    <label>@sensor.status</label>
+                </div>
+            </div>
+        }
+    }
+    <hr />
 }
 <script src="../js/JarvisRefresh.js"></script>
-<!---<script src="../js/utill.js"></script>-->
- 
 <script>
     $(function () {
         $('#color').colorpicker();
