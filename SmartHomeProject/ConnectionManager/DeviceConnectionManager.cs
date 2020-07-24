@@ -170,7 +170,7 @@ namespace SmartHomeProject.Connections
                             stream.Read(bytes, 0, bytes.Length);
                             stream.Close();
                             client.Close();
-                            return BitConverter.ToString(bytes);
+                            return System.Text.Encoding.ASCII.GetString(bytes);
 
                         }
                     }

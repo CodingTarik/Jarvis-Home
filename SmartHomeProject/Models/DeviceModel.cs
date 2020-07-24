@@ -13,7 +13,7 @@ namespace SmartHomeProject.Models
         /// <summary>
         /// Timeout for ping
         /// </summary>
-        private const int TIMEOUTMILSECONDS = 20;
+        private const int TIMEOUTMILSECONDS = 30;
         /// <summary>
         /// Creates a new device model with deviceconnectionamanger (ip, port)
         /// </summary>
@@ -165,7 +165,7 @@ namespace SmartHomeProject.Models
             /// <summary>
             /// Timeout for network communication
             /// </summary>
-            private const double TIMEOUTMILSECONDS = 20;
+            private const double TIMEOUTMILSECONDS = 50;
             public string sensorname { get; set; }
             public string python { get; set; }
             public int sensorID { get; set; }
@@ -221,14 +221,14 @@ namespace SmartHomeProject.Models
                     {
                         string result = task.Result;
                         string[] resultStrings = result.Split(':');
-                        if (resultStrings[0] == "error")
+                        if (resultStrings[0] == "ERROR")
                         {
                             if (Logger.Logger.VERBOSE_LOG)
                             {
                                 Logger.Logger.logError(Logger.Logger.Category.PYTHON, resultStrings[1], null);
                             }
-
-                            return "ERROR:" + resultStrings[1];
+                            this.pythonError = resultStrings[1];
+                            return "ERROR";
                         }
                         else
                         {
@@ -260,7 +260,7 @@ namespace SmartHomeProject.Models
             /// <summary>
             /// Timeout for network communication
             /// </summary>
-            private const double TIMEOUTMILSECONDS = 20;
+            private const double TIMEOUTMILSECONDS = 50;
             public int functionID { get; set; }
             public byte GPIO_PIN { get; private set; }
             public string functionname { get; set; }

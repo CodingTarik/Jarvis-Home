@@ -1,7 +1,7 @@
 
 import socket
-import RPi.GPIO as GPIO
-#from RPiSim import GPIO 
+#import RPi.GPIO as GPIO
+import GPIO
 
 
 def waitForMessage():
@@ -10,30 +10,37 @@ def waitForMessage():
     s.listen(5)
     while True:
         clientsocket, address = s.accept()
-        msg = clientsocket.recv(1024).decode()
-        print(msg)
-        msgsplit = msg.split(":")
+        msg = clientsocket.recv(1024).decode()        
+        msgsplit = msg.split(":", 2)
+        print(msgsplit)
         s.close
-        print("Getting GPIO-State for: " + msgsplit[1])
-        print(getGPIOState(int(msgsplit[1])))
-        se = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        print("Connecting to " + address[0] + " with port " + msgsplit[2])
-        se.connect((address[0],int(msgsplit[2])))
+        se = socket.socket(socket.AF_INET,socket.SOCK_STREAM)       
         if msgsplit[0] == "Switch":
-            switchGPIOState(int(msgsplit[1]))
-            print(msgsplit)
+            se.connect((address[0],int(msgsplit[2])))
+            switchGPIOState(int(msgsplit[1]))         
             state = getGPIOState(int(msgsplit[1]))
-            se.send(state)
+            se.send(str.encode(state))
         elif msgsplit[0] == "Status":
-            print(msgsplit)
-            state = getGPIOState(int(msgsplit[1]))
+            se.connect((address[0],int(msgsplit[2])))            
+            state = str.encode(getGPIOState(int(msgsplit[1])))
             print(getGPIOState(int(msgsplit[1])))
             se.send(state)
         elif msgsplit[0] == "Sensor":
-            print(msgsplit[2])
-            sensorValue = exec(msgsplit[2])
-            se.send(str.encode(sensorValue))
+            se.connect((address[0],int(msgsplit[1])))  
+            python = msgsplit[2]+"global execSensorValue; execSensorValue = sensorValue()"
+            print("Execute:\r\n" + python)
+            global execSensorValue
+            execSensorValue = "ERROR:PYTHON ERROR"
+            try:
+                exec(python) 
+            except Exception as e:
+                execSensorValue = "ERROR:"+str(e)          
+            else:
+                execSensorValue = "SUCCESS:"+str(execSensorValue)
+            print("Result: " + str(execSensorValue))
+            se.send(str.encode(str(execSensorValue)))
         else:
+            se.connect((address[0],int(msgsplit[2]))) 
             se.send(str.encode("Layer-8-Error"))
         se.close()
              
@@ -47,10 +54,10 @@ def getGPIOState(gpioToCheck):
 
 def switchGPIOState(toSwitch):
     GPIO.setup(toSwitch, GPIO.OUT)
-    if getGPIOState(toSwitch) == "High":
+    if getGPIOState(toSwitch) == "1":
         GPIO.output(toSwitch, GPIO.LOW)
     else:
         GPIO.output(toSwitch, GPIO.HIGH)
   
-GPIO.setmode(GPIO.BCM)   
+#GPIO.setmode(GPIO.BCM)   
 waitForMessage()

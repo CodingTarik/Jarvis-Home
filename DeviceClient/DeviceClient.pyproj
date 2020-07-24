@@ -26,6 +26,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.py" />
+    <Compile Include="GPIO.py" />
+    <Compile Include="GPIOSim.py" />
     <Compile Include="GPIO_CLIENT.py">
       <SubType>Code</SubType>
     </Compile>
