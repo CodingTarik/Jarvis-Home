@@ -111,8 +111,8 @@ namespace SmartHomeProject.Connections
                         {
                             ASCIIEncoding ascii = new ASCIIEncoding();
                             TcpListener listener = new TcpListener(IPAddress.Any, port);
-                            SendPin(operation, pin, port);
                             listener.Start();
+                            SendPin(operation, pin, port);
                             TcpClient client = listener.AcceptTcpClient();
                             NetworkStream stream = client.GetStream();
                             byte[] bytes = new byte[1024];
@@ -162,8 +162,8 @@ namespace SmartHomeProject.Connections
                         {
                             ASCIIEncoding ascii = new ASCIIEncoding();
                             TcpListener listener = new TcpListener(IPAddress.Any, port);
-                            SendSensor(method, port);
                             listener.Start();
+                            SendSensor(method, port);
                             TcpClient client = listener.AcceptTcpClient();
                             NetworkStream stream = client.GetStream();
                             byte[] bytes = new byte[1024];

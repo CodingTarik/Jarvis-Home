@@ -187,6 +187,10 @@ namespace SmartHomeProject.Models
                 {
                     status = getStatus();
                 }
+                else
+                {
+                    status = "ERROR";
+                }
             }
 
             public string getFullPythonExecution()
