@@ -2,16 +2,50 @@
 @{
     ViewData["Title"] = "Jarvis Home";
 }
-
+<script src="https://www.youtube.com/iframe_api"></script>
+<style>
+    div#light-background{
+        background:none repeat scroll 0 0 #000;
+        display:none;
+        height:100%;
+        width:100%;
+        left:0;
+        top:0;
+        position:fixed;
+        z-index:9999;
+        pointer-events:none
+    }
+    div#jarvis{
+        display: none;
+        top: 0%;
+        width: 100%;
+        height: 100%;
+        position: relative;
+        left: -50%;
+        z-index: 10000;
+        text-align: center;
+    }
+    iframe{
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<div id="light-background"></div>
+<div style="position: absolute; left: 50%; width: 100%; height: 90%;">
+    <div id="jarvis"> <div id="player"></div></div>
+</div>
 <div class="jumbotron">
     <h1 class="display-3">Welcome back!</h1>
     <img src="https://image.flaticon.com/icons/png/512/270/270137.png" style="width: 20%; height: auto;"/>
     <p class="lead">I am Jarvis, I'm here to support you day and night.</p>
     <hr class="my-4">
-    <p>© David Noll and Tarik Azzouzi</p>
+    <p><strong>© David Noll and Tarik Azzouzi</strong> </p>
     <p class="lead">
-        <button class="btn btn-primary btn-lg" role="button" onclick="playSound()">Click here to learn more.</button>
+        <button class="btn btn-primary btn-lg" role="button" onclick="playSound()">What is jarvis?*</button>
     </p>
+    <p class="lead">*This project has no official connection with Marvel.</p>
 </div>
 <div class="text-center">
     <form style="margin-top: 5%">

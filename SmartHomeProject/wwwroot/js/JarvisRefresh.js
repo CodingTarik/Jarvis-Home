@@ -18,12 +18,12 @@ function success(data) {
                         document.getElementById(id).className = "card text-white bg-success mb-3";
                         var id = "(" + data[i].name + data[i].deviceFunctions[k].functionID + ")" + "button";
                         document.getElementById(id).className = "btn btn-danger";
-                        document.getElementById(id).value = "Ausschalten";
+                        document.getElementById(id).value = "switch off";
                     } else {
                         document.getElementById(id).className = "card text-white bg-danger mb-3";
                         var id = "(" + data[i].name + data[i].deviceFunctions[k].functionID + ")" + "button";
                         document.getElementById(id).className = "btn btn-success";
-                        document.getElementById(id).value = "Einschalten";
+                        document.getElementById(id).value = "switch on";
                     }
                 } else {
                     var id = "(" + data[i].name + data[i].deviceFunctions[k].functionID + ")" + "button";
@@ -45,7 +45,7 @@ function success(data) {
                 var sensorstatus = document.getElementById("(" + data[i].sensors[g].sensorID + ")sensorstatus");
                 if (data[i].sensors[g].status == "ERROR") {
                     badge.className = "card text-white bg-danger mb-3";
-                    sensorstatus.innerHTML = data[i].sensors[g].status + " (see console for more information)";
+                    sensorstatus.innerHTML = data[i].sensors[g].status + " (see console)";
                     console.warn("Python-Error of sensor " + data[i].sensors[g].sensorname + " with id " + data[i].sensors[g].sensorID + ": " + data[i].sensors[g].pythonError);
                 } else {
                     badge.className = "card text-white bg-success mb-3";

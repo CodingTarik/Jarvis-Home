@@ -45,6 +45,7 @@
   <ItemGroup>
     <Folder Include="AI\" />
     <Folder Include="wwwroot\devices\" />
+    <Folder Include="wwwroot\sound\" />
   </ItemGroup>
 
 </Project>

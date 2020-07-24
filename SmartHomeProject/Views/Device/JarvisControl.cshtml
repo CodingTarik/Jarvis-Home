@@ -3,7 +3,7 @@
     ViewData["Title"] = "Jarvis Control";
 }
 
-
+<hr/>
 @foreach (var device in Model.DeviceModels)
 {
 
@@ -20,7 +20,6 @@
                     <input type="hidden" value="@funtion.functionID" name="functionID" />
                     <input type="hidden" value="@device.name" name="deviceName" />
                     <div class="card-body">
-
                         <input type="submit" id="(@device.name@funtion.functionID)button" value="switch off" class="btn btn-danger" />
                         @if (funtion.RGB == true) { 
                             <br/>
@@ -28,7 +27,6 @@
                                 <label><strong>RGB color</strong></label>
                                 <input id="color" type="button" class="form-control btn btn-primary" value="rgb(255, 128, 0)"/>
                             </div>
-                              
                         }
 
                     </div>
