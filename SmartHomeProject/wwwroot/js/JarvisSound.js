@@ -34,7 +34,8 @@ function playSound() {
         }
     });
     function onPlayerReady(event) {
-        $('#jarvis').css({ opacity: 0, display: 'block'}).stop().animate({ opacity: 1}, 100);
+        $('#jarvis').css({ opacity: 0, display: 'block' }).stop().animate({ opacity: 1, zIndex: 10000 }, 100);
+        $('#jarvis2').css({ zIndex: 10000 });
         event.target.playVideo();
     }
 
@@ -51,6 +52,7 @@ function playSound() {
         $('#jarvis').stop().fadeOut(400);
         $('#player').remove();
         $('#jarvis').append("<div id='player'></div>");
+        $('#jarvis2').css({ zIndex: -1 });
     }
 
 }
