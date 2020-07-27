@@ -21,7 +21,10 @@ namespace SmartHomeProject.Controllers
             return View();
         }
 
-
+        public IActionResult Credits()
+        {
+            return View();
+        }
         [HttpGet]
         public IActionResult Index()
         {
