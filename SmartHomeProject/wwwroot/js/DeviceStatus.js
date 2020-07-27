@@ -10,9 +10,15 @@ function refreshDevice() {
     }
 
 }
+
 function RefreshDeviceStatus(devicename) {
     console.log("Refreshing status for: " + devicename);
-    $.ajax({ type: "GET", dataType: "json", url: location.origin+"/api/devicestatus/" + devicename, success: success });
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: location.origin + "/api/devicestatus/" + devicename,
+        success: success
+    });
 }
 
 function success(data) {
@@ -21,8 +27,7 @@ function success(data) {
     if (data.onlineStatus == false) {
         spanElement.className = "badge badge-danger";
         spanElement.innerHTML = "Offline";
-    }
-    else {
+    } else {
         spanElement.className = "badge badge-success";
         spanElement.innerHTML = "Online";
     }

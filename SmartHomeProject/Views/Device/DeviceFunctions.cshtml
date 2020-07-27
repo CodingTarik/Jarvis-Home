@@ -1,13 +1,12 @@
-﻿@using System.Data.Entity.Core.Metadata.Edm
-@model SmartHomeProject.Models.DeviceFunctionsModel
+﻿@model DeviceFunctionsModel
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Device Function Managment</h1>
-    <hr />
-    <br />
+    <hr/>
+    <br/>
     <h3 class="display-6">Select Device</h3>
     <select name="selectedDevice" class="form-control" id="deviceSelect" onchange="SelectionUpdateDevice()">
         @foreach (var device in Model.DeviceModels)
@@ -15,8 +14,8 @@
             <option name="deviceName" value="@device.deviceID">@device.name</option>
         }
     </select>
-    <hr />
-    <br />
+    <hr/>
+    <br/>
     <h3 class="display-6">Add Function</h3>
     @{
         if (Model != null)
@@ -39,28 +38,28 @@
     }
     <form method="post" asp-controller="Device" asp-action="addDeviceFunction" style="margin-top: 1rem;">
         <div style="margin-top: 2rem">
-            <input type="hidden" id="deviceAddID" name="deviceID" value="" />
+            <input type="hidden" id="deviceAddID" name="deviceID" value=""/>
             <div id="Functionname" style="display: inline-block; float: left; width: 30%;">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionname">Function name</label>
-                <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Enter function name" />
+                <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="functionname">Function name</label>
+                <input type="text" class="form-control" id="functionname" name="functionname" placeholder="Enter function name"/>
             </div>
-            <div id="Functionname" style="display: inline-block; width: 25%; font-family: 'Roboto Medium';">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionpin">GPIO-Pin</label>
-                <input type="text" class="form-control" id="functionpin" name="functionpin" placeholder="Enter GPIO pin" />
+            <div id="Functionname" style="display: inline-block; font-family: 'Roboto Medium'; width: 25%;">
+                <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="functionpin">GPIO-Pin</label>
+                <input type="text" class="form-control" id="functionpin" name="functionpin" placeholder="Enter GPIO pin"/>
             </div>
             <div id="Functionname" style="display: inline-block; width: 10%;">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="RGB">RGB-Function</label>
+                <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="RGB">RGB-Function</label>
                 @Html.CheckBox("RGB")
             </div>
             <div id="Functionname" style="display: inline-block; float: right; width: 30%;">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">Save</label>
-                <input type="submit" class="btn btn-info" style="width: 100%" id="Bestätigen" value="Function Add" />
+                <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="Bestätigen">Save</label>
+                <input type="submit" class="btn btn-info" style="width: 100%" id="Bestätigen" value="Function Add"/>
             </div>
 
         </div>
     </form>
-    <br />
-    <hr />
+    <br/>
+    <hr/>
     <h3 class="display-6">Edit function</h3>
     @{
         if (Model != null)
@@ -76,7 +75,7 @@
             {
                 <div class="alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>Processing not successful!</strong>  The function <strong>@Model.functionNameAdded</strong> could not be edited.
+                    <strong>Processing not successful!</strong> The function <strong>@Model.functionNameAdded</strong> could not be edited.
                 </div>
             }
             else if (Model.functionDelete && Model.functionDeleteSuccess)
@@ -97,24 +96,24 @@
     }
     <form asp-controller="Device" asp-action="EditDeviceFunction" method="post" style="margin-top: 1rem;">
         <div style="margin-top: 2rem">
-            <div id="SelectFunctionEdit" style="display: inline-block; width: 20%; margin-right: 2%">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Select function</label>
+            <div id="SelectFunctionEdit" style="display: inline-block; margin-right: 2%; width: 20%;">
+                <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="deviceFunctions">Select function</label>
                 <select name="deviceFunctions" class="form-control" id="deviceFunctions" onchange="SelectionUpdateFunctionEdit()"></select>
             </div>
-            <div style="display: inline-block; width: 20%; margin-right: 2%;">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="functionnameEdit">Function name</label>
+            <div style="display: inline-block; margin-right: 2%; width: 20%;">
+                <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="functionnameEdit">Function name</label>
                 <input type="text" class="form-control" id="functionnameEdit" name="functionnameEdit" placeholder="Function name">
             </div>
-            <div style="display: inline-block; width: 10%; margin-right: 2%;">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="pinEdit">GPIO-PIN</label>
+            <div style="display: inline-block; margin-right: 2%; width: 10%;">
+                <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="pinEdit">GPIO-PIN</label>
                 <input type="text" class="form-control" id="pinEdit" name="pinEdit" placeholder="GPIO-PIN">
             </div>
             <div id="Functionname" style="display: inline-block; width: 10%;">
-                <label style="font-weight: bold; font-family: 'Roboto Medium';" for="Bestätigen">RGB-Function</label>
+                <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="Bestätigen">RGB-Function</label>
                 @Html.CheckBox("rgbEdit")
             </div>
             <!-- umbenennen von Buttons "value" könnte zu Problemen führen, weil der Controller diese benötigt-->
-            <div style="display: inline-block; width: 13%; margin-right: 2%">
+            <div style="display: inline-block; margin-right: 2%; width: 13%;">
                 <br>
                 <input type="submit" class="btn btn-info" style="width: 100%" id="BestätigenEdit" name="method" value="Save">
             </div>
@@ -124,7 +123,7 @@
             </div>
         </div>
     </form>
-    <hr />
+    <hr/>
 </div>
 @{
     if (Model != null)
@@ -159,7 +158,7 @@
             {
                 <div class="alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>A problem occured while editing the sensor!</strong> 
+                    <strong>A problem occured while editing the sensor!</strong>
                 </div>
             }
         }
@@ -168,26 +167,26 @@
 <form asp-controller="Device" asp-action="AddNewSensor">
     <div>
         <input type="submit" class="btn btn-info" style="width: 100%" id="AddSensor" name="method" value="Create new sensor">
-        <input type="hidden" id="deviceIDSensor" name="deviceIDSensor" value="" />
+        <input type="hidden" id="deviceIDSensor" name="deviceIDSensor" value=""/>
     </div>
 </form>
 <form method="post" id="code" asp-controller="Device" asp-action="EditSensor">
-    <input type="hidden" id="deviceIDSensorEdit" name="deviceIDSensor" value="" />
+    <input type="hidden" id="deviceIDSensorEdit" name="deviceIDSensor" value=""/>
     <div id="SelectFunctionEdit">
-        <label style="font-weight: bold; font-family: 'Roboto Medium';" for="deviceFunctions">Select sensor</label>
+        <label style="font-family: 'Roboto Medium'; font-weight: bold;" for="deviceFunctions">Select sensor</label>
         <select name="sensorOptions" class="form-control" id="sensorOptions" onchange="SelectionUpdateSensors()"></select>
     </div>
     <div class="form-group">
         <label for="Title">Sensorname</label>
-        <input id="Sensorname" name="Sensorname" class="form-control" type="text" placeholder="Enter Sensorname" />
+        <input id="Sensorname" name="Sensorname" class="form-control" type="text" placeholder="Enter Sensorname"/>
     </div>
     <div class="form-group">
         <label for="Title">GPIO-Pins:</label>
-        <input id="SensorGPIO_PINS" name="SensorGPIO_PINS" class="form-control" type="text" placeholder="Enter used PINS e.g. 4;23;56;23" />
+        <input id="SensorGPIO_PINS" name="SensorGPIO_PINS" class="form-control" type="text" placeholder="Enter used PINS e.g. 4;23;56;23"/>
     </div>
     <div class="form-group">
         <label for="Title">Sensor Location:</label>
-        <input id="SensorLocation" name="SensorLocation" class="form-control" type="text" placeholder="Enter location here" />
+        <input id="SensorLocation" name="SensorLocation" class="form-control" type="text" placeholder="Enter location here"/>
     </div>
     <div class="form-group">
         <label for="content">Python-Code</label>
@@ -197,7 +196,7 @@
     <!-- Renaming buttons could lead to problems in controller in EditSensor-->
     <div>
         <input type="submit" class="btn btn-info" style="width: 100%" name="method" value="Save">
-        <br />
+        <br/>
     </div>
     <div style="margin-top: 1rem;">
         <input type="submit" class="btn btn-danger" style="width: 100%" name="method" value="Delete">
@@ -206,25 +205,26 @@
 <script type="text/javascript">
     var devices = new Array();
     @foreach (var device in Model.DeviceModels)
-        {
-            @:devices.push({
-            @:sensors: [
-            @if (device.Sensors != null)
-                @foreach (var sens in device.Sensors)
-                {
-                    @:{ ID: @(sens.sensorID), Name: "@Html.Raw(sens.sensorname)", Location: "@(sens.location)", GPIO_PINS: "@foreach (var num in sens.GPIO_PINS) {@(num + ";")}", Python: `@Html.Raw(sens.python)` },
-                }
-            @:],
-            @:deviceFunctions: [
-            @if(device.DeviceFunctions != null)
-                foreach (var fun in device.DeviceFunctions)
-                {
-                    @:{ GPIO: @(fun.GPIO_PIN), Name: "@(fun.functionname)", ID:@(fun.functionID), RGB:"@(fun.RGB)"},
-                }@:],
-            @:id: "@(device.deviceID)", name: "@(device.name)", description: `@(device.description)`, type: "@(device.type)", location: "@(device.location)", port: "@(device.port)", ip: "@(device.ip)"
-            @:});
-
-        }
+    {
+        @:devices.push({
+        @:sensors: [
+        @if (device.Sensors != null)
+            @
+            foreach (var sens in device.Sensors)
+            {
+                @:{ ID: @(sens.sensorID), Name: "@Html.Raw(sens.sensorname)", Location: "@(sens.location)", GPIO_PINS: "@foreach (var num in sens.GPIO_PINS) {@(num + ";")}", Python: `@Html.Raw(sens.python)` },  
+            }
+        @:],
+        @:deviceFunctions: [
+        @if (device.DeviceFunctions != null)
+            foreach (var fun in device.DeviceFunctions)
+            {
+                @:{ GPIO: @(fun.GPIO_PIN), Name: "@(fun.functionname)", ID: @(fun.functionID), RGB: "@(fun.RGB)" },
+            }
+        @:],
+        @:id:"@(device.deviceID)", name:"@(device.name)", description:`@(device.description)`, type:"@(device.type)", location:"@(device.location)", port:"@(device.port)", ip:"@(device.ip)"
+        @:});
+    }
 
     function SelectionUpdateDevice() {
         var deviceID = document.getElementById("deviceSelect").value;
@@ -260,7 +260,7 @@
 
             }
         }
-      
+
     }
 
     function SelectionUpdateFunctionEdit() {
@@ -283,8 +283,7 @@
         var deviceID = document.getElementById("deviceSelect").value;
         var sensorID = document.getElementById("sensorOptions").value;
         for (i = 0; i < devices.length; i++) {
-            if (devices[i].id == deviceID)
-            {
+            if (devices[i].id == deviceID) {
                 for (let sens of devices[i].sensors) {
                     if (sens.ID == sensorID) {
                         document.getElementById("Sensorname").value = sens.Name;
@@ -306,17 +305,17 @@
         {
             @:for (let element of document.getElementsByName("deviceName"))
             @:{
-                @:if (element.value == @(Model.selectedDeviceID))
-                    @:element.selected = 'selected';
+            @:if (element.value == @(Model.selectedDeviceID))
+            @:element.selected = 'selected';
             @:  SelectionUpdateDevice();
             @:}
         }
         if (Model.sensorAdded || Model.sensorEdited)
         {
             @:for (let element of document.getElementsByName("sensorOptionName"))
-            @:{ console.log(element); console.log(element.text);
-                @:if (element.text == "@Html.Raw(Model.sensorName)")
-                    @:element.selected = 'selected';
+            @:{ console.log(element);console.log(element.text);
+            @:if (element.text == "@Html.Raw(Model.sensorName)")
+            @:element.selected = 'selected';
             @:}
         }
     }
@@ -328,8 +327,3 @@
 
 <script src="../js/DeviceStatus.js"></script>
 <script src="../lib/jquery/dist/jquery.min.js"></script>
-
-
-
-
-

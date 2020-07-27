@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartHomeProject.ConnectionManager;
@@ -18,17 +14,18 @@ namespace SmartHomeProject.Controllers
         {
             _logger = logger;
         }
+
         [HttpGet]
-        public IActionResult Donation() 
+        public IActionResult Donation()
         {
             return View();
         }
 
 
-       [HttpGet]
+        [HttpGet]
         public IActionResult Index()
         {
-            DeviceManageModel pageModel = new DeviceManageModel() {DeviceModels = DatabaseManager.getDeviceModels()};
+            var pageModel = new DeviceManageModel {DeviceModels = DatabaseManager.getDeviceModels()};
             return View(pageModel);
         }
 
@@ -40,7 +37,7 @@ namespace SmartHomeProject.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }

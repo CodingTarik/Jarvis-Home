@@ -1,5 +1,4 @@
-﻿@using System.Security.Cryptography.X509Certificates
-@model DeviceEditModel
+﻿@model DeviceEditModel
 
 @{
     ViewData["Title"] = "Edit Device";
@@ -9,12 +8,11 @@
     var devices = new Array();
     @foreach (var device in Model.DeviceModels)
     {
-        @:devices.push({name: "@device.name", description: "@Html.Raw(device.description.Replace(System.Environment.NewLine, "\\n"))", type: "@device.type", location: "@device.location", port: "@device.port", ip: "@device.ip"});
+        @:devices.push({ name: "@device.name", description: "@Html.Raw(device.description.Replace(Environment.NewLine, "\\n"))", type: "@device.type", location: "@device.location", port: "@device.port", ip: "@device.ip" });
     }
     function SelectionUpdate() {
-        var name= document.getElementById("deviceSelect").value;
-        for (i = 0; i < devices.length; i++)
-        {
+        var name = document.getElementById("deviceSelect").value;
+        for (i = 0; i < devices.length; i++) {
             if (devices[i].name == name) {
                 document.getElementById("deviceNameNew").value = devices[i].name;
                 document.getElementById("deviceType").value = devices[i].type;
@@ -29,19 +27,19 @@
 </script>
 <h1 class="display-4 text-center">Device Manage</h1>
 @{
-    if (!Model.editingFailed && !String.IsNullOrEmpty(Model.deviceNameEdited))
+    if (!Model.editingFailed && !string.IsNullOrEmpty(Model.deviceNameEdited))
     {
-    <div class="alert alert-dismissible alert-success">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>Editing successful!</strong> The device <strong>@Model.deviceNameEdited</strong> was successfully updated.
-    </div>
+        <div class="alert alert-dismissible alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Editing successful!</strong> The device <strong>@Model.deviceNameEdited</strong> was successfully updated.
+        </div>
     }
-    else if (Model.editingFailed && !String.IsNullOrEmpty(Model.deviceNameEdited))
+    else if (Model.editingFailed && !string.IsNullOrEmpty(Model.deviceNameEdited))
     {
-<div class="alert alert-dismissible alert-danger">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <strong>Editing not successful!</strong> The device <strong>@Model.deviceNameEdited</strong> could not be updated.
-</div>
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Editing not successful!</strong> The device <strong>@Model.deviceNameEdited</strong> could not be updated.
+        </div>
     }
 }
 <div class="alert alert-dismissible alert-secondary">
@@ -51,7 +49,7 @@
 <div class="text-center">
     <form asp-controller="Device" asp-action="EditDeviceSettings" method="POST">
         <label for="exampleSelect1">Select Device</label>
-        <select name="selectedDevice" class="form-control" id="deviceSelect" onchange="SelectionUpdate()"  >
+        <select name="selectedDevice" class="form-control" id="deviceSelect" onchange="SelectionUpdate()">
             @foreach (var device in Model.DeviceModels)
             {
                 if (!(device.name == Model.selectedDeviceName))
@@ -66,7 +64,7 @@
         </select>
         <div class="form-group">
             <label for="deviceNameNew">Geräte Name</label>
-            <input type="text" class="form-control" id="deviceNameNew"  name="deviceNameNew" placeholder="Enter device name">
+            <input type="text" class="form-control" id="deviceNameNew" name="deviceNameNew" placeholder="Enter device name">
         </div>
         <div class="form-group">
             <label for="deviceType">Device type</label>
@@ -83,15 +81,15 @@
         </div>
         <div class="form-group">
             <label for="deviceIP">Device IP</label>
-            <input type="text"  class="form-control" id="deviceIP" name="deviceIP" placeholder="Enter IP address">
+            <input type="text" class="form-control" id="deviceIP" name="deviceIP" placeholder="Enter IP address">
         </div>
         <div class="form-group">
             <label for="devicePort">Device port</label>
-            <input type="text" class="form-control" id="devicePort"  name="devicePort" placeholder="Enter Port">
+            <input type="text" class="form-control" id="devicePort" name="devicePort" placeholder="Enter Port">
         </div>
         <div class="form-group">
             <label for="deviceLocation">Device location</label>
-            <input type="text" class="form-control" id="deviceLocation"  name="deviceLocation" placeholder="Enter location">
+            <input type="text" class="form-control" id="deviceLocation" name="deviceLocation" placeholder="Enter location">
         </div>
         <button type="submit" value="Save" class="btn btn-primary"><i class="far fa-save"></i> Save</button>
     </form>

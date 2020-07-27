@@ -1,5 +1,4 @@
-﻿@using System.Data.Entity.Core.Metadata.Edm
-@model SmartHomeProject.Models.DeviceManageModel
+﻿@model DeviceManageModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -8,16 +7,15 @@
 <div class="text-center">
     <h1 class="display-4">Manage devices</h1>
     @{
-        if (!Model.deleteErrored && !String.IsNullOrEmpty(Model.deletedDeviceName))
+        if (!Model.deleteErrored && !string.IsNullOrEmpty(Model.deletedDeviceName))
         {
             <div class="alert alert-dismissible alert-success">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Deletion Successful!</strong> The device <strong>@Model.deletedDeviceName</strong> was successfully deleted.
             </div>
         }
-        else if (Model.deleteErrored && !String.IsNullOrEmpty(Model.deletedDeviceName))
+        else if (Model.deleteErrored && !string.IsNullOrEmpty(Model.deletedDeviceName))
         {
-
             <div class="alert alert-dismissible alert-danger">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <strong>Deletion not successful!</strong> The device <strong>@Model.deletedDeviceName</strong> could not be deleted.
@@ -49,22 +47,24 @@
             <tr>
                 <td class="devicename">@device.name</td>
                 <td>
-                    <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.image))" width="20%" height="20%" />
+                    <img src="@string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.image))" width="20%" height="20%"/>
                 </td>
                 <td>@device.type</td>
                 <td>@device.location</td>
                 <td>@device.ip</td>
                 <td>@device.port</td>
-                <td><span id="@(device.name)-status" class="badge badge-danger">Offline</span></td>
+                <td>
+                    <span id="@(device.name)-status" class="badge badge-danger">Offline</span>
+                </td>
                 <td>
                     <form asp-controller="Device" asp-action="EditDevice" method="post">
-                        <input type="hidden" name="model" value="@device.name" />
+                        <input type="hidden" name="model" value="@device.name"/>
                         <button type="submit" class="btn btn-primary" name="Edit" value="Edit"><i class="fas fa-code"></i> Edit</button>
                     </form>
                 </td>
                 <td>
                     <form asp-controller="Device" asp-action="DeleteDevice" asp-route-returnURL="@Context.Request.Path" method="post">
-                        <input type="hidden" name="model" value="@device.name" />
+                        <input type="hidden" name="model" value="@device.name"/>
                         <button type="submit" class="btn btn-danger" name="Delete" value="Delete"><i class="fas fa-trash-alt"></i> Delete</button>
                     </form>
                 </td>

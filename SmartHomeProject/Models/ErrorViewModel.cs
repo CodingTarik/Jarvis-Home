@@ -1,5 +1,3 @@
-using System;
-
 namespace SmartHomeProject.Models
 {
     public class ErrorViewModel

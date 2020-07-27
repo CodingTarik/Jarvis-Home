@@ -6,25 +6,27 @@
 <hr/>
 @foreach (var device in Model.DeviceModels)
 {
-
     <h1 id="(@device.name)head">@device.name</h1>
-    if (@device.DeviceFunctions != null)
+    if (device.DeviceFunctions != null)
     {
         foreach (var funtion in device.DeviceFunctions)
         {
-
-
-            <div class="card text-white bg-success mb-3" id="(@device.name@funtion.functionID)card" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
+            <div class="card text-white bg-success mb-3" id="(@device.name@funtion.functionID)card" style="display: inline-block; max-height: 15rem; max-width: 15rem;">
                 <form asp-controller="Device" asp-action="ControlFunction" method="get">
-                    <div class="card-header"><h3>@funtion.functionname</h3></div>
-                    <input type="hidden" value="@funtion.functionID" name="functionID" />
-                    <input type="hidden" value="@device.name" name="deviceName" />
+                    <div class="card-header">
+                        <h3>@funtion.functionname</h3>
+                    </div>
+                    <input type="hidden" value="@funtion.functionID" name="functionID"/>
+                    <input type="hidden" value="@device.name" name="deviceName"/>
                     <div class="card-body">
-                        <input type="submit" id="(@device.name@funtion.functionID)button" value="switch off" class="btn btn-danger" />
-                        @if (funtion.RGB == true) { 
+                        <input type="submit" id="(@device.name@funtion.functionID)button" value="switch off" class="btn btn-danger"/>
+                        @if (funtion.RGB)
+                        {
                             <br/>
                             <div class="" style="margin-top: 1rem;">
-                                <label><strong>RGB color</strong></label>
+                                <label>
+                                    <strong>RGB color</strong>
+                                </label>
                                 <input id="color" type="button" class="form-control btn btn-primary" value="rgb(255, 128, 0)"/>
                             </div>
                         }
@@ -32,32 +34,32 @@
                     </div>
                 </form>
             </div>
-
         }
     }
     if (device.Sensors != null)
     {
         foreach (var sensor in device.Sensors)
         {
-            <div class="card text-white bg-success mb-3" id="(@sensor.sensorID)sensorcard" style="max-width: 15rem; max-height: 15rem; display: inline-block;">
+            <div class="card text-white bg-success mb-3" id="(@sensor.sensorID)sensorcard" style="display: inline-block; max-height: 15rem; max-width: 15rem;">
                 <div class="card-header">
                     <h3>@sensor.sensorname</h3>
-                    <h5>@sensor.location</h5></div>
+                    <h5>@sensor.location</h5>
+                </div>
                 <div class="card-body">
                     <label id="(@sensor.sensorID)sensorstatus">@sensor.status</label>
                 </div>
             </div>
         }
     }
-    <hr />
+    <hr/>
 }
 <script src="../js/JarvisRefresh.js"></script>
 <script>
-    $(function () {
+    $(function() {
         $('#color').colorpicker();
-        $('#color').on('colorpickerChange', function(event) {
-            $('#color').css('background-color', event.color.toString());
-        });
+        $('#color').on('colorpickerChange',
+            function(event) {
+                $('#color').css('background-color', event.color.toString());
+            });
     });
-</script> 
-
+</script>

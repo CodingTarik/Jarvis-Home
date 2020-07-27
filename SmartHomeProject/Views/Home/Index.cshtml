@@ -1,49 +1,55 @@
-﻿@model SmartHomeProject.Models.DeviceManageModel
+﻿@model DeviceManageModel
 @{
     ViewData["Title"] = "Jarvis Home";
 }
 <script src="https://www.youtube.com/iframe_api"></script>
 <style>
-    div#light-background{
-        background:none repeat scroll 0 0 #000;
-        display:none;
-        height:100%;
-        width:100%;
-        left:0;
-        right: 0;
-        top:0;
-        position:absolute;
-        z-index:9999;
-        pointer-events:none
-    }
-    div#jarvis{
+    div#light-background {
+        background: none repeat scroll 0 0 #000;
         display: none;
+        height: 100%;
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 100%;
+        z-index: 9999;
+    }
+
+    div#jarvis {
+        display: none;
+        height: 100%;
+        left: 0%;
+        pointer-events: none;
+        position: relative;
+        text-align: center;
         top: 0%;
         width: 100%;
-        height: 100%;
-        position: relative;
-        left: 0%;
         z-index: -1;
-        text-align: center;
-        pointer-events: none;
     }
-    iframe{
-        top: 0;
-        left: 0;
-        width: 100%;
+
+    iframe {
         height: 100%;
+        left: 0;
+        top: 0;
+        width: 100%;
     }
 </style>
 <div id="light-background"></div>
-<div id="jarvis2" style="position: absolute; left: 0%; width: 100%; height: 85%; z-index: -1;">
-    <div id="jarvis"> <div id="player"></div></div>
+<div id="jarvis2" style="height: 85%; left: 0%; position: absolute; width: 100%; z-index: -1;">
+    <div id="jarvis">
+        <div id="player"></div>
+    </div>
 </div>
 <div class="jumbotron">
     <h1 class="display-3">Welcome back!</h1>
-    <img src="https://image.flaticon.com/icons/png/512/270/270137.png" style="width: 20%; height: auto;"/>
+    <img src="https://image.flaticon.com/icons/png/512/270/270137.png" style="height: auto; width: 20%;"/>
     <p class="lead">I am Jarvis, I'm here to support you day and night.</p>
     <hr class="my-4">
-    <p><strong>© David Noll and Tarik Azzouzi</strong> </p>
+    <p>
+        <strong>© David Noll and Tarik Azzouzi</strong>
+    </p>
     <p class="lead">
         <button class="btn btn-primary btn-lg" role="button" onclick="playSound()">What is jarvis?*</button>
     </p>
@@ -62,7 +68,9 @@
                 <tr>
                     <td class="devicename">@device.name</td>
                     <td>@device.location</td>
-                    <td><span id="@(device.name)-status" class="badge badge-danger">Offline</span></td>
+                    <td>
+                        <span id="@(device.name)-status" class="badge badge-danger">Offline</span>
+                    </td>
                 </tr>
             }
         </table>

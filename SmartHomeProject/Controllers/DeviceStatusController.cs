@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SmartHomeProject.ConnectionManager;
 using SmartHomeProject.Models;
@@ -17,7 +15,7 @@ namespace SmartHomeProject.Controllers
         // GET: api/<DeviceStatusController>
         [HttpGet]
         public IEnumerable<DeviceModel> Get()
-        {   
+        {
             return DatabaseManager.getDeviceModels();
         }
 
@@ -32,14 +30,12 @@ namespace SmartHomeProject.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
-
         }
 
         // PUT api/<DeviceStatusController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
-
         }
 
         // DELETE api/<DeviceStatusController>/5

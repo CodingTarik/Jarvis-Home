@@ -8,33 +8,30 @@ namespace SmartHomeProject.Connections
 {
     public class DeviceConnectionManager
     {
-        private string _ip;
-        private int _port;
+        private readonly string _ip;
+        private readonly int _port;
 
         public DeviceConnectionManager(string ip, int port)
         {
-
             _port = port;
             _ip = ip;
-
-
         }
 
         public void SendSensor(string method, int port)
         {
             try
             {
-                TcpClient client = new TcpClient(_ip, _port);
+                var client = new TcpClient(_ip, _port);
 
-                string message = "Sensor" + ":" + port + ":"+ method;
+                var message = "Sensor" + ":" + port + ":" + method;
 
-                int byteCount = Encoding.ASCII.GetByteCount(message);
+                var byteCount = Encoding.ASCII.GetByteCount(message);
 
-                byte[] sendDater = new byte[byteCount];
+                var sendDater = new byte[byteCount];
 
                 sendDater = Encoding.ASCII.GetBytes(message);
 
-                NetworkStream stream = client.GetStream();
+                var stream = client.GetStream();
 
                 stream.Write(sendDater, 0, sendDater.Length);
 
@@ -43,30 +40,25 @@ namespace SmartHomeProject.Connections
             }
             catch (Exception ex)
             {
-                if (Logger.Logger.VERBOSE_LOG)
-                {
-                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
-                }
+                if (Logger.Logger.VERBOSE_LOG) Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
             }
-
-
-
         }
+
         public void SendPin(string operation, byte pin, int port)
         {
             try
             {
-                TcpClient client = new TcpClient(_ip, _port);
+                var client = new TcpClient(_ip, _port);
 
-                string message = operation + ":" + pin + ":" + port;
+                var message = operation + ":" + pin + ":" + port;
 
-                int byteCount = Encoding.ASCII.GetByteCount(message);
+                var byteCount = Encoding.ASCII.GetByteCount(message);
 
-                byte[] sendDater = new byte[byteCount];
+                var sendDater = new byte[byteCount];
 
                 sendDater = Encoding.ASCII.GetBytes(message);
 
-                NetworkStream stream = client.GetStream();
+                var stream = client.GetStream();
 
                 stream.Write(sendDater, 0, sendDater.Length);
 
@@ -75,33 +67,24 @@ namespace SmartHomeProject.Connections
             }
             catch (Exception ex)
             {
-                if (Logger.Logger.VERBOSE_LOG)
-                {
-                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
-                }
+                if (Logger.Logger.VERBOSE_LOG) Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
             }
-
-
-
         }
 
         public bool recvMessage(string operation, byte pin)
         {
-
-
             try
             {
-                int port = 456;
-                bool isAvailable = false;
+                var port = 456;
+                var isAvailable = false;
                 var rand = new Random();
-                IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-                TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
+                var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+                var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
                 while (isAvailable == false)
                 {
                     port = rand.Next(1024, 65535);
 
-                    foreach (TcpConnectionInformation tcpi in tcpConnInfoArray)
-                    {
+                    foreach (var tcpi in tcpConnInfoArray)
                         if (tcpi.LocalEndPoint.Port == port)
                         {
                             isAvailable = false;
@@ -109,23 +92,21 @@ namespace SmartHomeProject.Connections
                         }
                         else
                         {
-                            ASCIIEncoding ascii = new ASCIIEncoding();
-                            TcpListener listener = new TcpListener(IPAddress.Any, port);
+                            var ascii = new ASCIIEncoding();
+                            var listener = new TcpListener(IPAddress.Any, port);
                             listener.Start();
                             SendPin(operation, pin, port);
-                            TcpClient client = listener.AcceptTcpClient();
-                            NetworkStream stream = client.GetStream();
-                            byte[] bytes = new byte[1024];
+                            var client = listener.AcceptTcpClient();
+                            var stream = client.GetStream();
+                            var bytes = new byte[1024];
                             stream.Read(bytes, 0, bytes.Length);
                             stream.Close();
                             client.Close();
                             return BitConverter.ToInt32(bytes) == 49;
-
                         }
-                    }
                 }
-                return false;
 
+                return false;
             }
 
             catch (Exception ex)
@@ -133,26 +114,22 @@ namespace SmartHomeProject.Connections
                 Console.WriteLine(ex.Message);
                 return false;
             }
-
         }
 
         public string recvSensor(string method)
         {
-
-
             try
             {
-                int port = 456;
-                bool isAvailable = false;
+                var port = 456;
+                var isAvailable = false;
                 var rand = new Random();
-                IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-                TcpConnectionInformation[] tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
+                var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+                var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
                 while (isAvailable == false)
                 {
                     port = rand.Next(1024, 65535);
 
-                    foreach (TcpConnectionInformation tcpi in tcpConnInfoArray)
-                    {
+                    foreach (var tcpi in tcpConnInfoArray)
                         if (tcpi.LocalEndPoint.Port == port)
                         {
                             isAvailable = false;
@@ -160,23 +137,21 @@ namespace SmartHomeProject.Connections
                         }
                         else
                         {
-                            ASCIIEncoding ascii = new ASCIIEncoding();
-                            TcpListener listener = new TcpListener(IPAddress.Any, port);
+                            var ascii = new ASCIIEncoding();
+                            var listener = new TcpListener(IPAddress.Any, port);
                             listener.Start();
                             SendSensor(method, port);
-                            TcpClient client = listener.AcceptTcpClient();
-                            NetworkStream stream = client.GetStream();
-                            byte[] bytes = new byte[1024];
+                            var client = listener.AcceptTcpClient();
+                            var stream = client.GetStream();
+                            var bytes = new byte[1024];
                             stream.Read(bytes, 0, bytes.Length);
                             stream.Close();
                             client.Close();
-                            return System.Text.Encoding.ASCII.GetString(bytes);
-
+                            return Encoding.ASCII.GetString(bytes);
                         }
-                    }
                 }
-                return null;
 
+                return null;
             }
 
             catch (Exception ex)
@@ -184,10 +159,6 @@ namespace SmartHomeProject.Connections
                 Console.WriteLine(ex.Message);
                 return null;
             }
-
         }
-
-
-
     }
 }

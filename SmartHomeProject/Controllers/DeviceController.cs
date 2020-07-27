@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartHomeProject.ConnectionManager;
 using SmartHomeProject.Models;
-using System;
-using System.Collections.Generic;
-
 
 namespace SmartHomeProject.Controllers
 {
@@ -16,11 +16,11 @@ namespace SmartHomeProject.Controllers
         {
             _logger = logger;
         }
+
         [HttpGet]
         public IActionResult JarvisControl()
         {
-
-            ControlModel pageModel = new ControlModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+            var pageModel = new ControlModel {DeviceModels = DatabaseManager.getDeviceModels()};
             return View(pageModel);
         }
 
@@ -28,117 +28,113 @@ namespace SmartHomeProject.Controllers
         [HttpGet]
         public IActionResult DeviceFunctions()
         {
-            DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+            var pageModel = new DeviceFunctionsModel {DeviceModels = DatabaseManager.getDeviceModels()};
             return View(pageModel);
         }
+
         [HttpPost]
         public IActionResult addDeviceFunction(int deviceID, string functionname, int functionpin, bool RGB)
         {
-            bool result = false;
+            var result = false;
             try
             {
-                result = DatabaseManager.AddFunctionToDevice(deviceID, functionname, (byte)functionpin, RGB);
+                result = DatabaseManager.AddFunctionToDevice(deviceID, functionname, (byte) functionpin, RGB);
             }
             catch (Exception e)
             {
                 result = false;
                 Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
             }
-            DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), addedFunction = true, addedSuccess = result, deviceSelected = true, functionNameAdded = functionname, selectedDeviceID = deviceID };
+
+            var pageModel = new DeviceFunctionsModel
+            {
+                DeviceModels = DatabaseManager.getDeviceModels(), addedFunction = true, addedSuccess = result,
+                deviceSelected = true, functionNameAdded = functionname, selectedDeviceID = deviceID
+            };
             return View("DeviceFunctions", pageModel);
         }
+
         [HttpGet]
         public IActionResult ControlFunction(int functionID, string deviceName)
         {
+            var pageModel = new ControlModel {DeviceModels = DatabaseManager.getDeviceModels()};
+            var modelsD = new DeviceManageModel {DeviceModels = DatabaseManager.getDeviceModels()};
 
-            ControlModel pageModel = new ControlModel() { DeviceModels = DatabaseManager.getDeviceModels() };
-            DeviceManageModel modelsD = new DeviceManageModel() { DeviceModels = DatabaseManager.getDeviceModels() };
 
-
-            for (int i = 0; i < modelsD.DeviceModels.Length; i++)
-            {
-
+            for (var i = 0; i < modelsD.DeviceModels.Length; i++)
                 if (modelsD.DeviceModels[i].name == deviceName)
-                {
-                    for (int k = 0; k < modelsD.DeviceModels[i].DeviceFunctions.Count; k++)
-                    {
-
+                    for (var k = 0; k < modelsD.DeviceModels[i].DeviceFunctions.Count; k++)
                         if (modelsD.DeviceModels[i].DeviceFunctions[k].functionID == functionID)
-                        {
                             //Hier müsste dann an den server geschickt werden und der state geändert werden umgehe das erstmal
                             modelsD.DeviceModels[i].DeviceFunctions[k].executeFunction();
 
-                        }
-
-                    }
-
-
-                }
-
-
-            }
-
             return RedirectToAction("JarvisControl", pageModel);
             //return View("JarvisControl", pageModel);
-
-
         }
 
         [HttpPost]
-        public IActionResult EditDeviceSettings(string selectedDevice, string deviceNameNew, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
+        public IActionResult EditDeviceSettings(string selectedDevice, string deviceNameNew, string deviceType,
+            string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
         {
-            bool result = DatabaseManager.UpdateDevice(selectedDevice, deviceNameNew, deviceType, deviceDescription,
+            var result = DatabaseManager.UpdateDevice(selectedDevice, deviceNameNew, deviceType, deviceDescription,
                 deviceIP, devicePort, deviceLocation);
-            DeviceEditModel pageModel = new DeviceEditModel() { selectedDevice = deviceNameNew, DeviceModels = DatabaseManager.getDeviceModels(), deviceNameEdited = selectedDevice, editingFailed = !result };
+            var pageModel = new DeviceEditModel
+            {
+                selectedDevice = deviceNameNew, DeviceModels = DatabaseManager.getDeviceModels(),
+                deviceNameEdited = selectedDevice, editingFailed = !result
+            };
             return View("EditDevice", pageModel);
         }
+
         [HttpGet]
         public IActionResult DeviceManage()
         {
-            DeviceManageModel pageModel = new DeviceManageModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+            var pageModel = new DeviceManageModel {DeviceModels = DatabaseManager.getDeviceModels()};
             return View(pageModel);
         }
+
         [HttpGet]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
+
         [HttpGet]
         public IActionResult EditDevice()
         {
-            DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels() };
+            var pageModel = new DeviceEditModel {DeviceModels = DatabaseManager.getDeviceModels()};
             return View("EditDevice", pageModel);
         }
 
         [HttpPost]
         public IActionResult EditDevice(string model)
         {
-            DeviceEditModel pageModel = new DeviceEditModel() { DeviceModels = DatabaseManager.getDeviceModels(), selectedDeviceName = model };
+            var pageModel = new DeviceEditModel
+                {DeviceModels = DatabaseManager.getDeviceModels(), selectedDeviceName = model};
             return View("EditDevice", pageModel);
         }
+
         [HttpPost]
         public IActionResult AddNewSensor(int deviceIDSensor)
         {
-            Random rnd = new Random();
+            var rnd = new Random();
             const string python = "GPIO.setup(PIN[0], GPIO.IN)\r\nreturn GPIO.input(PIN[0])";
-            bool result = false;
-            string sensorname = "New Sensor <" + rnd.Next(0, 9999) + ">";
+            var result = false;
+            var sensorname = "New Sensor <" + rnd.Next(0, 9999) + ">";
             try
             {
                 result = DatabaseManager.AddSensorToDevice(deviceIDSensor, sensorname, new byte[] { },
-                    python, "");
+                    python);
             }
             catch (Exception e)
             {
                 if (Logger.Logger.VERBOSE_LOG)
-                {
                     Logger.Logger.logError(Logger.Logger.Category.DEVICE_FUNCTION, e.Message, e);
-                }
 
                 result = false;
             }
 
-            DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
+            var pageModel = new DeviceFunctionsModel
             {
                 selectedDeviceID = deviceIDSensor,
                 deviceSelected = true,
@@ -151,39 +147,39 @@ namespace SmartHomeProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditSensor(int deviceIDSensor, int sensorOptions, string sensorname, string SensorGPIO_PINS,
+        public IActionResult EditSensor(int deviceIDSensor, int sensorOptions, string sensorname,
+            string SensorGPIO_PINS,
             string SensorLocation, string content, string method)
         {
             try
             {
-                Console.WriteLine("Werte: " + deviceIDSensor + " " + sensorOptions + " " + sensorname + " " + SensorGPIO_PINS + " " + SensorLocation + " " + content + " " + method );
-                bool result = false;
+                Console.WriteLine("Werte: " + deviceIDSensor + " " + sensorOptions + " " + sensorname + " " +
+                                  SensorGPIO_PINS + " " + SensorLocation + " " + content + " " + method);
+                var result = false;
                 if (method == "Delete")
                 {
                     result = DatabaseManager.DeleteSensor(sensorOptions);
                 }
                 else
                 {
-                    List<byte> pins = new List<byte>();
-                    if (!String.IsNullOrEmpty(SensorGPIO_PINS))
+                    var pins = new List<byte>();
+                    if (!string.IsNullOrEmpty(SensorGPIO_PINS))
                     {
-                        string[] split = SensorGPIO_PINS.Split(";");
-                        for (int i = 0; i < split.Length; i++)
+                        var split = SensorGPIO_PINS.Split(";");
+                        for (var i = 0; i < split.Length; i++)
                         {
                             split[i] = split[i].Trim();
-                            if (!String.IsNullOrEmpty(split[i]))
-                            {
-                                pins.Add(Byte.Parse(split[i]));
-                            }
+                            if (!string.IsNullOrEmpty(split[i])) pins.Add(byte.Parse(split[i]));
                         }
                     }
 
-                    result = DatabaseManager.UpdateSensor(sensorOptions, sensorname, pins.ToArray(), content, SensorLocation);
+                    result = DatabaseManager.UpdateSensor(sensorOptions, sensorname, pins.ToArray(), content,
+                        SensorLocation);
                 }
 
                 if (result)
                 {
-                    DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
+                    var pageModel = new DeviceFunctionsModel
                     {
                         sensorEdited = true,
                         sensorEditetSuccess = result,
@@ -196,7 +192,7 @@ namespace SmartHomeProject.Controllers
                 }
                 else
                 {
-                    DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
+                    var pageModel = new DeviceFunctionsModel
                     {
                         sensorEdited = true,
                         sensorEditetSuccess = result,
@@ -211,11 +207,9 @@ namespace SmartHomeProject.Controllers
             catch (Exception e)
             {
                 if (Logger.Logger.VERBOSE_LOG)
-                {
                     Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
-                }
 
-                DeviceFunctionsModel pageModel = new DeviceFunctionsModel()
+                var pageModel = new DeviceFunctionsModel
                 {
                     sensorEdited = true,
                     sensorEditetSuccess = false,
@@ -223,28 +217,29 @@ namespace SmartHomeProject.Controllers
                 };
                 return View("DeviceFunctions", pageModel);
             }
-
         }
+
         [HttpPost]
-        public ActionResult EditDeviceFunction(int deviceFunctions, string functionnameEdit, int pinEdit, string method, bool rgbEdit)
+        public ActionResult EditDeviceFunction(int deviceFunctions, string functionnameEdit, int pinEdit, string method,
+            bool rgbEdit)
         {
-            bool editResult = false;
-            bool save = false;
-            bool delete = false;
-            bool deleteResult = false;
+            var editResult = false;
+            var save = false;
+            var delete = false;
+            var deleteResult = false;
             if (method == "Save")
             {
                 save = true;
                 try
                 {
-                    editResult = DatabaseManager.UpdateDeviceFunction(deviceFunctions, functionnameEdit, (byte)pinEdit, null, rgbEdit);
+                    editResult = DatabaseManager.UpdateDeviceFunction(deviceFunctions, functionnameEdit, (byte) pinEdit,
+                        null, rgbEdit);
                 }
                 catch (Exception e)
                 {
                     Logger.Logger.logError(Logger.Logger.Category.DEVICE_CONTROLLER, e.Message, e);
                     editResult = false;
                 }
-
             }
             else if (method == "Delete")
             {
@@ -259,16 +254,23 @@ namespace SmartHomeProject.Controllers
                     deleteResult = false;
                 }
             }
-            DeviceFunctionsModel pageModel = new DeviceFunctionsModel() { DeviceModels = DatabaseManager.getDeviceModels(), functionEdited = save, functionEditSuccess = editResult, functionDelete = delete, functionDeleteSuccess = deleteResult, functionNameAdded = functionnameEdit };
+
+            var pageModel = new DeviceFunctionsModel
+            {
+                DeviceModels = DatabaseManager.getDeviceModels(), functionEdited = save,
+                functionEditSuccess = editResult, functionDelete = delete, functionDeleteSuccess = deleteResult,
+                functionNameAdded = functionnameEdit
+            };
             return View("DeviceFunctions", pageModel);
         }
+
         [HttpPost]
         public IActionResult DeleteDevice(string returnUrl, string model)
         {
-            bool result = DatabaseManager.DeleteDevice(model);
-            DeviceManageModel pageModel = new DeviceManageModel() { deleteErrored = !result, deletedDeviceName = model, DeviceModels = DatabaseManager.getDeviceModels() };
+            var result = DatabaseManager.DeleteDevice(model);
+            var pageModel = new DeviceManageModel
+                {deleteErrored = !result, deletedDeviceName = model, DeviceModels = DatabaseManager.getDeviceModels()};
             return View("DeviceManage", pageModel);
-
         }
 
         [HttpGet]
@@ -276,13 +278,15 @@ namespace SmartHomeProject.Controllers
         {
             return View();
         }
+
         [HttpPost]
-        public ActionResult AddDevice(string deviceName, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
+        public ActionResult AddDevice(string deviceName, string deviceType, string deviceDescription, string deviceIP,
+            string devicePort, string deviceLocation)
         {
-            bool result = DatabaseManager.AddNewDevice(deviceName, deviceType, deviceDescription, deviceIP, devicePort, deviceLocation);
-            DeviceAddModel pageModel = new DeviceAddModel() { successAdded = result, deviceName = deviceName };
+            var result = DatabaseManager.AddNewDevice(deviceName, deviceType, deviceDescription, deviceIP, devicePort,
+                deviceLocation);
+            var pageModel = new DeviceAddModel {successAdded = result, deviceName = deviceName};
             return View(pageModel);
         }
-
     }
 }

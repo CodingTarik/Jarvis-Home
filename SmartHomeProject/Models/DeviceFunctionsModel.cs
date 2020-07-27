@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SmartHomeProject.Models
+﻿namespace SmartHomeProject.Models
 {
     public class DeviceFunctionsModel
     {
@@ -13,9 +8,9 @@ namespace SmartHomeProject.Models
         public string functionNameAdded { get; set; }
         public bool addedFunction { get; set; }
         public bool addedSuccess { get; set; }
-        public bool functionEdited { get;  set; }
-        public bool functionEditSuccess { get;  set; }
-        public bool functionDelete { get;  set; }
+        public bool functionEdited { get; set; }
+        public bool functionEditSuccess { get; set; }
+        public bool functionDelete { get; set; }
         public bool functionDeleteSuccess { get; set; }
         public bool sensorAdded { get; set; }
         public bool sensorAddSuccess { get; set; }

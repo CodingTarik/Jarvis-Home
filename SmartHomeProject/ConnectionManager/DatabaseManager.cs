@@ -1,19 +1,18 @@
-﻿using SmartHomeProject.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.Data.SQLite;
 using System.IO;
 using System.Text;
+using SmartHomeProject.Models;
+using SmartHomeProject.Properties;
 
 namespace SmartHomeProject.ConnectionManager
 {
     public class DatabaseManager
     {
-        public static SQLiteConnection webDBConnection = new SQLiteConnection("Data Source=WebDatabase.sqlite;Version=3;");
-
         /// <summary>
-        /// Has Attributes: DeviceName, DeviceType, DeviceDescription, DeviceLocation, DeviceIP, DevicePort
+        ///     Has Attributes: DeviceName, DeviceType, DeviceDescription, DeviceLocation, DeviceIP, DevicePort
         /// </summary>
         private const string createDeviceTable = @"CREATE TABLE devices (
               DeviceName VARCHAR(255) UNIQUE,
@@ -24,8 +23,9 @@ namespace SmartHomeProject.ConnectionManager
               DevicePort INT DEFAULT(333) NOT NULL,
               DeviceID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL DEFAULT(0)
              );";
+
         /// <summary>
-        /// DeviceID, FunctionID, Functionname, GPIO_PIN, Location, RGB
+        ///     DeviceID, FunctionID, Functionname, GPIO_PIN, Location, RGB
         /// </summary>
         private const string createFunctionTable = @"CREATE TABLE deviceFunctions (
                 DeviceID INTEGER NOT NULL,
@@ -36,8 +36,9 @@ namespace SmartHomeProject.ConnectionManager
                 RGB INTEGER DEFAULT(0) CHECK(RGB IN (0,1)),
                 FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
                );";
+
         /// <summary>
-        /// DeviceID, SensorID, Sensor, GPIO_PINS, LOCATION, PYTHON
+        ///     DeviceID, SensorID, Sensor, GPIO_PINS, LOCATION, PYTHON
         /// </summary>
         private const string createSensorTable = @"CREATE TABLE sensors (
                 DeviceID INTEGER NOT NULL,
@@ -49,15 +50,18 @@ namespace SmartHomeProject.ConnectionManager
                 FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
                );";
 
+        public static SQLiteConnection webDBConnection =
+            new SQLiteConnection("Data Source=WebDatabase.sqlite;Version=3;");
+
         internal static string getSensornameById(int id)
         {
             try
             {
-                SQLiteCommand command = new SQLiteCommand(webDBConnection);
+                var command = new SQLiteCommand(webDBConnection);
                 command.CommandText = "SELECT Sensor FROM sensors WHERE SensorID = @SensorID";
                 command.Parameters.AddWithValue("@SensorID", id);
                 command.Prepare();
-                SQLiteDataReader reader = command.ExecuteReader();
+                var reader = command.ExecuteReader();
                 return reader.GetString(0);
             }
             catch (Exception e)
@@ -65,21 +69,19 @@ namespace SmartHomeProject.ConnectionManager
                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                 return "ERROR";
             }
-           
         }
+
         /// <summary>
-        /// Checks for existance of a sqlite database and creates one 
+        ///     Checks for existance of a sqlite database and creates one
         /// </summary>
         internal static void CreateWebDatabase()
         {
             if (!File.Exists("WebDatabase.sqlite"))
-            {
                 try
                 {
-
                     SQLiteConnection.CreateFile("WebDatabase.sqlite");
                     webDBConnection.Open();
-                    SQLiteCommand createDeviceQuery = new SQLiteCommand(createDeviceTable, webDBConnection);
+                    var createDeviceQuery = new SQLiteCommand(createDeviceTable, webDBConnection);
                     createDeviceQuery.ExecuteNonQuery();
                     createDeviceQuery = new SQLiteCommand(createFunctionTable, webDBConnection);
                     createDeviceQuery.ExecuteNonQuery();
@@ -88,21 +90,16 @@ namespace SmartHomeProject.ConnectionManager
                 }
                 catch (Exception ex)
                 {
-                    if (File.Exists("WebDatabase.sqlite"))
-                    {
-                        File.Delete("WebDatabase.sqlite");
-                    }
+                    if (File.Exists("WebDatabase.sqlite")) File.Delete("WebDatabase.sqlite");
 
                     throw ex;
                 }
-            }
             else
-            {
                 webDBConnection.Open();
-            }
         }
+
         /// <summary>
-        /// Add new device
+        ///     Add new device
         /// </summary>
         /// <param name="deviceName"></param>
         /// <param name="deviceType"></param>
@@ -111,12 +108,13 @@ namespace SmartHomeProject.ConnectionManager
         /// <param name="devicePort"></param>
         /// <param name="deviceLocation"></param>
         /// <returns></returns>
-        internal static bool AddNewDevice(string deviceName, string deviceType, string deviceDescription, string deviceIP, string devicePort, string deviceLocation)
+        internal static bool AddNewDevice(string deviceName, string deviceType, string deviceDescription,
+            string deviceIP, string devicePort, string deviceLocation)
         {
             try
             {
                 //webDBConnection.Open();
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText =
                     @"INSERT INTO devices(DeviceName, DeviceType, DeviceDescription, DeviceLocation, DeviceIP, DevicePort)
             VALUES(@DeviceName, @DeviceType, @DeviceDescription, @DeviceLocation, @DeviceIP, @DevicePort)";
@@ -125,13 +123,10 @@ namespace SmartHomeProject.ConnectionManager
                 sqlQuery.Parameters.AddWithValue("@DeviceDescription", deviceDescription);
                 sqlQuery.Parameters.AddWithValue("@DeviceLocation", deviceLocation);
                 sqlQuery.Parameters.AddWithValue("@DeviceIP", deviceIP);
-                if (String.IsNullOrEmpty(devicePort))
-                {
-                    devicePort = "333";
-                }
+                if (string.IsNullOrEmpty(devicePort)) devicePort = "333";
                 sqlQuery.Parameters.AddWithValue("@DevicePort", int.Parse(devicePort));
                 sqlQuery.Prepare();
-                bool result = sqlQuery.ExecuteNonQuery() != 0;
+                var result = sqlQuery.ExecuteNonQuery() != 0;
                 //webDBConnection.Close();
                 return result;
             }
@@ -140,10 +135,10 @@ namespace SmartHomeProject.ConnectionManager
                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                 return false;
             }
-
         }
+
         /// <summary>
-        /// Deletes a device by name
+        ///     Deletes a device by name
         /// </summary>
         /// <param name="deviceName"></param>
         /// <returns></returns>
@@ -151,29 +146,25 @@ namespace SmartHomeProject.ConnectionManager
         {
             try
             {
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText = @"SELECT DeviceID FROM devices WHERE DeviceName = @DeviceName";
                 sqlQuery.Parameters.AddWithValue("@DeviceName", deviceName);
                 sqlQuery.Prepare();
-                SQLiteDataReader reader = sqlQuery.ExecuteReader();
-                int id = 0;
+                var reader = sqlQuery.ExecuteReader();
+                var id = 0;
                 if (reader.Read())
-                {
                     id = reader.GetInt32(0);
-                }
                 else
-                {
                     throw new ObjectNotFoundException("Couldn't get device id of " + deviceName + " for deletion");
-                }
 
-                SQLiteTransaction tr = webDBConnection.BeginTransaction();
+                var tr = webDBConnection.BeginTransaction();
                 try
                 {
                     sqlQuery.CommandText = @"DELETE FROM devices WHERE DeviceName = @DeviceName";
                     sqlQuery.Parameters.AddWithValue("@DeviceName", deviceName);
                     sqlQuery.Transaction = tr;
                     sqlQuery.Prepare();
-                    bool result1 = sqlQuery.ExecuteNonQuery() > 0;
+                    var result1 = sqlQuery.ExecuteNonQuery() > 0;
                     if (!result1)
                     {
                         tr.Rollback();
@@ -206,10 +197,10 @@ namespace SmartHomeProject.ConnectionManager
                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                 return false;
             }
-
         }
+
         /// <summary>
-        /// Updates a device
+        ///     Updates a device
         /// </summary>
         /// <param name="selectedDevice"></param>
         /// <param name="deviceNameNew"></param>
@@ -224,7 +215,7 @@ namespace SmartHomeProject.ConnectionManager
         {
             try
             {
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText = @"UPDATE devices 
             SET DeviceName = @deviceNameNew, DeviceType = @deviceType, DeviceDescription = @deviceDescription, DeviceLocation = @deviceLocation, DeviceIP = @deviceIP, DevicePort = @DevicePort
             WHERE DeviceName = @deviceName;";
@@ -236,7 +227,7 @@ namespace SmartHomeProject.ConnectionManager
                 sqlQuery.Parameters.AddWithValue("@devicePort", devicePort);
                 sqlQuery.Parameters.AddWithValue("@deviceIP", deviceIP);
                 sqlQuery.Prepare();
-                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                var result = sqlQuery.ExecuteNonQuery() > 0;
                 return result;
             }
             catch (Exception e)
@@ -244,10 +235,10 @@ namespace SmartHomeProject.ConnectionManager
                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
                 return false;
             }
-
         }
+
         /// <summary>
-        /// Updates a device function
+        ///     Updates a device function
         /// </summary>
         /// <param name="functionID"></param>
         /// <param name="functionname"></param>
@@ -255,11 +246,12 @@ namespace SmartHomeProject.ConnectionManager
         /// <param name="location"></param>
         /// <param name="RGB"></param>
         /// <returns></returns>
-        internal static bool UpdateDeviceFunction(int functionID, string functionname, byte GPIO_PIN, string location, bool RGB)
+        internal static bool UpdateDeviceFunction(int functionID, string functionname, byte GPIO_PIN, string location,
+            bool RGB)
         {
             try
             {
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText = @"UPDATE deviceFunctions
                 SET Functionname = @functionname, GPIO_PIN = @GPIO_PIN, LOCATION = @location, RGB = @RGB
                 WHERE FunctionID = @functionID";
@@ -267,9 +259,9 @@ namespace SmartHomeProject.ConnectionManager
                 sqlQuery.Parameters.AddWithValue("@functionname", functionname);
                 sqlQuery.Parameters.AddWithValue("@GPIO_PIN", GPIO_PIN);
                 sqlQuery.Parameters.AddWithValue("@location", location);
-                sqlQuery.Parameters.AddWithValue("@RGB", (RGB ? 1 : 0));
+                sqlQuery.Parameters.AddWithValue("@RGB", RGB ? 1 : 0);
                 sqlQuery.Prepare();
-                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                var result = sqlQuery.ExecuteNonQuery() > 0;
                 return result;
             }
             catch (Exception ex)
@@ -277,10 +269,10 @@ namespace SmartHomeProject.ConnectionManager
                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
                 return false;
             }
-
         }
+
         /// <summary>
-        /// Updates a sensor
+        ///     Updates a sensor
         /// </summary>
         /// <param name="sensorID"></param>
         /// <param name="sensorname"></param>
@@ -288,33 +280,28 @@ namespace SmartHomeProject.ConnectionManager
         /// <param name="python"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        internal static bool UpdateSensor(int sensorID, string sensorname, byte[] GPIO_PINS, string python, string location = "")
+        internal static bool UpdateSensor(int sensorID, string sensorname, byte[] GPIO_PINS, string python,
+            string location = "")
         {
             try
             {
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText = @"UPDATE Sensors
                 SET Sensor = @sensorname, GPIO_PINS = @GPIO_PINS, LOCATION = @location, PYTHON = @python
                 WHERE SensorID = @SensorID";
-                StringBuilder pinBuilder = new StringBuilder();
-                for (int i = 0; i < GPIO_PINS.Length; i++)
-                {
+                var pinBuilder = new StringBuilder();
+                for (var i = 0; i < GPIO_PINS.Length; i++)
                     if (i + 1 == GPIO_PINS.Length)
-                    {
                         pinBuilder.Append(GPIO_PINS[i].ToString());
-                    }
                     else
-                    {
-                        pinBuilder.Append(GPIO_PINS[i].ToString() + ";");
-                    }
-                }
+                        pinBuilder.Append(GPIO_PINS[i] + ";");
                 sqlQuery.Parameters.AddWithValue("@sensorname", sensorname);
                 sqlQuery.Parameters.AddWithValue("@GPIO_PINS", pinBuilder.ToString());
                 sqlQuery.Parameters.AddWithValue("@location", location);
                 sqlQuery.Parameters.AddWithValue("@python", python);
                 sqlQuery.Parameters.AddWithValue("@SensorID", sensorID);
                 sqlQuery.Prepare();
-                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                var result = sqlQuery.ExecuteNonQuery() > 0;
                 return result;
             }
             catch (Exception ex)
@@ -322,10 +309,10 @@ namespace SmartHomeProject.ConnectionManager
                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
                 return false;
             }
-
         }
+
         /// <summary>
-        /// Deletes a device function
+        ///     Deletes a device function
         /// </summary>
         /// <param name="functionID"></param>
         /// <returns></returns>
@@ -333,11 +320,11 @@ namespace SmartHomeProject.ConnectionManager
         {
             try
             {
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText = @"DELETE FROM deviceFunctions WHERE FunctionID = @FunctionID";
                 sqlQuery.Parameters.AddWithValue("@FunctionID", functionID);
                 sqlQuery.Prepare();
-                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                var result = sqlQuery.ExecuteNonQuery() > 0;
                 return result;
             }
             catch (Exception e)
@@ -346,8 +333,9 @@ namespace SmartHomeProject.ConnectionManager
                 return false;
             }
         }
+
         /// <summary>
-        /// Deletes a sensor
+        ///     Deletes a sensor
         /// </summary>
         /// <param name="SensorID"></param>
         /// <returns></returns>
@@ -355,11 +343,11 @@ namespace SmartHomeProject.ConnectionManager
         {
             try
             {
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText = @"DELETE FROM Sensors WHERE SensorID = @SensorID";
                 sqlQuery.Parameters.AddWithValue("@SensorID", SensorID);
                 sqlQuery.Prepare();
-                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                var result = sqlQuery.ExecuteNonQuery() > 0;
                 return result;
             }
             catch (Exception e)
@@ -368,8 +356,9 @@ namespace SmartHomeProject.ConnectionManager
                 return false;
             }
         }
+
         /// <summary>
-        /// Adds function to device
+        ///     Adds function to device
         /// </summary>
         /// <param name="deviceid"></param>
         /// <param name="functionname"></param>
@@ -380,16 +369,16 @@ namespace SmartHomeProject.ConnectionManager
         {
             try
             {
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText =
                     "INSERT INTO deviceFunctions (DeviceID, Functionname, GPIO_PIN, LOCATION, RGB) VALUES (@deviceID, @functionname, @GPIO_PIN, @location, @RGB);";
                 sqlQuery.Parameters.AddWithValue("@deviceID", deviceid);
                 sqlQuery.Parameters.AddWithValue("@functionname", functionname);
                 sqlQuery.Parameters.AddWithValue("@GPIO_PIN", GPIO_PIN);
                 sqlQuery.Parameters.AddWithValue("@location", null);
-                sqlQuery.Parameters.AddWithValue("@RGB", (RGB ? 1 : 0));
+                sqlQuery.Parameters.AddWithValue("@RGB", RGB ? 1 : 0);
                 sqlQuery.Prepare();
-                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                var result = sqlQuery.ExecuteNonQuery() > 0;
                 return result;
             }
             catch (Exception ex)
@@ -397,10 +386,10 @@ namespace SmartHomeProject.ConnectionManager
                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
                 return false;
             }
-
         }
+
         /// <summary>
-        /// Adds sensor to device
+        ///     Adds sensor to device
         /// </summary>
         /// <param name="deviceid"></param>
         /// <param name="sensorname"></param>
@@ -408,33 +397,28 @@ namespace SmartHomeProject.ConnectionManager
         /// <param name="python"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        internal static bool AddSensorToDevice(int deviceid, string sensorname, byte[] GPIO_PINS, string python, string location = "")
+        internal static bool AddSensorToDevice(int deviceid, string sensorname, byte[] GPIO_PINS, string python,
+            string location = "")
         {
             try
             {
-                SQLiteCommand sqlQuery = new SQLiteCommand(webDBConnection);
+                var sqlQuery = new SQLiteCommand(webDBConnection);
                 sqlQuery.CommandText =
                     "INSERT INTO sensors (DeviceID, Sensor, GPIO_PINS, LOCATION, PYTHON) VALUES (@deviceID, @sensorname, @GPIO_PINS, @location, @python);";
                 sqlQuery.Parameters.AddWithValue("@deviceID", deviceid);
-                StringBuilder pinBuilder = new StringBuilder();
-                for (int i = 0; i < GPIO_PINS.Length; i++)
-                {
+                var pinBuilder = new StringBuilder();
+                for (var i = 0; i < GPIO_PINS.Length; i++)
                     if (i + 1 == GPIO_PINS.Length)
-                    {
                         pinBuilder.Append(GPIO_PINS[i].ToString());
-                    }
                     else
-                    {
-                        pinBuilder.Append(GPIO_PINS[i].ToString() + ";");
-                    }
-                }
+                        pinBuilder.Append(GPIO_PINS[i] + ";");
                 sqlQuery.Parameters.AddWithValue("@deviceID", deviceid);
                 sqlQuery.Parameters.AddWithValue("@sensorname", sensorname);
                 sqlQuery.Parameters.AddWithValue("@GPIO_PINS", pinBuilder.ToString());
                 sqlQuery.Parameters.AddWithValue("@location", location);
                 sqlQuery.Parameters.AddWithValue("@python", python);
                 sqlQuery.Prepare();
-                bool result = sqlQuery.ExecuteNonQuery() > 0;
+                var result = sqlQuery.ExecuteNonQuery() > 0;
                 return result;
             }
             catch (Exception ex)
@@ -442,81 +426,77 @@ namespace SmartHomeProject.ConnectionManager
                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
                 return false;
             }
-
         }
+
         /// <summary>
-        /// Reads all devices from database
+        ///     Reads all devices from database
         /// </summary>
         /// <returns>Array of type DeviceModel</returns>
         internal static DeviceModel[] getDeviceModels()
         {
-            string query = "SELECT * FROM devices";
-            SQLiteCommand sqlQuery = new SQLiteCommand(query, webDBConnection);
-            SQLiteDataReader resultReader = sqlQuery.ExecuteReader();
-            List<DeviceModel> models = new List<DeviceModel>();
+            var query = "SELECT * FROM devices";
+            var sqlQuery = new SQLiteCommand(query, webDBConnection);
+            var resultReader = sqlQuery.ExecuteReader();
+            var models = new List<DeviceModel>();
             while (resultReader.Read())
-            {
                 try
                 {
-                    DeviceModel model = new DeviceModel(resultReader.GetString(4), resultReader.GetInt32(5))
+                    var model = new DeviceModel(resultReader.GetString(4), resultReader.GetInt32(5))
                     {
-                        image = Properties.Resources.raspi,
+                        image = Resources.raspi,
                         name = resultReader.GetString(0),
                         location = resultReader.GetString(3),
                         type = resultReader.GetString(1),
                         description = resultReader.GetString(2),
                         deviceID = resultReader.GetInt32(6)
                     };
-                    SQLiteCommand functionQuery = new SQLiteCommand(webDBConnection);
-                    functionQuery.CommandText = @"SELECT * FROM deviceFunctions WHERE deviceFunctions.DeviceID = @DeviceID";
+                    var functionQuery = new SQLiteCommand(webDBConnection);
+                    functionQuery.CommandText =
+                        @"SELECT * FROM deviceFunctions WHERE deviceFunctions.DeviceID = @DeviceID";
                     functionQuery.Parameters.AddWithValue("@DeviceID", model.deviceID);
                     functionQuery.Prepare();
-                    SQLiteDataReader functionReader = functionQuery.ExecuteReader();
+                    var functionReader = functionQuery.ExecuteReader();
                     while (functionReader.Read())
-                    {
-                        model.addDeviceModelFunction(functionReader.GetInt32(1), (byte)functionReader.GetInt32(3), functionReader.IsDBNull(2) ? null : functionReader.GetString(2), functionReader.IsDBNull(4) ? null : functionReader.GetString(4), (functionReader.GetInt32(5) == 1));
-                    }
-                    SQLiteCommand sensorQuery = new SQLiteCommand(webDBConnection);
+                        model.addDeviceModelFunction(functionReader.GetInt32(1), (byte) functionReader.GetInt32(3),
+                            functionReader.IsDBNull(2) ? null : functionReader.GetString(2),
+                            functionReader.IsDBNull(4) ? null : functionReader.GetString(4),
+                            functionReader.GetInt32(5) == 1);
+                    var sensorQuery = new SQLiteCommand(webDBConnection);
                     sensorQuery.CommandText = @"SELECT * FROM Sensors WHERE Sensors.DeviceID = @DeviceID";
                     sensorQuery.Parameters.AddWithValue("@DeviceID", model.deviceID);
                     sensorQuery.Prepare();
-                    SQLiteDataReader sensorReader = sensorQuery.ExecuteReader();
+                    var sensorReader = sensorQuery.ExecuteReader();
                     while (sensorReader.Read())
                     {
-                        List<byte> modelSensors = new List<byte>();
+                        var modelSensors = new List<byte>();
                         try
                         {
-                            string sensorValues = sensorReader.GetString(3);
+                            var sensorValues = sensorReader.GetString(3);
                             sensorValues = sensorValues.Trim();
-                            if (!String.IsNullOrEmpty(sensorValues))
+                            if (!string.IsNullOrEmpty(sensorValues))
                             {
-                                string[] byteSensorValues = sensorValues.Split(';');
-                                foreach (string byteString in byteSensorValues)
-                                {
-
-                                    modelSensors.Add(Byte.Parse(byteString));
-                                }
+                                var byteSensorValues = sensorValues.Split(';');
+                                foreach (var byteString in byteSensorValues) modelSensors.Add(byte.Parse(byteString));
                             }
                         }
                         catch (Exception e)
                         {
                             if (Logger.Logger.VERBOSE_LOG)
-                            {
                                 Logger.Logger.logError(Logger.Logger.Category.DATABASE, e.Message, e);
-                            }
                         }
-                        model.addDeviceSensors(sensorReader.GetInt32(1), modelSensors.ToArray(), sensorReader.GetString(5), sensorReader.GetString(2), sensorReader.GetString(4));
+
+                        model.addDeviceSensors(sensorReader.GetInt32(1), modelSensors.ToArray(),
+                            sensorReader.GetString(5), sensorReader.GetString(2), sensorReader.GetString(4));
                     }
+
                     models.Add(model);
                 }
                 catch (Exception ex)
                 {
                     Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
                 }
-            }
+
             return models.ToArray();
-
         }
-
     }
 }

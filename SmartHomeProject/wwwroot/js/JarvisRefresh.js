@@ -46,7 +46,12 @@ function success(data) {
                 if (data[i].sensors[g].status == "ERROR") {
                     badge.className = "card text-white bg-danger mb-3";
                     sensorstatus.innerHTML = data[i].sensors[g].status + " (see console)";
-                    console.warn("Python-Error of sensor " + data[i].sensors[g].sensorname + " with id " + data[i].sensors[g].sensorID + ": " + data[i].sensors[g].pythonError);
+                    console.warn("Python-Error of sensor " +
+                        data[i].sensors[g].sensorname +
+                        " with id " +
+                        data[i].sensors[g].sensorID +
+                        ": " +
+                        data[i].sensors[g].pythonError);
                 } else {
                     badge.className = "card text-white bg-success mb-3";
                     sensorstatus.innerHTML = data[i].sensors[g].status;

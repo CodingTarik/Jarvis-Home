@@ -10,14 +10,14 @@
     @{
         if (Model != null)
         {
-            if (Model.successAdded && !String.IsNullOrEmpty(Model.deviceName))
+            if (Model.successAdded && !string.IsNullOrEmpty(Model.deviceName))
             {
                 <div class="alert alert-dismissible alert-success">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <strong>Adding successful!</strong> The device <strong>@Model.deviceName</strong> was successfully added.
                 </div>
             }
-            else if (!Model.successAdded && !String.IsNullOrEmpty(Model.deviceName))
+            else if (!Model.successAdded && !string.IsNullOrEmpty(Model.deviceName))
             {
                 <div class="alert alert-dismissible alert-danger">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -29,7 +29,7 @@
     <form method="POST">
         <div class="form-group">
             <label for="deviceName">Device Name</label>
-            <input type="text" class="form-control" id="deviceName" name="deviceName" placeholder="Enter device name" />
+            <input type="text" class="form-control" id="deviceName" name="deviceName" placeholder="Enter device name"/>
         </div>
         <div class="form-group">
             <label for="deviceType">Device type</label>
@@ -56,9 +56,8 @@
             <label for="deviceLocation">DeviceLocation</label>
             <input type="text" class="form-control" id="deviceLocation" name="deviceLocation" placeholder="Enter location">
         </div>
-        <input type="submit" value="Submit" class="btn btn-primary" />
+        <input type="submit" value="Submit" class="btn btn-primary"/>
     </form>
 
 </div>
 <script src="../lib/jquery/dist/jquery.min.js"></script>
-
