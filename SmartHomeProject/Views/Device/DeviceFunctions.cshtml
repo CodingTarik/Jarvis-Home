@@ -209,8 +209,7 @@
         @:devices.push({
         @:sensors: [
         @if (device.Sensors != null)
-            @
-            foreach (var sens in device.Sensors)
+            @foreach (var sens in device.Sensors)
             {
                 @:{ ID: @(sens.sensorID), Name: "@Html.Raw(sens.sensorname)", Location: "@(sens.location)", GPIO_PINS: "@foreach (var num in sens.GPIO_PINS) {@(num + ";")}", Python: `@Html.Raw(sens.python)` },  
             }
