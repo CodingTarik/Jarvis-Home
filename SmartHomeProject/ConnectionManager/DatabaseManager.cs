@@ -160,17 +160,6 @@ namespace SmartHomeProject.ConnectionManager
                 var tr = webDBConnection.BeginTransaction();
                 try
                 {
-                    sqlQuery.CommandText = @"DELETE FROM devices WHERE DeviceName = @DeviceName";
-                    sqlQuery.Parameters.AddWithValue("@DeviceName", deviceName);
-                    sqlQuery.Transaction = tr;
-                    sqlQuery.Prepare();
-                    var result1 = sqlQuery.ExecuteNonQuery() > 0;
-                    if (!result1)
-                    {
-                        tr.Rollback();
-                        return false;
-                    }
-
                     sqlQuery.CommandText = @"DELETE FROM deviceFunctions WHERE DeviceID = @DeviceID";
                     sqlQuery.Parameters.AddWithValue("@DeviceID", id);
                     sqlQuery.Transaction = tr;
@@ -182,6 +171,17 @@ namespace SmartHomeProject.ConnectionManager
                     sqlQuery.Transaction = tr;
                     sqlQuery.Prepare();
                     sqlQuery.ExecuteNonQuery();
+
+                    sqlQuery.CommandText = @"DELETE FROM devices WHERE DeviceName = @DeviceName";
+                    sqlQuery.Parameters.AddWithValue("@DeviceName", deviceName);
+                    sqlQuery.Transaction = tr;
+                    sqlQuery.Prepare();
+                    var result1 = sqlQuery.ExecuteNonQuery() > 0;
+                    if (!result1)
+                    {
+                        tr.Rollback();
+                        return false;
+                    }
                 }
                 catch (Exception e)
                 {
