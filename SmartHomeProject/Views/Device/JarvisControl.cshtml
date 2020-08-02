@@ -6,8 +6,8 @@
 <hr/>
 @if (Model.DeviceModels.Length == 0) {
 
-    <h1>You have no smart home functions</h1>
-    <p>You can go to <a  asp-area="" asp-controller="Device" asp-action="AddDevice">Add Device</a> and add an device or if you have an device you can go to <a asp-area="" asp-controller="Device" asp-action="DeviceFunctions">DeviceFunctions</a> and add an Function to an existing device</p>
+    <h1>You have no smart home devices</h1>
+    <p>You can go to <a  asp-area="" asp-controller="Device" asp-action="AddDevice">Add Device</a> and add an device</p>
 }
 
 
@@ -58,8 +58,14 @@
                     <label id="(@sensor.sensorID)sensorstatus">@sensor.status</label>
                 </div>
             </div>
-            }
-        
+        }
+
+    }
+    if (device.Sensors == null) {
+        if (device.DeviceFunctions == null) {
+            <p>Sorry you dont have any function or sensor for this device you can go to <a asp-area = "" asp-controller = "Device" asp-action = "DeviceFunctions">DeviceFunctions </a> and add an Function to this device</p>
+        }
+
     }
     <hr/>
 }
