@@ -4,13 +4,22 @@
 }
 
 <hr/>
+@if (Model.DeviceModels.Length == 0) {
+
+    <h1>You have no smart home functions</h1>
+    <p>You can go to <a  asp-area="" asp-controller="Device" asp-action="AddDevice">Add Device</a> and add an device or if you have an device you can go to <a asp-area="" asp-controller="Device" asp-action="DeviceFunctions">DeviceFunctions</a> and add an Function to an existing device</p>
+}
+
+
+
 @foreach (var device in Model.DeviceModels)
 {
+ 
     <h1 id="(@device.name)head">@device.name</h1>
-    if (device.DeviceFunctions != null)
-    {
-        foreach (var funtion in device.DeviceFunctions)
+        if (device.DeviceFunctions != null)
         {
+            foreach (var funtion in device.DeviceFunctions)
+            {
             <div class="card text-white bg-success mb-3" id="(@device.name@funtion.functionID)card" style="display: inline-block; max-height: 15rem; max-width: 15rem;">
                 <form asp-controller="Device" asp-action="ControlFunction" method="get">
                     <div class="card-header">
@@ -34,12 +43,12 @@
                     </div>
                 </form>
             </div>
+            }
         }
-    }
-    if (device.Sensors != null)
-    {
-        foreach (var sensor in device.Sensors)
+        if (device.Sensors != null)
         {
+            foreach (var sensor in device.Sensors)
+            {
             <div class="card text-white bg-success mb-3" id="(@sensor.sensorID)sensorcard" style="display: inline-block; max-height: 15rem; max-width: 15rem;">
                 <div class="card-header">
                     <h3>@sensor.sensorname</h3>
@@ -49,7 +58,8 @@
                     <label id="(@sensor.sensorID)sensorstatus">@sensor.status</label>
                 </div>
             </div>
-        }
+            }
+        
     }
     <hr/>
 }
