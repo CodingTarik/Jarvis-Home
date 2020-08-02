@@ -50,6 +50,8 @@ namespace SmartHomeProject.ConnectionManager
                 FOREIGN KEY (DeviceID) REFERENCES devices(DeviceID)
                );";
 
+        private const string createSettingsTable = "@CREATE TABLE settings ( Bootstrap VARCHAR(255) NOT NULL );";
+
         public static SQLiteConnection webDBConnection =
             new SQLiteConnection("Data Source=WebDatabase.sqlite;Version=3;");
 
@@ -87,6 +89,7 @@ namespace SmartHomeProject.ConnectionManager
                     createDeviceQuery.ExecuteNonQuery();
                     createDeviceQuery = new SQLiteCommand(createSensorTable, webDBConnection);
                     createDeviceQuery.ExecuteNonQuery();
+                    createDeviceQuery = new SQLiteCommand(createSettingsTable, webDBConnection);
                 }
                 catch (Exception ex)
                 {
