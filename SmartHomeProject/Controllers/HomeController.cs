@@ -32,6 +32,11 @@ namespace SmartHomeProject.Controllers
             return View(pageModel);
         }
 
+        [HttpGet]
+        public IActionResult Settings()
+        {
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();
