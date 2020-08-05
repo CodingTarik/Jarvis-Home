@@ -5,7 +5,9 @@
 
 <hr/>
 @if (Model.DeviceModels.Length == 0) {
-
+    string color = "123456789";
+    string colorType = color.Substring(0, 4);
+    Console.WriteLine(colorType);
     <h1>You have no smart home devices</h1>
     <p>You can go to <a  asp-area="" asp-controller="Device" asp-action="AddDevice">Add Device</a> and add an device</p>
 }

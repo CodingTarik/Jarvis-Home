@@ -25,6 +25,8 @@ def waitForMessage():
             state = str.encode(getGPIOState(int(msgsplit[1])))
             print(getGPIOState(int(msgsplit[1])))
             se.send(state)
+        elif msgsplit[0] == "SetColor":
+            print("Hey colorchange")
         elif msgsplit[0] == "Sensor":
             se.connect((address[0],int(msgsplit[1])))  
             python = msgsplit[2]+"global execSensorValue; execSensorValue = sensorValue()"
@@ -51,6 +53,12 @@ def getGPIOState(gpioToCheck):
     else:
         return "0"
         print(GPIO.input(gpioToCheck))
+
+def ColorChangeCode():
+    print("This is the place where your color code takes place")
+    #you can add you color code in this methode. The message we send is "SetColor" + ":" + colortype + ":" + color + ":" + pin + ":" + port; 
+    #in msgsplit every element is on element ahade of ":" so msgsplit[1] would be colortype
+    #you need to send an answer to the server with "SetColor:SUC" for succes or "SetColor:ERR" for Error
 
 def switchGPIOState(toSwitch):
     GPIO.setup(toSwitch, GPIO.OUT)
