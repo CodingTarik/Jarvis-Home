@@ -5,10 +5,11 @@
 
 <h1 class="display-4 text-center">Settings</h1>
 <div class="text-center">
-    <form asp-controller="Home" asp-action="EditDeviceSettings" method="POST">
+    <form asp-controller="Home" asp-action="Settings" method="POST">
         <label for="exampleSelect1">Select Theme</label>
         <select name="selectedTheme" class="form-control" id="deviceSelect">
-            <option>Bootstrap-Litera.css</option>
+            <option>bootstrap-Litera.css</option>
+            <option>bootstrap-Darkly.css</option>
         </select>
         <br />
         <button type="submit" value="Save" class="btn btn-primary"><i class="far fa-save"></i> Save</button>
