@@ -37,6 +37,12 @@ namespace SmartHomeProject.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult Settings(string selectedTheme)
+        {
+            DatabaseManager.updateActiveBootstrap(selectedTheme);
+            return View();
+        }
         public IActionResult Privacy()
         {
             return View();

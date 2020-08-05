@@ -55,6 +55,37 @@ namespace SmartHomeProject.ConnectionManager
         public static SQLiteConnection webDBConnection =
             new SQLiteConnection("Data Source=WebDatabase.sqlite;Version=3;");
 
+        internal static string getBootstrap()
+        {
+            try
+            {
+                var query = "SELECT * FROM settings";
+                var sqlQuery = new SQLiteCommand(query, webDBConnection);
+                var reader = sqlQuery.ExecuteReader();
+                string bootstrap = reader.Read() ? reader.GetString(0) : "bootstrap-Litera.css";
+                return bootstrap;
+            } catch(Exception ex)
+            {
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, "ERROR reading bootstrap value", ex);
+            }
+            return "bootstrap-Litera.css";
+        }
+
+        internal static bool updateActiveBootstrap(string name)
+        {
+            try
+            {
+                var query = "UPDATE settings SET Bootstrap = @BOOTSTRAP";
+                var sqlQuery = new SQLiteCommand(query, webDBConnection);
+                sqlQuery.Parameters.AddWithValue("@BOOTSTRAP", name);
+                sqlQuery.Prepare();
+                return sqlQuery.ExecuteNonQuery() > 0;
+            } catch(Exception ex)
+            {
+                Logger.Logger.logError(Logger.Logger.Category.DATABASE, "ERROR updating bootstrap value", ex);
+            }
+            return false;
+        }
         internal static string getSensornameById(int id)
         {
             try

@@ -1,16 +1,25 @@
-﻿@model DeviceEditModel
-
-@{
+﻿@{
     ViewData["Title"] = "Edit Settings";
 }
 
 
 <h1 class="display-4 text-center">Settings</h1>
 <div class="text-center">
-    <form asp-controller="Device" asp-action="EditDeviceSettings" method="POST">
+    <form asp-controller="Home" asp-action="EditDeviceSettings" method="POST">
         <label for="exampleSelect1">Select Theme</label>
-        <select name="selectedTheme" class="form-control" id="deviceSelect" onchange="SelectionUpdate()">
+        <select name="selectedTheme" class="form-control" id="deviceSelect">
+            <option>Bootstrap-Litera.css</option>
         </select>
+        <br />
         <button type="submit" value="Save" class="btn btn-primary"><i class="far fa-save"></i> Save</button>
     </form>
 </div>
+
+<script>
+    var elements = document.getElementById("deviceSelect").options;
+    for (i = 0; i < elements.length; i++) {
+        if (elements[i].innerHTML == "@SmartHomeProject.ConnectionManager.DatabaseManager.getBootstrap()") {
+            elements.value = "selected";
+        }
+    }
+</script>
