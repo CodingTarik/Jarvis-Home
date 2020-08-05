@@ -8,9 +8,12 @@
     <form asp-controller="Home" asp-action="Settings" method="POST">
         <label for="exampleSelect1">Select Theme</label>
         <select name="selectedTheme" class="form-control" id="deviceSelect">           
-            @foreach (var file in (new System.IO.DirectoryInfo(Startup.wwwroot + "/lib/bootstrap/dist/css")).GetFiles())
-            {
-                <option>@file.Name</option>
+            @foreach (var file in (new System.IO.DirectoryInfo(Startup.wwwroot + "/lib/bootstrap/dist/themes")).GetFiles())
+            {            
+                if (file.Extension == ".css")
+                {
+                    <option>@(file.Name)</option>
+                }
             }
         </select>
         <br />
