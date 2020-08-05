@@ -7,9 +7,11 @@
 <div class="text-center">
     <form asp-controller="Home" asp-action="Settings" method="POST">
         <label for="exampleSelect1">Select Theme</label>
-        <select name="selectedTheme" class="form-control" id="deviceSelect">
-            <option>bootstrap-Litera.css</option>
-            <option>bootstrap-Darkly.css</option>
+        <select name="selectedTheme" class="form-control" id="deviceSelect">           
+            @foreach (var file in (new System.IO.DirectoryInfo(Startup.wwwroot + "/lib/bootstrap/dist/css")).GetFiles())
+            {
+                <option>@file.Name</option>
+            }
         </select>
         <br />
         <button type="submit" value="Save" class="btn btn-primary"><i class="far fa-save"></i> Save</button>
@@ -18,9 +20,9 @@
 
 <script>
     var elements = document.getElementById("deviceSelect").options;
-    for (i = 0; i < elements.length; i++) {
-        if (elements[i].innerHTML == "@SmartHomeProject.ConnectionManager.DatabaseManager.getBootstrap()") {
-            elements.value = "selected";
+    for (i = 0; i < elements.length; i++) {       
+        if (elements[i].innerHTML == "@SmartHomeProject.ConnectionManager.DatabaseManager.getBootstrap()") {      
+            elements[i].selected = true;
         }
     }
 </script>
