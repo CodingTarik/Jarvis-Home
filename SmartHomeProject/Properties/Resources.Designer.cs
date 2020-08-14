@@ -63,6 +63,16 @@ namespace SmartHomeProject.Properties {
         /// <summary>
         ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
         /// </summary>
+        internal static byte[] arduino {
+            get {
+                object obj = ResourceManager.GetObject("arduino", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Ressource vom Typ System.Byte[].
+        /// </summary>
         internal static byte[] raspi {
             get {
                 object obj = ResourceManager.GetObject("raspi", resourceCulture);
