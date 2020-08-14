@@ -23,6 +23,7 @@ namespace SmartHomeProject
         {
             services.AddControllersWithViews();
             services.Configure<CookiePolicyOptions>(options => { options.MinimumSameSitePolicy = SameSiteMode.None; });
+          
         }
         public static string wwwroot = "";
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

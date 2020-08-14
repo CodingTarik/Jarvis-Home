@@ -17,25 +17,25 @@
     <h1 id="(@device.name)head">@device.name</h1>
         if (device.DeviceFunctions != null)
         {
-            foreach (var funtion in device.DeviceFunctions)
+            foreach (var function in device.DeviceFunctions)
             {
-            <div class="card text-white bg-success mb-3" id="(@device.name@funtion.functionID)card" style="display: inline-block; max-height: 15rem; max-width: 15rem;">
+            <div class="card text-white bg-success mb-3" id="(@device.name@function.functionID)card" style="display: inline-block; max-height: 15rem; max-width: 15rem;">
                 <form asp-controller="Device" asp-action="ControlFunction" method="get">
                     <div class="card-header">
-                        <h3>@funtion.functionname</h3>
+                        <h3>@function.functionname</h3>
                     </div>
-                    <input type="hidden" value="@funtion.functionID" name="functionID"/>
+                    <input type="hidden" value="@function.functionID" name="functionID"/>
                     <input type="hidden" value="@device.name" name="deviceName"/>
                     <div class="card-body">
-                        <input type="submit" id="(@device.name@funtion.functionID)button" value="switch off" class="btn btn-danger"/>
-                        @if (funtion.RGB)
+                        <input type="submit" id="(@device.name@function.functionID)button" value="switch off" class="btn btn-danger"/>
+                        @if (function.RGB)
                         {
                             <br/>
                             <div class="" style="margin-top: 1rem;">
                                 <label>
                                     <strong>RGB color</strong>
                                 </label>
-                                <input id="color" type="button" class="form-control btn btn-primary" value="rgb(255, 128, 0)"/>
+                                <input type="button" id="@device.name;@function.functionID "class="color form-control btn btn-primary" value="rgb(255, 128, 0)"/>
                             </div>
                         }
 
@@ -70,11 +70,37 @@
 }
 <script src="../js/JarvisRefresh.js"></script>
 <script>
-    $(function() {
-        $('#color').colorpicker();
-        $('#color').on('colorpickerChange',
-            function(event) {
-                $('#color').css('background-color', event.color.toString());
-            });
+    $('.color').each(function (i, obj) {
+        $(obj).colorpicker();
+        $(obj).on('colorpickerChange', function (event) {
+            $(obj).css('background-color', event.color.toString());
+            var rgbData =
+            {
+                "red": event.color._color.red(),
+                "green": event.color._color.green(),
+                "blue": event.color._color.blue(),
+                "alpha": event.color.alpha,
+                "deviceID": $(obj).attr('id').split(";")[0],
+                "functionID": $(obj).attr('id').split(";")[1],
+                "rgba": event.color.toString()
+            };             
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: location.origin + "/api/rgb/",
+                data: JSON.stringify(rgbData),
+                success: function (data) {
+                    console.log("Change RGB to " + rgbData.rgba + " with response: " + data);                 
+                },
+                error: function (err) {
+                    console.log("Error:");
+                    console.log(err);                 
+                }
+            })
+        })
     });
 </script>
