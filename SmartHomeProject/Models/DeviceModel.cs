@@ -309,6 +309,28 @@ namespace SmartHomeProject.Models
                     return false;
                 }
             }
+            public bool changeRGB(double red, double green, double blue, double alpha)
+            {
+                if(!RGB)
+                {
+                    return false;
+                }
+                try
+                {
+                    var task = Task.Run(() => _deviceConnectionManager.recvColor(red, green, blue, alpha, GPIO_PIN));
+                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS))) return task.Result;
+
+                    Logger.Logger.logInfo(Logger.Logger.Category.NETWORK,
+                        "Timeout for function execute for " + functionname);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    if (Logger.Logger.VERBOSE_LOG)
+                        Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    return false;
+                }
+            }
         }
     }
 }

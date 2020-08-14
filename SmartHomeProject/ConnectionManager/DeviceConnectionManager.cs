@@ -6,6 +6,11 @@ using System.Text;
 
 namespace SmartHomeProject.Connections
 {
+    /// <summary>
+    /// SendSensor message ==>    Sensor:Port:Python-Code       (Sensor is a const)
+    /// SendPin message ==>       Operation:Pin:Port            (Operation can be for instance Switch or Status)
+    /// SendColor message ==>     SetColor:RGBA:Pin:Port        (SetColor is a const) (Split RGBA values with a semicolon e.g. 123;234;100;0.5)
+    /// </summary>
     public class DeviceConnectionManager
     {
         private readonly string _ip;
@@ -17,7 +22,7 @@ namespace SmartHomeProject.Connections
             _ip = ip;
         }
 
-        public void SendSensor(string method, int port)
+        private void SendSensor(string method, int port)
         {
             try
             {
@@ -44,7 +49,7 @@ namespace SmartHomeProject.Connections
             }
         }
 
-        public void SendPin(string operation, byte pin, int port)
+        private void SendPin(string operation, byte pin, int port)
         {
             try
             {
@@ -70,16 +75,12 @@ namespace SmartHomeProject.Connections
                 if (Logger.Logger.VERBOSE_LOG) Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
             }
         }
-        public void SendColor(string color, string colortype, byte pin, int port)
+        private void SendColor(double red, double green, double blue, double alpha, byte pin, int port)
         {
             try
             {
                 var client = new TcpClient(_ip, _port);
-                if (colortype == "rgb(")
-                {
-                    colortype = "rgb";
-                }
-                var message = "SetColor" + ":" + colortype + ":" + color + ":" + pin + ":" + port;
+                var message = "SetColor" + ":" + red + ";" + green + ";" + blue + ";" + alpha + ":" + pin + ":" + port;
 
                 var byteCount = Encoding.ASCII.GetByteCount(message);
 
@@ -189,7 +190,7 @@ namespace SmartHomeProject.Connections
             }
 
         }
-        public string recvColor(string color, byte pin)
+        public bool recvColor(double red, double green, double blue, double alpha, byte pin)
         {
             try
             {
@@ -206,32 +207,31 @@ namespace SmartHomeProject.Connections
                         if (tcpi.LocalEndPoint.Port == port)
                         {
                             isAvailable = false;
-                            return null;
+                            return false;
                         }
                         else
                         {
                             var ascii = new ASCIIEncoding();
                             var listener = new TcpListener(IPAddress.Any, port);
-                            listener.Start();
-                            string colorType = color.Substring(0, 4);
-                            SendColor(color, colorType, pin, port);
+                            listener.Start();                       
+                            SendColor(red, green, blue, alpha, pin, port);
                             var client = listener.AcceptTcpClient();
                             var stream = client.GetStream();
                             var bytes = new byte[1024];
                             stream.Read(bytes, 0, bytes.Length);
                             stream.Close();
                             client.Close();
-                            return Encoding.ASCII.GetString(bytes);
+                            return Encoding.ASCII.GetString(bytes) == "SUCCESS";
                         }
                 }
 
-                return null;
+                return false;
             }
 
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return null;
+                return false;
             }
         }
     }
