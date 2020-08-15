@@ -7,7 +7,7 @@ Easily Manage your smart home with Jarvis Home
   - [Clone](#clone)
   - [License](#License)
 ## Preview
-![](Assets/mastermind-preview.gif)
+![](preview.gif)
 
 ## Stats
 ![GitHub All Releases](https://img.shields.io/github/downloads/CodingTarik/Jarvis-Home)
