@@ -45,7 +45,10 @@ namespace SmartHomeProject.Connections
             }
             catch (Exception ex)
             {
-                if (Logger.Logger.VERBOSE_LOG) Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                if (Logger.Logger.VERBOSE_LOG)
+                {
+                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                }
             }
         }
 
@@ -72,7 +75,10 @@ namespace SmartHomeProject.Connections
             }
             catch (Exception ex)
             {
-                if (Logger.Logger.VERBOSE_LOG) Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                if (Logger.Logger.VERBOSE_LOG)
+                {
+                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                }
             }
         }
         private void SendColor(double red, double green, double blue, double alpha, byte pin, int port)
@@ -97,7 +103,10 @@ namespace SmartHomeProject.Connections
             }
             catch (Exception ex)
             {
-                if (Logger.Logger.VERBOSE_LOG) Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                if (Logger.Logger.VERBOSE_LOG)
+                {
+                    Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                }
             }
         }
         public bool recvMessage(string operation, byte pin)
@@ -114,6 +123,7 @@ namespace SmartHomeProject.Connections
                     port = rand.Next(1024, 65535);
 
                     foreach (var tcpi in tcpConnInfoArray)
+                    {
                         if (tcpi.LocalEndPoint.Port == port)
                         {
                             isAvailable = false;
@@ -131,8 +141,9 @@ namespace SmartHomeProject.Connections
                             stream.Read(bytes, 0, bytes.Length);
                             stream.Close();
                             client.Close();
-                            return BitConverter.ToInt32(bytes) == 49;
+                            return BitConverter.ToInt32(bytes) == 49; // "1" for ASCII at index 49
                         }
+                    }
                 }
 
                 return false;
@@ -159,6 +170,7 @@ namespace SmartHomeProject.Connections
                     port = rand.Next(1024, 65535);
 
                     foreach (var tcpi in tcpConnInfoArray)
+                    {
                         if (tcpi.LocalEndPoint.Port == port)
                         {
                             isAvailable = false;
@@ -178,6 +190,7 @@ namespace SmartHomeProject.Connections
                             client.Close();
                             return Encoding.ASCII.GetString(bytes);
                         }
+                    }
                 }
 
                 return null;
@@ -204,6 +217,7 @@ namespace SmartHomeProject.Connections
                     port = rand.Next(1024, 65535);
 
                     foreach (var tcpi in tcpConnInfoArray)
+                    {
                         if (tcpi.LocalEndPoint.Port == port)
                         {
                             isAvailable = false;
@@ -213,7 +227,7 @@ namespace SmartHomeProject.Connections
                         {
                             var ascii = new ASCIIEncoding();
                             var listener = new TcpListener(IPAddress.Any, port);
-                            listener.Start();                       
+                            listener.Start();
                             SendColor(red, green, blue, alpha, pin, port);
                             var client = listener.AcceptTcpClient();
                             var stream = client.GetStream();
@@ -223,6 +237,7 @@ namespace SmartHomeProject.Connections
                             client.Close();
                             return Encoding.ASCII.GetString(bytes) == "SUCCESS";
                         }
+                    }
                 }
 
                 return false;

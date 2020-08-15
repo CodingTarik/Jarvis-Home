@@ -62,7 +62,7 @@ namespace SmartHomeProject.ConnectionManager
                 var query = "SELECT * FROM settings";
                 var sqlQuery = new SQLiteCommand(query, webDBConnection);
                 var reader = sqlQuery.ExecuteReader();
-                string bootstrap = reader.Read() ? reader.GetString(0) : "booststrap-Litera.css";
+                string bootstrap = reader.Read() ? reader.GetString(0) : "bootstrap-Flatly.css";
                 return bootstrap;
             }
             catch (Exception ex)
@@ -130,7 +130,7 @@ namespace SmartHomeProject.ConnectionManager
                 }
                 catch (Exception ex)
                 {
-                     
+
                     webDBConnection.Close();
                     webDBConnection.Dispose();
                     GC.Collect();
@@ -143,7 +143,7 @@ namespace SmartHomeProject.ConnectionManager
                         {
                             System.Threading.Thread.Sleep(100);
                             i++;
-                            if(i == 25)
+                            if (i == 25)
                             {
                                 throw new IOException("Could not get access to database");
                             }
@@ -533,13 +533,31 @@ namespace SmartHomeProject.ConnectionManager
                 return false;
             }
         }
-
+        private static byte[] imageSwitch(string deviceType)
+        {
+            switch(deviceType)
+            {
+                case "Raspberry PI":
+                    return Resources.raspi;
+                case "Arduino":
+                    return Resources.arduino;
+                default:
+                    return Resources.raspi;
+            }
+        }
+        private static DeviceModel[] modelBuffer;
+        private static DateTime lastModelQuery = DateTime.Now;
+        private const int secondsToBuffer = 2;
         /// <summary>
         ///     Reads all devices from database
         /// </summary>
         /// <returns>Array of type DeviceModel</returns>
         internal static DeviceModel[] getDeviceModels()
         {
+            if(modelBuffer != null && (DateTime.Now - lastModelQuery).TotalSeconds < secondsToBuffer)
+            {
+                return modelBuffer;
+            }
             var query = "SELECT * FROM devices";
             var sqlQuery = new SQLiteCommand(query, webDBConnection);
             var resultReader = sqlQuery.ExecuteReader();
@@ -550,7 +568,7 @@ namespace SmartHomeProject.ConnectionManager
                 {
                     var model = new DeviceModel(resultReader.GetString(4), resultReader.GetInt32(5))
                     {
-                        image = Resources.raspi,
+                        image = imageSwitch(resultReader.GetString(1)),
                         name = resultReader.GetString(0),
                         location = resultReader.GetString(3),
                         type = resultReader.GetString(1),
@@ -611,8 +629,8 @@ namespace SmartHomeProject.ConnectionManager
                     Logger.Logger.logError(Logger.Logger.Category.DATABASE, ex.Message, ex);
                 }
             }
-
-            return models.ToArray();
+            modelBuffer = models.ToArray();
+            return modelBuffer;
         }
     }
 }

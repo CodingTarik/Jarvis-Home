@@ -47,7 +47,7 @@
             <tr>
                 <td class="devicename">@device.name</td>
                 <td>
-                    <img src="@string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.image))" width="20%" height="20%"/>
+                    <img src="@string.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(device.image))" style="max-height: 60px; max-width: 90px;"/>
                 </td>
                 <td>@device.type</td>
                 <td>@device.location</td>

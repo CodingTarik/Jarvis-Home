@@ -22,16 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="config.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Client.py" />
-    <Compile Include="GPIO.py" />
-    <Compile Include="GPIOSim.py" />
     <Compile Include="GPIO_CLIENT.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Send.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

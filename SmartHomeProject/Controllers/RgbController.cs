@@ -20,10 +20,10 @@ namespace SmartHomeProject.Controllers
         {
             try
             {
-                double red = data.GetProperty("red").GetInt32();
-                double green = data.GetProperty("green").GetInt32();
-                double blue = data.GetProperty("blue").GetInt32();
-                double alpha = data.GetProperty("alpha").GetInt32();
+                double red = data.GetProperty("red").GetDouble();
+                double green = data.GetProperty("green").GetDouble();
+                double blue = data.GetProperty("blue").GetDouble();
+                double alpha = data.GetProperty("alpha").GetDouble();
                 int deviceID = data.GetProperty("deviceID").GetInt32();
                 int functionID = data.GetProperty("functionID").GetInt32();
                 DeviceModel model = DatabaseManager.getDeviceModels().Where(d => d.deviceID == deviceID).First();
@@ -37,7 +37,7 @@ namespace SmartHomeProject.Controllers
             } catch(Exception ex)
             {
                 Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
-                return "ERROR";
+                return "ERROR: " + ex.Message + " data: " + data.GetRawText();
             }
         }
     }

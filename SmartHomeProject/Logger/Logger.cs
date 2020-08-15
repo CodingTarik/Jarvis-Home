@@ -26,9 +26,15 @@ namespace SmartHomeProject.Logger
             Console.WriteLine(category + " (ERROR): " + message + " /// caller: " + caller + " /// line: " +
                               lineNumber + " in " + path.Split("\\").Last());
             if (VERBOSE_LOG)
+            {
                 if (ex != null)
+                {
                     foreach (var stackLine in ex.StackTrace.Split("\r\n").Take(STACK_TRACE_LINE_COUNT))
+                    {
                         Console.WriteLine("/// STACKTRACE : " + stackLine);
+                    }
+                }
+            }
 
             Console.ForegroundColor = ConsoleColor.White;
         }

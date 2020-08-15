@@ -1,10 +1,10 @@
-﻿using System;
+﻿using SmartHomeProject.Connections;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
-using SmartHomeProject.Connections;
 
 namespace SmartHomeProject.Models
 {
@@ -13,7 +13,7 @@ namespace SmartHomeProject.Models
         /// <summary>
         ///     Timeout for ping
         /// </summary>
-        private const int TIMEOUTMILSECONDS = 30;
+        private const int TIMEOUTMILSECONDS = 25;
 
         /// <summary>
         ///     Creates a new device model with deviceconnectionamanger (ip, port)
@@ -101,17 +101,25 @@ namespace SmartHomeProject.Models
                 {
                     var p = new Ping();
                     if (Logger.Logger.VERBOSE_LOG)
+                    {
                         Logger.Logger.logInfo(Logger.Logger.Category.NETWORK, "Sending ping to IP " + ip);
+                    }
 
                     var reply = p.Send(ip, TIMEOUTMILSECONDS);
                     if (reply.Status == IPStatus.Success)
+                    {
                         return true;
+                    }
+
                     return false;
                 }
                 catch (PingException ex)
                 {
                     if (Logger.Logger.VERBOSE_LOG)
+                    {
                         Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    }
+
                     Logger.Logger.logInfo(Logger.Logger.Category.NETWORK,
                         "Device with IP " + ip + " *probably* not reachable");
 
@@ -136,7 +144,11 @@ namespace SmartHomeProject.Models
         /// <param name="location">location of the sensor</param>
         public void addDeviceSensors(int sensorID, byte[] GPIO_PINS, string python, string sensorname, string location)
         {
-            if (Sensors == null) Sensors = new List<Sensor>();
+            if (Sensors == null)
+            {
+                Sensors = new List<Sensor>();
+            }
+
             Sensors.Add(new Sensor(sensorID, GPIO_PINS, python, sensorname, location, DeviceConnectionManager,
                 OnlineStatus));
         }
@@ -152,7 +164,10 @@ namespace SmartHomeProject.Models
         public void addDeviceModelFunction(int functionID, byte GPIO_PIN, string functionname, string location,
             bool RGB)
         {
-            if (DeviceFunctions == null) DeviceFunctions = new List<DeviceModelFunction>();
+            if (DeviceFunctions == null)
+            {
+                DeviceFunctions = new List<DeviceModelFunction>();
+            }
 
             DeviceFunctions.Add(new DeviceModelFunction(functionID, GPIO_PIN, functionname, location, RGB,
                 DeviceConnectionManager, OnlineStatus));
@@ -166,7 +181,7 @@ namespace SmartHomeProject.Models
             /// <summary>
             ///     Timeout for network communication
             /// </summary>
-            private const double TIMEOUTMILSECONDS = 50;
+            private const double TIMEOUTMILSECONDS = 40;
 
             private readonly DeviceConnectionManager _deviceConnectionManager;
 
@@ -180,9 +195,13 @@ namespace SmartHomeProject.Models
                 this.python = python;
                 sensorID = id;
                 if (deviceOnlineStauts)
+                {
                     status = getStatus();
+                }
                 else
+                {
                     status = "ERROR";
+                }
             }
 
             public string sensorname { get; set; }
@@ -199,10 +218,15 @@ namespace SmartHomeProject.Models
                 var pythonReader = new StringReader(python);
                 pythonBuilder.AppendLine("def sensorValue():");
                 string codeLine;
-                while ((codeLine = pythonReader.ReadLine()) != null) pythonBuilder.AppendLine("\t" + codeLine);
+                while ((codeLine = pythonReader.ReadLine()) != null)
+                {
+                    pythonBuilder.AppendLine("\t" + codeLine);
+                }
 
                 for (var i = 0; i < GPIO_PINS.Length; i++)
+                {
                     pythonBuilder.Replace("PIN[" + i + "]", GPIO_PINS[i].ToString());
+                }
 
                 return pythonBuilder.ToString();
             }
@@ -219,7 +243,10 @@ namespace SmartHomeProject.Models
                         if (resultStrings[0] == "ERROR")
                         {
                             if (Logger.Logger.VERBOSE_LOG)
+                            {
                                 Logger.Logger.logError(Logger.Logger.Category.PYTHON, resultStrings[1], null);
+                            }
+
                             pythonError = resultStrings[1];
                             return "ERROR";
                         }
@@ -230,8 +257,10 @@ namespace SmartHomeProject.Models
                 catch (Exception e)
                 {
                     if (Logger.Logger.VERBOSE_LOG)
+                    {
                         Logger.Logger.logError(Logger.Logger.Category.NETWORK + ", " + Logger.Logger.Category.PYTHON,
                             e.Message, e);
+                    }
                 }
 
                 return "ERROR";
@@ -246,7 +275,7 @@ namespace SmartHomeProject.Models
             /// <summary>
             ///     Timeout for network communication
             /// </summary>
-            private const double TIMEOUTMILSECONDS = 50;
+            private const double TIMEOUTMILSECONDS = 30;
 
             private readonly DeviceConnectionManager _deviceConnectionManager;
 
@@ -259,7 +288,10 @@ namespace SmartHomeProject.Models
                 _deviceConnectionManager = deviceConnectionManager;
                 this.RGB = RGB;
                 functionID = id;
-                if (deviceOnlineStauts) status = getStatus();
+                if (deviceOnlineStauts)
+                {
+                    status = getStatus();
+                }
             }
 
             public int functionID { get; set; }
@@ -275,18 +307,26 @@ namespace SmartHomeProject.Models
                 try
                 {
                     var task = Task.Run(() => _deviceConnectionManager.recvMessage("Status", GPIO_PIN));
-                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS))) return task.Result;
+                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
+                    {
+                        return task.Result;
+                    }
 
                     if (Logger.Logger.VERBOSE_LOG)
+                    {
                         Logger.Logger.logInfo(Logger.Logger.Category.NETWORK,
                             "Timeout for function status check for function " + functionname);
+                    }
 
                     return false;
                 }
                 catch (Exception ex)
                 {
                     if (Logger.Logger.VERBOSE_LOG)
+                    {
                         Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    }
+
                     return false;
                 }
             }
@@ -296,7 +336,10 @@ namespace SmartHomeProject.Models
                 try
                 {
                     var task = Task.Run(() => _deviceConnectionManager.recvMessage("Switch", GPIO_PIN));
-                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS))) return task.Result;
+                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
+                    {
+                        return task.Result;
+                    }
 
                     Logger.Logger.logInfo(Logger.Logger.Category.NETWORK,
                         "Timeout for function execute for " + functionname);
@@ -305,20 +348,26 @@ namespace SmartHomeProject.Models
                 catch (Exception ex)
                 {
                     if (Logger.Logger.VERBOSE_LOG)
+                    {
                         Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    }
+
                     return false;
                 }
             }
             public bool changeRGB(double red, double green, double blue, double alpha)
             {
-                if(!RGB)
+                if (!RGB)
                 {
                     return false;
                 }
                 try
                 {
                     var task = Task.Run(() => _deviceConnectionManager.recvColor(red, green, blue, alpha, GPIO_PIN));
-                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS))) return task.Result;
+                    if (task.Wait(TimeSpan.FromMilliseconds(TIMEOUTMILSECONDS)))
+                    {
+                        return task.Result;
+                    }
 
                     Logger.Logger.logInfo(Logger.Logger.Category.NETWORK,
                         "Timeout for function execute for " + functionname);
@@ -327,7 +376,10 @@ namespace SmartHomeProject.Models
                 catch (Exception ex)
                 {
                     if (Logger.Logger.VERBOSE_LOG)
+                    {
                         Logger.Logger.logError(Logger.Logger.Category.NETWORK, ex.Message, ex);
+                    }
+
                     return false;
                 }
             }

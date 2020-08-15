@@ -19,8 +19,13 @@ namespace SmartHomeProject.Models
         public DeviceModel getModlebyName(string deviceName)
         {
             for (var i = 0; i < DeviceModels.Length; i++)
+            {
                 if (DeviceModels[i].name == deviceName)
+                {
                     return DeviceModels[i];
+                }
+            }
+
             return null;
         }
     }
