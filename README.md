@@ -1,5 +1,5 @@
 # Jarvis Home
-Easily Manage your smart home with Jarvis Home
+Easily Manage your smart home with Jarvis Home.
 
 ## Table of Contents
   - [Preview](#preview)
