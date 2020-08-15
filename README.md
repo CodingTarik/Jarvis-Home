@@ -10,7 +10,7 @@ Easily Manage your smart home with Jarvis Home
 ![](preview.gif)
 
 ## Stats
-![GitHub All Releases](https://img.shields.io/github/downloads/CodingTarik/Jarvis-Home)
+![GitHub All Releases](https://img.shields.io/github/downloads/CodingTarik/Jarvis-Home/total)
 ## Clone
 > You can run the server with IIS
 
