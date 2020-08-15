@@ -125,7 +125,7 @@ namespace SmartHomeProject.ConnectionManager
                     createDeviceQuery.ExecuteNonQuery();
                     createDeviceQuery = new SQLiteCommand(createSettingsTable, webDBConnection);
                     createDeviceQuery.ExecuteNonQuery();
-                    createDeviceQuery = new SQLiteCommand("INSERT INTO settings VALUES ('booststrap-Litera.css');", webDBConnection);
+                    createDeviceQuery = new SQLiteCommand("INSERT INTO settings VALUES ('bootstrap-Flatly.css');", webDBConnection);
                     createDeviceQuery.ExecuteNonQuery();
                 }
                 catch (Exception ex)
@@ -547,7 +547,7 @@ namespace SmartHomeProject.ConnectionManager
         }
         private static DeviceModel[] modelBuffer;
         private static DateTime lastModelQuery = DateTime.Now;
-        private const int secondsToBuffer = 2;
+        private const int secondsToBuffer = 3;
         /// <summary>
         ///     Reads all devices from database
         /// </summary>
